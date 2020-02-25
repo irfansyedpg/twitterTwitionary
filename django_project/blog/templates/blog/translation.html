@@ -1,0 +1,63 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+{% extends "blog/base.html" %}
+{% block content %}
+
+<div class="text-center" >
+  {% for post in posts  %}
+
+
+ 
+    <div class="row" style="margin: 10px;"  >
+      <div class="col-sm-11 col-md-5 col-lg-2">
+
+        <a href={{ post.href }} target="_blank">
+        <picture><img src={{ post.img }} ></picture>
+
+      </a>
+      </div>
+
+      <div class="col-sm-1 col-md-1 col-lg-1">
+      </div>
+
+      <div class="col-sm-12 col-md-6 col-lg-9">
+        <a href={{ post.href }} target="_blank">
+        <h3 class="article-content" style=" text-align: center">{{ post.header }}</h3> </a>
+        <p class="article-content">{{ post.prgh }}</p>
+        <p class="article-content"><strong>{{ post.News }}: </strong>{{ post.date }}</p>
+      </div>
+    </div>
+
+
+
+  {% endfor %}
+
+
+
+
+
+
+
+
+  <form action='actionUrl' method='GET'>
+
+    <button class="article-title" type='submit'> Click Me For Translation </button>
+
+  </form>
+
+  <form action='dtranslation' method='GET' style="margin-top: 10px;">
+
+
+    <button class="article-title" type='submit'> Click Me For Download transcription </button>
+
+
+  </form>
+  <form action='ddictionary' method='GET' style="margin-top: 10px;">
+
+
+    <button class="article-title" type='submit'> Click Me For Download Word Dictionary </button>
+  </form>
+
+</div>
+
+{% endblock content %}
