@@ -20,8 +20,15 @@ import urllib.request
 import time
 from bs4 import BeautifulSoup
 
+#newshunt
 import re
 import pandas as pd
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
+from selenium import webdriver
+import time
 
 # json object to go to translation page
 def button_click(request):
@@ -36,6 +43,65 @@ def translation(request):
     df = pd.read_excel ('dictionary.xlsx')
     mylist = df['words'].tolist()
     r = re.compile('|'.join([r'\b%s\b' % w for w in mylist]), flags=re.I)
+
+
+
+#News Hunt News
+    options = webdriver.ChromeOptions()
+    options.add_argument('--ignore-certificate-errors')
+    options.add_argument('--incognito')
+    options.add_argument('--headless')
+    driver = webdriver.Chrome("chromedriver", chrome_options=options)
+    
+    driver.get("https://newshunt.io/#/en/")
+    more_buttons = driver.find_element_by_link_text("Latest News")
+    driver.execute_script("arguments[0].click();", more_buttons)
+#try:
+    
+    old_page = driver.page_source
+    while True:
+    
+        for i in range(2):
+            driver.execute_script("window.scrollBy(0,"+str(2000)+")")
+            time.sleep(2)
+        new_page = driver.page_source
+        if new_page != old_page:
+            old_page = new_page
+        else:
+            break
+#except :
+ #   print("error")
+    page_source = driver.page_source   
+    soup = BeautifulSoup(page_source, 'lxml')
+
+    reviews_selector = soup.find_all('div', class_='flex')
+    for article in reviews_selector:
+        img=article.find('img')
+        img=img['src']
+        href1=article.find('a')
+        href=href1['href']
+        header=href1.text
+        prgh=article.find("p")
+        prgh=prgh.text
+        date=article.find("span",class_='news-time')
+        date=date.text
+        source=article.find("span",class_='news-source')
+        source=source.text
+        articaltext=article.getText()
+        r = re.compile('|'.join([r'\b%s\b' % w for w in mylist]), flags=re.I)
+        listt=r.findall(articaltext)
+        if listt:
+            posts.append({
+            'href': href,
+            'img': img,
+            'header': header,
+            'prgh': prgh,
+            'date': date,
+            'News':source
+
+                    })
+     
+
 
     #DAWN News
     
