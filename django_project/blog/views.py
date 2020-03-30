@@ -20,6 +20,8 @@ import urllib.request
 import time
 from bs4 import BeautifulSoup
 
+
+
 #newshunt
 import re
 import pandas as pd
@@ -29,7 +31,8 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium import webdriver
 import time
-
+import re
+import tweepy
 # json object to go to translation page
 def button_click(request):
     
@@ -44,7 +47,121 @@ def translation(request):
     mylist = df['words'].tolist()
     r = re.compile('|'.join([r'\b%s\b' % w for w in mylist]), flags=re.I)
 
+    url = 'https://www.dawn.com/latest-news'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+    for article in soup.findAll("article"):
+        try:
+            href=article.find('a')
+            href=href['href']
+            img=article.find('img')
+            img=img['src']
+            header=article.find('h2')
+            header=header.text
+            prgh=article.find_all("div")[1]
+            prgh=prgh.text
+            date=article.find_all("span")[2]
+            date=date.text
+            articaltext=article.getText()
+            #data mining
+            listt=r.findall(articaltext)
+            if listt:
+                posts.append({
+                'href': href,
+                'img': img,
+                'header': header,
+                'prgh': prgh,
+                'date': date,
+                'News':'DAWN',
+                'words':listt
+     
+                })
+        except :
+            print("error")
 
+#DailyTimePakistan 
+    url = 'https://dailytimes.com.pk/pakistan/'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+    for article in soup.findAll("article"):
+        try:
+            href=article.find('a')
+            href=href['href']
+            img=article.find('img')
+            img=img['src']
+            header=article.find('header')
+            header=header.find('h2')
+            header=header.text
+            prgh=article.find_all("div")[1]
+            prgh=prgh.text
+            date=article.find_all("span")[2]
+            date=date.text
+            articaltext=article.getText()
+            #data mining
+            listt=r.findall(articaltext)
+            if listt:
+                posts.append({
+                'href': href,
+                'img': img,
+                'header': header,
+                'prgh': prgh,
+                'date': date,
+                'News':'DailyTimePakistan',
+                'words':listt
+     
+                })
+        except :
+            print("error")        
+
+
+            #THENEWS News
+    url = 'https://www.thenews.com.pk/latest-stories'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+    for article in soup.findAll("div",{"class": "writter-list-item-story"}):
+        try:
+            href=article.find('a')
+            href=href['href']
+            img=article.find('a')
+            img=img.find('img')
+            img=img['src']
+       
+            header=article.find('h2')
+            header=header.text
+       
+            prgh=article.find("p")
+            prgh=prgh.text
+            date=article.find("span")
+            date=date.text
+            #data mining
+            articaltext=article.getText()
+            listt=r.findall(articaltext)
+            if listt:
+                posts.append({
+                'href': href,
+                'img': img,
+                'header': header,
+                'prgh': prgh,
+                'date': date,
+                'News':'THENEWS',
+                'words':listt
+     
+             })
+        except :
+            print("error")
+
+               
+    #posts = get_buckets('1')
+
+    context = {
+
+        'posts': posts
+
+    }
+    # (request,the blog i am requestin,my json object)
+    return render(request, 'blog/translation.html', context)
+    # return render(request, 'blog/translation.html', {'tital': 'translation'})
+'''
 
 #News Hunt News
     options = webdriver.ChromeOptions()
@@ -94,97 +211,22 @@ def translation(request):
             posts.append({
             'href': href,
             'img': img,
-            'header': header,
-            'prgh': prgh,
+              
+            'header': re.sub(' +', ' ', header),
+            'prgh': re.sub(' +', ' ', prgh),
             'date': date,
-            'News':source
+            'News':source,
+            'words':listt
 
-                    })
-     
+                    }) 
 
-
-    #DAWN News
-    
-    url = 'https://www.dawn.com/latest-news'
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, "html.parser")
-    for article in soup.findAll("article"):
-        try:
-            href=article.find('a')
-            href=href['href']
-            img=article.find('img')
-            img=img['src']
-            header=article.find('h2')
-            header=header.text
-            prgh=article.find_all("div")[1]
-            prgh=prgh.text
-            date=article.find_all("span")[2]
-            date=date.text
-            articaltext=article.getText()
-            #data mining
-            listt=r.findall(articaltext)
-            if listt:
-                posts.append({
-                'href': href,
-                'img': img,
-                'header': header,
-                'prgh': prgh,
-                'date': date,
-                'News':'DAWN'
-     
-                })
-        except :
-            print("error")
-
-
-            #THENEWS News
-    url = 'https://www.thenews.com.pk/latest-stories'
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, "html.parser")
-    for article in soup.findAll("div",{"class": "writter-list-item-story"}):
-        try:
-            href=article.find('a')
-            href=href['href']
-            img=article.find('a')
-            img=img.find('img')
-            img=img['src']
-       
-            header=article.find('h2')
-            header=header.text
-       
-            prgh=article.find("p")
-            prgh=prgh.text
-            date=article.find("span")
-            date=date.text
-            #data mining
-            articaltext=article.getText()
-            listt=r.findall(articaltext)
-            if listt:
-                posts.append({
-                'href': href,
-                'img': img,
-                'header': header,
-                'prgh': prgh,
-                'date': date,
-                'News':'THENEWS'
-     
-             })
-        except :
-            print("error")
+                    '''
+  #DAWN News
+   
 
 
     
-    
-    #posts = get_buckets('1')
-
-    context = {
-
-        'posts': posts
-
-    }
-    # (request,the blog i am requestin,my json object)
-    return render(request, 'blog/translation.html', context)
-    # return render(request, 'blog/translation.html', {'tital': 'translation'})
+ 
 
 
 def home(request):
@@ -192,25 +234,55 @@ def home(request):
 
 
 
-# here this is click when the user wants to go to next page for detail summary of text with word level confidacen
+# Twiteer scraping
+
 def detial_click(request):
 
-    bob_name = request.GET.get("name")
-    datee = request.GET.get("datee")
-    audi_url = request.GET.get("publicurl")
-    datee = request.GET.get("datee")
+    consumer_key = "iJFZnuM0YHqwvFilNUBSVkzJU"
+    consumer_secret = "412n9RVFyUc4lRH3RWBU4kRT1lz5NHWg81d6FEoMPQEvYJPRio"
+    access_token = "813456180-jXG4M0Kpc80UjJF4bhwA0z9Bx8aZfAht4veyxSgc"
+    access_token_secret = "Cvh3gsUS5Y4HpyfD1UdlMLfpxlqa47iYFo3vxogpP6blR"
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
+    api = tweepy.API(auth,wait_on_rate_limit=True)
+
+    text_query = 'coronavirus'
+    language = "en"
+    text=""
+    userid=""
+    username=""
+    dated=""
+    location=""
 
     posts = []
-    main = []
+    try:
+# Pulling individual tweets from query
+        for tweet in api.search(q=text_query,lang=language):
+# Adding to list that contains all tweets
+      #tweets.append((tweet.created_at,tweet.id,tweet.text))
+            text=tweet.text
+            userid=tweet.id
+            dated=tweet.created_at
+            username=tweet.user.screen_name
+            location=tweet.user.location
+            posts.append({
+                'text': text,
+                'userid': userid,
+                'dated': dated,
+                'username': username,
+                'location': location,
+     
+                }) 
+    except BaseException as e:
+        time.sleep(3)
+
+   
     #posts = transcriberDetail(bob_name, main)
 
     context = {
 
-        'posts': posts,
-        'main': main,
-        'text': bob_name,
-        'datee': datee,
-        'audi_url': audi_url,
+        'posts': posts
+      
 
 
     }
