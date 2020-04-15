@@ -1,0 +1,161 @@
+def translation(request):
+
+    posts = []
+    df = pd.read_excel ('dictionary.xlsx')
+    mylist = df['words'].tolist()
+    r = re.compile('|'.join([r'\b%s\b' % w for w in mylist]), flags=re.I)
+
+    url = 'https://www.dawn.com/latest-news'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+    for article in soup.findAll("article"):
+        try:
+            href=article.find('a')
+            href=href['href']
+            img=article.find('img')
+            img=img['src']
+            header=article.find('h2')
+            header=header.text
+            prgh=article.find_all("div")[1]
+            prgh=prgh.text
+            date=article.find_all("span")[2]
+            date=date.text
+            articaltext=article.getText()
+            #data mining
+            listt=r.findall(articaltext)
+            if listt:
+                sql = "INSERT INTO news (href, img,header,prgh,date,News,words) VALUES (%s, %s, %s, %s, %s, %s,%s)"
+                mydb._open_connection()
+                val = (href, img,header,prgh,date,'DAwn','words')
+                mycursor.execute(sql, val)
+                mydb.commit()
+                mydb.close() 
+                posts.append({
+                'href': href,
+                'img': img,
+                'header': header,
+                'prgh': prgh,
+                'date': date,
+                'News':'DAWN',
+                'words':listt
+     
+                })
+        except :
+            print("error")
+
+           
+
+       
+
+
+            #THENEWS News
+    url = 'https://www.thenews.com.pk/latest-stories'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+    for article in soup.findAll("div",{"class": "writter-list-item-story"}):
+        try:
+            href=article.find('a')
+            href=href['href']
+            img=article.find('a')
+            img=img.find('img')
+            img=img['src']
+       
+            header=article.find('h2')
+            header=header.text
+       
+            prgh=article.find("p")
+            prgh=prgh.text
+            date=article.find("span")
+            date=date.text
+            #data mining
+            articaltext=article.getText()
+            listt=r.findall(articaltext)
+            if listt:
+                posts.append({
+                'href': href,
+                'img': img,
+                'header': header,
+                'prgh': prgh,
+                'date': date,
+                'News':'THENEWS',
+                'words':listt
+     
+             })
+        except :
+            print("error")
+
+               
+    #posts = get_buckets('1')
+
+    context = {
+
+        'posts': posts
+
+    }
+
+    # (request,the blog i am requestin,my json object)
+    return render(request, 'blog/translation.html', context)
+    # return render(request, 'blog/translation.html', {'tital': 'translation'})
+'''
+
+
+
+#News Hunt News
+    options = webdriver.ChromeOptions()
+    options.add_argument('--ignore-certificate-errors')
+    options.add_argument('--incognito')
+    options.add_argument('--headless')
+    driver = webdriver.Chrome("chromedriver", chrome_options=options)
+    
+    driver.get("https://newshunt.io/#/en/")
+    more_buttons = driver.find_element_by_link_text("Latest News")
+    driver.execute_script("arguments[0].click();", more_buttons)
+#try:
+    
+    old_page = driver.page_source
+    while True:
+    
+        for i in range(2):
+            driver.execute_script("window.scrollBy(0,"+str(2000)+")")
+            time.sleep(2)
+        new_page = driver.page_source
+        if new_page != old_page:
+            old_page = new_page
+        else:
+            break
+#except :
+ #   print("error")
+    page_source = driver.page_source   
+    soup = BeautifulSoup(page_source, 'lxml')
+
+    reviews_selector = soup.find_all('div', class_='flex')
+    for article in reviews_selector:
+        img=article.find('img')
+        img=img['src']
+        href1=article.find('a')
+        href=href1['href']
+        header=href1.text
+        prgh=article.find("p")
+        prgh=prgh.text
+        date=article.find("span",class_='news-time')
+        date=date.text
+        source=article.find("span",class_='news-source')
+        source=source.text
+        articaltext=article.getText()
+        r = re.compile('|'.join([r'\b%s\b' % w for w in mylist]), flags=re.I)
+        listt=r.findall(articaltext)
+        if listt:
+            posts.append({
+            'href': href,
+            'img': img,
+              
+            'header': re.sub(' +', ' ', header),
+            'prgh': re.sub(' +', ' ', prgh),
+            'date': date,
+            'News':source,
+            'words':listt
+
+                    }) 
+
+                    '''
+  #DAWN News

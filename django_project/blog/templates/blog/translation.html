@@ -3,6 +3,35 @@
 {% extends "blog/base.html" %}
 {% block content %}
 
+
+
+
+
+<div class="row" style="margin: 10px; background: #FFFFFF;">
+
+
+  <div class="col-sm-1 col-md-1 col-lg-1">
+  </div>
+
+  <div class="col-sm-11 col-md-6 col-lg-9">
+  
+    <p class="article-content">select Date</p>
+   
+    <input type="date" id="start" name="trip-start"
+   
+    min="2020-01-01">
+    <form action='actionUrl' method='GET'>
+
+      <button class="article-title" type='submit'> Get News </button>
+    
+    </form>
+  </div>
+  </div>
+</div>
+
+
+
+
 <div class="text-center" style="background: #F6F6F6; " />
 {% for post in posts  %}
 
@@ -11,10 +40,12 @@
 <div class="row" style="margin: 10px; background: #FFFFFF;">
   <div class="col-sm-11 col-md-5 col-lg-2">
 
+    <div class="thumbnail">
     <a href={{ post.href }} target="_blank">
       <img src={{ post.img }}>
 
     </a>
+  </div>
   </div>
 
   <div class="col-sm-1 col-md-1 col-lg-1">
@@ -41,11 +72,7 @@
 
 
 
-<form action='actionUrl' method='GET'>
 
-  <button class="article-title" type='submit'> Click Me For Translation </button>
-
-</form>
 
 <form action='dtranslation' method='GET' style="margin-top: 10px;">
 

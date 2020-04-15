@@ -19,6 +19,19 @@ import requests
 import urllib.request
 import time
 from bs4 import BeautifulSoup
+import re
+
+
+
+# MY SQL 
+import mysql.connector
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    passwd="",
+    database="twittter"
+)
+mycursor = mydb.cursor()
 
 
 
@@ -34,6 +47,11 @@ import time
 import re
 import tweepy
 # json object to go to translation page
+
+import requests
+from requests.auth import HTTPDigestAuth
+import json
+
 def button_click(request):
     
     # (request,the blog i am requestin,my json object)
@@ -47,108 +65,36 @@ def translation(request):
     mylist = df['words'].tolist()
     r = re.compile('|'.join([r'\b%s\b' % w for w in mylist]), flags=re.I)
 
-    url = 'https://www.dawn.com/latest-news'
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, "html.parser")
-    for article in soup.findAll("article"):
-        try:
-            href=article.find('a')
-            href=href['href']
-            img=article.find('img')
-            img=img['src']
-            header=article.find('h2')
-            header=header.text
-            prgh=article.find_all("div")[1]
-            prgh=prgh.text
-            date=article.find_all("span")[2]
-            date=date.text
-            articaltext=article.getText()
-            #data mining
-            listt=r.findall(articaltext)
-            if listt:
-                posts.append({
-                'href': href,
-                'img': img,
-                'header': header,
-                'prgh': prgh,
-                'date': date,
-                'News':'DAWN',
-                'words':listt
-     
-                })
-        except :
-            print("error")
-
-#DailyTimePakistan 
-    url = 'https://dailytimes.com.pk/pakistan/'
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, "html.parser")
-    for article in soup.findAll("article"):
-        try:
-            href=article.find('a')
-            href=href['href']
-            img=article.find('img')
-            img=img['src']
-            header=article.find('header')
-            header=header.find('h2')
-            header=header.text
-            prgh=article.find_all("div")[1]
-            prgh=prgh.text
-            date=article.find_all("span")[2]
-            date=date.text
-            articaltext=article.getText()
-            #data mining
-            listt=r.findall(articaltext)
-            if listt:
-                posts.append({
-                'href': href,
-                'img': img,
-                'header': header,
-                'prgh': prgh,
-                'date': date,
-                'News':'DailyTimePakistan',
-                'words':listt
-     
-                })
-        except :
-            print("error")        
+    url = "https://newshunt.io/getDateNews/2020-03-16"
 
 
-            #THENEWS News
-    url = 'https://www.thenews.com.pk/latest-stories'
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, "html.parser")
-    for article in soup.findAll("div",{"class": "writter-list-item-story"}):
-        try:
-            href=article.find('a')
-            href=href['href']
-            img=article.find('a')
-            img=img.find('img')
-            img=img['src']
-       
-            header=article.find('h2')
-            header=header.text
-       
-            prgh=article.find("p")
-            prgh=prgh.text
-            date=article.find("span")
-            date=date.text
-            #data mining
-            articaltext=article.getText()
-            listt=r.findall(articaltext)
+    myResponse = requests.get(url, verify=True)
+    if(myResponse.ok):
+        jData = json.loads(myResponse.content)
+
+        jData=jData['news']
+        for key in jData:
+
+        
+            
+            listt=r.findall(key['description'])
             if listt:
+                header=re.sub('^A-Za-z0-9]+ +', ' ',key['title'])
+                prgh=re.sub('^A-Za-z0-9]+ +', ' ',key['description'])
+                header=re.sub("\s\s+", " ", header)
+                prgh=re.sub("\s\s+", " ", prgh)
                 posts.append({
-                'href': href,
-                'img': img,
+                 
+                'href': key['url'],
+                'img':  key['media'],
                 'header': header,
-                'prgh': prgh,
-                'date': date,
-                'News':'THENEWS',
-                'words':listt
+                'prgh':prgh ,
+                'date': 'date',
+                'News':key['source'],
+                'words':key['country']
      
              })
-        except :
-            print("error")
+     
 
                
     #posts = get_buckets('1')
@@ -158,6 +104,7 @@ def translation(request):
         'posts': posts
 
     }
+
     # (request,the blog i am requestin,my json object)
     return render(request, 'blog/translation.html', context)
     # return render(request, 'blog/translation.html', {'tital': 'translation'})
