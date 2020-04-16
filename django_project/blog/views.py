@@ -23,26 +23,14 @@ import re
 
 
 
-# MY SQL 
-import mysql.connector
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="",
-    database="twittter"
-)
-mycursor = mydb.cursor()
+
 
 
 
 #newshunt
 import re
 import pandas as pd
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
-from selenium import webdriver
+
 import time
 import re
 import tweepy
