@@ -5,30 +5,74 @@
 
 
 
+<div class="row" style="margin:30px;">
+
+  <div class="col-sm-12 col-md-7 col-lg-7" style="text-align: center;"></div>
 
 
-<div class="row" style="margin: 10px; background: #FFFFFF;">
+  <div class="col-sm-12 col-md-5 col-lg-5">
 
 
-  <div class="col-sm-1 col-md-1 col-lg-1">
+
+    <div class="form-group">
+      <form action='actionUrl' method='GET'>
+
+        <!-- 
+      <div class="col-md-8" >
+        <label>Select Country </label>
+       
+   -->
+
+   <div class="row" style="margin-top: 10px;">
+
+        <div class="col-sm-12 col-md-4 col-lg-4" style="text-align: end;">
+          <label style="margin-top: 2px;" for="date">Select Region</label>
+        </div>
+        <div class="col-sm-12 col-md-8 col-lg-8">
+          <div class="dropdown ">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Select Country
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="#">World</a></li>
+              <li><a href="#">Pakistan</a></li>
+              <li><a href="#">US</a></li>
+            </ul>
+          </div>
+        </div>
+
+      
+    </div>
+    <div class="row"  style="margin-top: 20px;">
+
+    <div class="col-sm-12 col-md-4 col-lg-4" style="text-align: end;">
+      <label style="margin-top: 2px;" for="date">Select Date</label>
+    </div>
+    <div class="col-sm-12 col-md-8 col-lg-8">
+      <input type="date" class="form-control" id="date" name="date" value={{ today }}>
+    </div>
   </div>
 
-  <div class="col-sm-11 col-md-6 col-lg-9">
-  
-    <p class="article-content">select Date</p>
+  <div class="row"  style="margin-top: 10px;">
+
+    <div class="col-sm-12 col-md-4 col-lg-4" style="text-align: end;">
+
+    </div>
+    <div class="col-sm-12 col-md-8 col-lg-8">
+      <button for="date" class="btn btn-primary " type='submit' style="margin-top: 15px;"> Get News on Date
+      </button>
+    </div>
+  </div>
    
-    <input type="date" id="start" name="trip-start"
-   
-    min="2020-01-01">
-    <form action='actionUrl' method='GET'>
 
-      <button class="article-title" type='submit'> Get News </button>
-    
-    </form>
   </div>
-  </div>
+
+
+
+  </form>
+</div>
 </div>
 
+</div>
 
 
 
@@ -41,11 +85,11 @@
   <div class="col-sm-11 col-md-5 col-lg-2">
 
     <div class="thumbnail">
-    <a href={{ post.href }} target="_blank">
-      <img src={{ post.img }}>
+      <a href={{ post.href }} target="_blank">
+        <img src={{ post.img }}>
 
-    </a>
-  </div>
+      </a>
+    </div>
   </div>
 
   <div class="col-sm-1 col-md-1 col-lg-1">
@@ -60,9 +104,6 @@
     <p> {{ post.words }}</p>
   </div>
 </div>
-
-
-
 {% endfor %}
 
 

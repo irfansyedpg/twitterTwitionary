@@ -51,21 +51,35 @@ import tweepy
 import requests
 from requests.auth import HTTPDigestAuth
 import json
+from datetime import datetime
+
 
 def button_click(request):
-    
+
+    posts=[]
+    date=request.GET.get("date")
+    posts=get_news(date)
+
+
+    context = {
+
+        'posts': posts,
+        'today':date
+
+    }
+
     # (request,the blog i am requestin,my json object)
     return render(request, 'blog/translation.html', context)
 
 
-def translation(request):
+def get_news(newsdate):
 
     posts = []
     df = pd.read_excel ('dictionary.xlsx')
     mylist = df['words'].tolist()
     r = re.compile('|'.join([r'\b%s\b' % w for w in mylist]), flags=re.I)
-
-    url = "https://newshunt.io/getDateNews/2020-03-16"
+    
+    url = "https://newshunt.io/getDateNews/"+newsdate
 
 
     myResponse = requests.get(url, verify=True)
@@ -89,87 +103,31 @@ def translation(request):
                 'img':  key['media'],
                 'header': header,
                 'prgh':prgh ,
-                'date': 'date',
+                'date': newsdate,
                 'News':key['source'],
-                'words':key['country']
+                'words':key['country'],
      
              })
-     
+            
+    return posts
 
-               
-    #posts = get_buckets('1')
+def translation(request):
+
+    datee=datetime.today().strftime('%Y-%m-%d')
+    posts=[]
+    posts=get_news(datee)
 
     context = {
 
-        'posts': posts
+        'posts': posts,
+        'today':datee
 
     }
 
     # (request,the blog i am requestin,my json object)
     return render(request, 'blog/translation.html', context)
     # return render(request, 'blog/translation.html', {'tital': 'translation'})
-'''
 
-#News Hunt News
-    options = webdriver.ChromeOptions()
-    options.add_argument('--ignore-certificate-errors')
-    options.add_argument('--incognito')
-    options.add_argument('--headless')
-    driver = webdriver.Chrome("chromedriver", chrome_options=options)
-    
-    driver.get("https://newshunt.io/#/en/")
-    more_buttons = driver.find_element_by_link_text("Latest News")
-    driver.execute_script("arguments[0].click();", more_buttons)
-#try:
-    
-    old_page = driver.page_source
-    while True:
-    
-        for i in range(2):
-            driver.execute_script("window.scrollBy(0,"+str(2000)+")")
-            time.sleep(2)
-        new_page = driver.page_source
-        if new_page != old_page:
-            old_page = new_page
-        else:
-            break
-#except :
- #   print("error")
-    page_source = driver.page_source   
-    soup = BeautifulSoup(page_source, 'lxml')
-
-    reviews_selector = soup.find_all('div', class_='flex')
-    for article in reviews_selector:
-        img=article.find('img')
-        img=img['src']
-        href1=article.find('a')
-        href=href1['href']
-        header=href1.text
-        prgh=article.find("p")
-        prgh=prgh.text
-        date=article.find("span",class_='news-time')
-        date=date.text
-        source=article.find("span",class_='news-source')
-        source=source.text
-        articaltext=article.getText()
-        r = re.compile('|'.join([r'\b%s\b' % w for w in mylist]), flags=re.I)
-        listt=r.findall(articaltext)
-        if listt:
-            posts.append({
-            'href': href,
-            'img': img,
-              
-            'header': re.sub(' +', ' ', header),
-            'prgh': re.sub(' +', ' ', prgh),
-            'date': date,
-            'News':source,
-            'words':listt
-
-                    }) 
-
-                    '''
-  #DAWN News
-   
 
 
     
