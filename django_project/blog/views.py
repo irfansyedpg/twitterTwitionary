@@ -46,7 +46,12 @@ def button_click(request):
 
     posts=[]
     date=request.GET.get("date")
-    posts=get_news(date)
+    country=request.GET.get("contry")
+    lang=request.GET.get("lang")
+    if lang=='Urdu':
+        posts=get_news_urdu(date,country)
+    else:
+        posts=get_news_elnglish(date,country)
 
 
     context = {
@@ -60,7 +65,9 @@ def button_click(request):
     return render(request, 'blog/translation.html', context)
 
 
-def get_news(newsdate):
+def get_news_elnglish(newsdate,country):
+
+
 
     posts = []
     df = pd.read_excel ('dictionary.xlsx')
@@ -69,18 +76,79 @@ def get_news(newsdate):
     
     url = "https://newshunt.io/getDateNews/"+newsdate
 
-
+    count=[]
     myResponse = requests.get(url, verify=True)
     if(myResponse.ok):
         jData = json.loads(myResponse.content)
 
         jData=jData['news']
         for key in jData:
-
-        
-            
+            if key['country'] not in count:
+                count.append(key['country'])
             listt=r.findall(key['description'])
-            if listt:
+            if country==key['country']:
+                if listt:
+                    header=re.sub('^A-Za-z0-9]+ +', ' ',key['title'])
+                    prgh=re.sub('^A-Za-z0-9]+ +', ' ',key['description'])
+                    header=re.sub("\s\s+", " ", header)
+                    prgh=re.sub("\s\s+", " ", prgh)
+                    posts.append({
+                 
+                'href': key['url'],
+                'img':  key['media'],
+                'header': header,
+                'prgh':prgh ,
+                'date': newsdate,
+                'News':key['source'],
+                'words':key['country'],
+     
+             })
+            elif country=="World":
+                 if listt:
+                    header=re.sub('^A-Za-z0-9]+ +', ' ',key['title'])
+                    prgh=re.sub('^A-Za-z0-9]+ +', ' ',key['description'])
+                    header=re.sub("\s\s+", " ", header)
+                    prgh=re.sub("\s\s+", " ", prgh)
+                    posts.append({
+                 
+                'href': key['url'],
+                'img':  key['media'],
+                'header': header,
+                'prgh':prgh ,
+                'date': newsdate,
+                'News':key['source'],
+                'words':key['country'],
+     
+             })
+                 
+            
+    return posts
+
+
+
+def get_news_urdu(newsdate,country):
+
+
+
+    posts = []
+    df = pd.read_excel ('dictionary.xlsx')
+    mylist = df['words'].tolist()
+    r = re.compile('|'.join([r'\b%s\b' % w for w in mylist]), flags=re.I)
+    
+    url = "https://newshunt.io/getDateNews/"+newsdate
+
+    count=[]
+    myResponse = requests.get(url, verify=True)
+    if(myResponse.ok):
+        jData = json.loads(myResponse.content)
+
+        jData=jData['news']
+        for key in jData:
+            if key['country'] not in count:
+                count.append(key['country'])
+            listt=r.findall(key['description'])
+            if country==key['country'] and key['lang']=='urdu':
+                #if listt:
                 header=re.sub('^A-Za-z0-9]+ +', ' ',key['title'])
                 prgh=re.sub('^A-Za-z0-9]+ +', ' ',key['description'])
                 header=re.sub("\s\s+", " ", header)
@@ -96,6 +164,24 @@ def get_news(newsdate):
                 'words':key['country'],
      
              })
+            elif country=="World" and key['lang']=='urdu':
+                 #if listt:
+                header=re.sub('^A-Za-z0-9]+ +', ' ',key['title'])
+                prgh=re.sub('^A-Za-z0-9]+ +', ' ',key['description'])
+                header=re.sub("\s\s+", " ", header)
+                prgh=re.sub("\s\s+", " ", prgh)
+                posts.append({
+                 
+                'href': key['url'],
+                'img':  key['media'],
+                'header': header,
+                'prgh':prgh ,
+                'date': newsdate,
+                'News':key['source'],
+                'words':key['country'],
+     
+             })
+                 
             
     return posts
 
@@ -103,7 +189,7 @@ def translation(request):
 
     datee=datetime.today().strftime('%Y-%m-%d')
     posts=[]
-    posts=get_news(datee)
+    posts=get_news_elnglish(datee,'World')
 
     context = {
 

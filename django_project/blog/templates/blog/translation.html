@@ -17,12 +17,6 @@
     <div class="form-group">
       <form action='actionUrl' method='GET'>
 
-        <!-- 
-      <div class="col-md-8" >
-        <label>Select Country </label>
-       
-   -->
-
    <div class="row" style="margin-top: 10px;">
 
         <div class="col-sm-12 col-md-4 col-lg-4" style="text-align: end;">
@@ -30,18 +24,56 @@
         </div>
         <div class="col-sm-12 col-md-8 col-lg-8">
           <div class="dropdown ">
-            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Select Country
-            <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-              <li><a href="#">World</a></li>
-              <li><a href="#">Pakistan</a></li>
-              <li><a href="#">US</a></li>
-            </ul>
+           
+            <select class="form-control" style="height: 30px;" id="contry" name="contry">  
+              <option>World</option>
+              <option>pakistan</option>
+              <option>thailand</option>
+              <option>malaysia</option>
+              <option>israel</option>
+              <option>japan</option>
+              <option>new zealand</option>
+              <option>australia</option>
+              <option>croatia</option>
+              <option>belgium</option>
+              <option>ukaine</option>
+              <option>south africa</option>
+              <option>india</option>
+              <option>brazil</option>
+              <option>iran</option>
+              <option>Greece</option>
+              <option>china</option>
+              <option>united states</option>
+              <option>argentina</option>
+              <option>mexico</option>
+           
+            </select>
           </div>
         </div>
 
       
     </div>
+
+    <div class="row" style="margin-top: 10px;">
+    <div class="col-sm-12 col-md-4 col-lg-4" style="text-align: end;">
+      <label style="margin-top: 2px;" for="date">Select Language</label>
+    </div>
+    <div class="col-sm-12 col-md-8 col-lg-8">
+      <div class="dropdown ">
+       
+        <select class="form-control" style="height: 30px;" id="lang" name="lang">  
+          <option>English</option>
+          <option>Urdu</option>
+         
+       
+        </select>
+      </div>
+    </div>
+
+  
+</div>
+
+
     <div class="row"  style="margin-top: 20px;">
 
     <div class="col-sm-12 col-md-4 col-lg-4" style="text-align: end;">
@@ -58,8 +90,9 @@
 
     </div>
     <div class="col-sm-12 col-md-8 col-lg-8">
-      <button for="date" class="btn btn-primary " type='submit' style="margin-top: 15px;"> Get News on Date
+      <button for="date" class="btn btn-primary " type='submit' style="margin-top: 15px;"> Get News
       </button>
+     
     </div>
   </div>
    
