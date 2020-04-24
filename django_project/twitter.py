@@ -77,7 +77,7 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
         duration_run = round((end_run-start_run)/60, 2)
         print('no. of tweets scraped for run {} is {}'.format(i + 1, noTweets))
         print('time take for {} run to complete is {} mins'.format(i+1, duration_run))
-        #time.sleep(920) #15 minute sleep time
+        time.sleep(920) #15 minute sleep time
 
 # Once all runs have completed, save them to a single csv file:
     from datetime import datetime
@@ -119,8 +119,8 @@ def job():
     #search_words=search_words+" OR #tariqjamil"
     #search_words = "#tariqjamil OR #COVID-19 OR #pakistan"
     date_since = "2020-04-23"
-    numTweets = 500
-    numRuns = 2
+    numTweets = 2500
+    numRuns = 6
     # Call the function scraptweets
     scraptweets(search_words, date_since, numTweets, numRuns)
     return
@@ -129,7 +129,7 @@ def job():
 # In[ ]:
 
 
-schedule.every().day.at("19:43").do(job)
+schedule.every().day.at("16:43").do(job)
 
 
 while True:
