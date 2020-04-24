@@ -217,46 +217,17 @@ def home(request):
 
 def detial_click(request):
 
-    consumer_key = "iJFZnuM0YHqwvFilNUBSVkzJU"
-    consumer_secret = "412n9RVFyUc4lRH3RWBU4kRT1lz5NHWg81d6FEoMPQEvYJPRio"
-    access_token = "813456180-jXG4M0Kpc80UjJF4bhwA0z9Bx8aZfAht4veyxSgc"
-    access_token_secret = "Cvh3gsUS5Y4HpyfD1UdlMLfpxlqa47iYFo3vxogpP6blR"
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
-    api = tweepy.API(auth,wait_on_rate_limit=True)
-
-    text_query = 'coronavirus'
-    language = "en"
-    text=""
-    userid=""
-    username=""
-    dated=""
-    location=""
-
-    posts = []
-    try:
-# Pulling individual tweets from query
-        for tweet in api.search(q=text_query,lang=language):
-# Adding to list that contains all tweets
-      #tweets.append((tweet.created_at,tweet.id,tweet.text))
-            text=tweet.text
-            userid=tweet.id
-            dated=tweet.created_at
-            username=tweet.user.screen_name
-            location=tweet.user.location
-            posts.append({
-                'text': text,
-                'userid': userid,
-                'dated': dated,
-                'username': username,
-                'location': location,
+    df = pd.read_csv ('tweets.csv')
+    posts=[]
+    for index, row in df.iterrows():
+        posts.append({
+                'text': row['text'],
+                'username': row['Username'],
+                'dated': row['tweetcreatedts'],
+                'retweetcount': row['retweetcount'],
+                'location': row['location'],
      
                 }) 
-    except BaseException as e:
-        time.sleep(3)
-
-   
-    #posts = transcriberDetail(bob_name, main)
 
     context = {
 

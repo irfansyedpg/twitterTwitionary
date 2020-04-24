@@ -17,15 +17,22 @@
       </a>
       </div>     !-->
 
-      <div class="col-sm-1 col-md-1 col-lg-1">
+      <div class="col-sm-1 col-md-2 col-lg-2">
+        <a href="#" class="fa fa-twitter" style="  padding: 35px;
+        font-size: 35px;
+       
+      
+        "></a>
       </div>
 
       <div class="col-sm-11 col-md- col-lg-10">
-        <a href={{ post.href }} target="_blank">
-        <h3 class="article-content" style=" text-align: center">{{ post.text }}</h3> </a>
-        <p class="article-content">{{ post.username }}</p>
-        <p class="article-content"><strong>{{ post.location }}: </strong>{{ post.dated }}</p>
-        <p> {{ post.userid }}</p>
+      
+     <a href="#"> <strong> <p class="article-content" style=" text-align: center; padding: 5px;">{{ post.text }}</p> </strong>  </a> 
+        <p class="article-content"><strong>UserName: </strong> {{ post.username }} <strong>  Location: </strong>{{ post.location }}</p>
+
+        <p class="article-content"><strong>Dated </strong>{{ post.dated }} <strong> Retweeted </strong>{{ post.retweetcount }}</p>
+     
+       
       </div>
     </div>
 
