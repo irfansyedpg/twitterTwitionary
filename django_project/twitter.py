@@ -129,7 +129,7 @@ def job():
 # In[ ]:
 
 
-schedule.every().day.at("00:45").do(job)
+schedule.every().day.at("19:43").do(job)
 
 
 while True:
