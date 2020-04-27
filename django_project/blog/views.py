@@ -20,6 +20,8 @@ import urllib.request
 import time
 from bs4 import BeautifulSoup
 import re
+from firebase import firebase
+firebase = firebase.FirebaseApplication('https://twitionary.firebaseio.com/', None) 
 
 
 
@@ -217,15 +219,16 @@ def home(request):
 
 def detial_click(request):
 
-    df = pd.read_csv ('tweets.csv')
+    #df = pd.read_csv ('tweets.csv')
+    df = firebase.get('twitter', '')  
     posts=[]
-    for index, row in df.iterrows():
+    for  row in df:
         posts.append({
-                'text': row['text'],
-                'username': row['Username'],
-                'dated': row['tweetcreatedts'],
-                'retweetcount': row['retweetcount'],
-                'location': row['location'],
+                'text': df[row]['text'],
+                'username': df[row]['username'],
+                'dated': df[row]['tweetcreatedts'],
+                'retweetcount': df[row]['retweetcount'],
+                'location': df[row]['location'],
      
                 }) 
 

@@ -12,6 +12,8 @@ import pandas as pd
 import tweepy
 import os
 import csv
+from firebase import firebase
+firebase = firebase.FirebaseApplication('https://twitionary.firebaseio.com/', None)  
 
 
 # In[3]:
@@ -30,6 +32,7 @@ api = tweepy.API(auth,wait_on_rate_limit=True)
 
 
 def scraptweets(search_words, date_since, numTweets, numRuns):
+    
     
     print('function called')
 
@@ -68,6 +71,14 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
         
             
             ith_tweet = [ location, tweetcreatedts, retweetcount, text, username]
+            data =  { 
+                 'location': location,
+                 'tweetcreatedts': tweetcreatedts,
+                'retweetcount': retweetcount,
+                 'text': text,
+                'username':username    
+            }  
+            result = firebase.post('twitter',data) 
             
             
             db_tweets.loc[len(db_tweets)] = ith_tweet
@@ -129,7 +140,7 @@ def job():
 # In[ ]:
 
 
-schedule.every().day.at("16:43").do(job)
+schedule.every().day.at("16:03").do(job)
 
 
 while True:
