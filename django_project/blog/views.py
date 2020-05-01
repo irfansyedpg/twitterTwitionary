@@ -219,18 +219,30 @@ def home(request):
 
 def detial_click(request):
 
-    #df = pd.read_csv ('tweets.csv')
-    df = firebase.get('twitter', '')  
+    df = pd.read_csv ('tweets.csv')
     posts=[]
-    for  row in df:
+    for index, row in df.iterrows():
         posts.append({
-                'text': df[row]['text'],
-                'username': df[row]['username'],
-                'dated': df[row]['tweetcreatedts'],
-                'retweetcount': df[row]['retweetcount'],
-                'location': df[row]['location'],
+                'text': row['text'],
+                'username': row['Username'],
+                'dated': row['tweetcreatedts'],
+                'retweetcount': row['retweetcount'],
+                'location': row['location'],
      
                 }) 
+
+    #df = pd.read_csv ('tweets.csv')
+    #df = firebase.get('twitter', '')  
+    #posts=[]
+    #for  row in df:
+     #   posts.append({
+      #          'text': df[row]['text'],
+       #         'username': df[row]['username'],
+        #        'dated': df[row]['tweetcreatedts'],
+         #       'retweetcount': df[row]['retweetcount'],
+          #      'location': df[row]['location'],
+     
+           #     }) 
 
     context = {
 
