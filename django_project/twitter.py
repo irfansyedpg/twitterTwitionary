@@ -14,6 +14,7 @@ import os
 import csv
 from firebase import firebase
 firebase = firebase.FirebaseApplication('https://twitionary.firebaseio.com/', None)  
+import sqlite3
 
 
 # In[3]:
@@ -34,6 +35,8 @@ api = tweepy.API(auth,wait_on_rate_limit=True)
 def scraptweets(search_words, date_since, numTweets, numRuns):
     
     
+    sqliteConnection = sqlite3.connect('SQLite_Python.db')
+    cursor = sqliteConnection.cursor()
     print('function called')
 
     db_tweets = pd.DataFrame(columns = [ 'location', 'tweetcreatedts',
@@ -71,20 +74,28 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
         
             
             ith_tweet = [ location, tweetcreatedts, retweetcount, text, username]
-            data =  { 
-                 'location': location,
-                 'tweetcreatedts': tweetcreatedts,
-                'retweetcount': retweetcount,
-                 'text': text,
-                'username':username    
-            }  
-            result = firebase.post('twitter',data) 
+            #data =  { 
+             #    'location': location,
+              #   'tweetcreatedts': tweetcreatedts,
+               # 'retweetcount': retweetcount,
+                # 'text': text,
+               # 'username':username    
+           # }  
+            #result = firebase.post('twitter',data) 
             
-            
+            query = """INSERT into twitter(location,tweetcreatedts,retweetcount,text,Username)
+                          VALUES (?,?,?,?,?)"""
+            param = (location, tweetcreatedts, retweetcount, text, username)
+            cursor.execute(query,param)
             db_tweets.loc[len(db_tweets)] = ith_tweet
             noTweets += 1
         # Run ended:
         end_run = time.time()
+        sqliteConnection.commit()
+        cursor.close()
+
+        if (sqliteConnection):
+            sqliteConnection.close()
         duration_run = round((end_run-start_run)/60, 2)
         print('no. of tweets scraped for run {} is {}'.format(i + 1, noTweets))
         print('time take for {} run to complete is {} mins'.format(i+1, duration_run))
@@ -101,7 +112,7 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
  
         #fd.write(db_tweets)
     #db_tweets.to_csv(filename, index = False)
-    db_tweets.to_csv(filename, mode='a', header=False)
+    #db_tweets.to_csv(filename, mode='a', header=False)
     #print(type(db_tweets))
     #print(db_tweets)
     
@@ -130,9 +141,10 @@ def job():
     #search_words=search_words+" OR #tariqjamil"
     #search_words = "#tariqjamil OR #COVID-19 OR #pakistan"
     date_since = "2020-04-23"
+    #numTweets = 2500
     numTweets = 2500
     numRuns = 6
-    # Call the function scraptweets
+    # Call the function scraptweet1
     scraptweets(search_words, date_since, numTweets, numRuns)
     return
 
@@ -140,7 +152,9 @@ def job():
 # In[ ]:
 
 
+#schedule.every().day.at("16:03").do(job)
 schedule.every().day.at("16:03").do(job)
+
 
 
 while True:

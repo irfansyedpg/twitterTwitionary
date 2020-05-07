@@ -20,6 +20,7 @@ import urllib.request
 import time
 from bs4 import BeautifulSoup
 import re
+import sqlite3
 from firebase import firebase
 firebase = firebase.FirebaseApplication('https://twitionary.firebaseio.com/', None) 
 
@@ -219,17 +220,43 @@ def home(request):
 
 def detial_click(request):
 
-    df = pd.read_csv ('tweets.csv')
+    #df = pd.read_csv ('tweets.csv')
     posts=[]
-    for index, row in df.iterrows():
-        posts.append({
-                'text': row['text'],
-                'username': row['Username'],
-                'dated': row['tweetcreatedts'],
-                'retweetcount': row['retweetcount'],
-                'location': row['location'],
+    #for index, row in df.iterrows():
+     #   posts.append({
+      #          'text': row['text'],
+       #         'username': row['Username'],
+        #        'dated': row['tweetcreatedts'],
+         #       'retweetcount': row['retweetcount'],
+          #      'location': row['location'],
      
-                }) 
+           #     }) 
+
+    try:
+        sqliteConnection = sqlite3.connect('SQLite_Python.db', timeout=20)
+        cursor = sqliteConnection.cursor()
+        print("Connected to SQLite")
+
+        sqlite_select_query = """SELECT * FROM twitter ORDER BY id DESC LIMIT 30000"""
+        cursor.execute(sqlite_select_query)
+        
+        for row in cursor:
+            posts.append({
+               'text': row[4],
+                'username': row[5],
+                'dated': row[2],
+                'retweetcount': row[3],
+                'location': row[1], }) 
+       
+        cursor.close()
+        
+
+    except sqlite3.Error as error:
+        print("Failed to read data from sqlite table", error)
+    finally:
+        if (sqliteConnection):
+            sqliteConnection.close()
+            print("The Sqlite connection is closed")          
 
     #df = pd.read_csv ('tweets.csv')
     #df = firebase.get('twitter', '')  
