@@ -95,6 +95,7 @@ def get_news_elnglish(newsdate,country):
                     prgh=re.sub('^A-Za-z0-9]+ +', ' ',key['description'])
                     header=re.sub("\s\s+", " ", header)
                     prgh=re.sub("\s\s+", " ", prgh)
+                    sentiments=sentiment(prgh)
                     posts.append({
                  
                 'href': key['url'],
@@ -104,6 +105,7 @@ def get_news_elnglish(newsdate,country):
                 'date': newsdate,
                 'News':key['source'],
                 'words':key['country'],
+                'sentiment':sentiments,
      
              })
             elif country=="World":
@@ -112,6 +114,7 @@ def get_news_elnglish(newsdate,country):
                     prgh=re.sub('^A-Za-z0-9]+ +', ' ',key['description'])
                     header=re.sub("\s\s+", " ", header)
                     prgh=re.sub("\s\s+", " ", prgh)
+                    sentiments=sentiment(prgh)
                     posts.append({
                  
                 'href': key['url'],
@@ -121,6 +124,7 @@ def get_news_elnglish(newsdate,country):
                 'date': newsdate,
                 'News':key['source'],
                 'words':key['country'],
+                 'sentiment':sentiments,
      
              })
                  
@@ -156,6 +160,7 @@ def get_news_urdu(newsdate,country):
                 prgh=re.sub('^A-Za-z0-9]+ +', ' ',key['description'])
                 header=re.sub("\s\s+", " ", header)
                 prgh=re.sub("\s\s+", " ", prgh)
+              
                 posts.append({
                  
                 'href': key['url'],
@@ -165,6 +170,7 @@ def get_news_urdu(newsdate,country):
                 'date': newsdate,
                 'News':key['source'],
                 'words':key['country'],
+                'sentiment':"NA",
      
              })
             elif country=="World" and key['lang']=='urdu':
@@ -173,6 +179,7 @@ def get_news_urdu(newsdate,country):
                 prgh=re.sub('^A-Za-z0-9]+ +', ' ',key['description'])
                 header=re.sub("\s\s+", " ", header)
                 prgh=re.sub("\s\s+", " ", prgh)
+              
                 posts.append({
                  
                 'href': key['url'],
@@ -182,6 +189,7 @@ def get_news_urdu(newsdate,country):
                 'date': newsdate,
                 'News':key['source'],
                 'words':key['country'],
+                'sentiment':"NA",
      
              })
                  
@@ -241,12 +249,14 @@ def detial_click(request):
         cursor.execute(sqlite_select_query)
         
         for row in cursor:
+            sentiments=sentiment(row[4])
             posts.append({
                'text': row[4],
                 'username': row[5],
                 'dated': row[2],
                 'retweetcount': row[3],
-                'location': row[1], }) 
+                'location': row[1],
+                'sentiment': sentiments, }) 
        
         cursor.close()
         
@@ -281,8 +291,14 @@ def detial_click(request):
     # (request,the blog i am requestin,my json object)
     return render(request, 'blog/translationdetail.html', context)
 
-
-
+from textblob import TextBlob
+def sentiment(text):
+    analysis = TextBlob(text)
+    # set sentiment 
+    if analysis.sentiment.polarity >= 0:
+        return 'positive'
+    else: 
+        return 'negative'
 def download_excel_data(request):
         # content-type of response
     response = HttpResponse(content_type='application/ms-excel')
