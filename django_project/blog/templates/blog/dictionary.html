@@ -1,0 +1,62 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+{% extends "blog/base.html" %}
+{% block content %}
+<div class="add_buttons">
+
+  <div class="button-group">
+ <a href="{% url 'display_laptops' %}" class="btn btn-primary btn-md btn-trim" role="button"> Laptops</a>
+
+
+
+
+  </div>
+
+</div>
+
+<div>
+
+  <h4>Currently Viewing {{ header }}</h4>
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>Model</th>
+      <th>Price</th>
+      <th>Status</th>
+      <th>Issues</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    {% for item in items %}
+
+    <tr>
+      <td>{{ item.pk }}
+      <td>{{ item.type }}</td>
+      <td>{{ item.price }} $</td>
+      <td>{{ item.status }}</td>
+      <td>{{ item.issues }}</td>
+
+      {% if header|lower == "laptops" %}
+      <td>
+   <a href="{% url 'delete_laptop'%}?pk= {{ item.pk }}" class="btn btn-danger btn-sm" role="button" aria-pressed="true" > x</a>
+    
+
+
+    
+    </td>
+
+      {% endif %}
+
+
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock content %}

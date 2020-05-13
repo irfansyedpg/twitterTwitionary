@@ -291,6 +291,16 @@ def detial_click(request):
     # (request,the blog i am requestin,my json object)
     return render(request, 'blog/translationdetail.html', context)
 
+def dictionary_link(request):
+    context = {
+
+
+      
+
+
+    }
+    return render(request, 'blog/dictionary.html', context)       
+
 from textblob import TextBlob
 def sentiment(text):
     analysis = TextBlob(text)
@@ -344,6 +354,7 @@ def download_excel_data(request):
 
 
 def download_excel_transcription(request):
+
     # content-type of response
     response = HttpResponse(content_type='application/ms-excel')
 
@@ -387,3 +398,57 @@ def download_excel_transcription(request):
 
     wb.save(response)
     return response
+
+
+#dicinoaty data table
+
+def display_laptops(request):
+    df = pd.read_excel ('test.xlsx')
+    #items = Laptops.objects.all()
+    posts=[]
+    for  index, row in df.iterrows():
+        posts.append({
+           'pk': row['pk'],
+            'type': row['type'],
+             'price': row['price'],
+            'status': row['status'],
+             'issues': row['issues'],
+     
+              }) 
+
+
+    #items=df
+    context = {
+        'items': posts,
+        'header': 'Laptops',
+    }
+    return render(request, 'blog/dictionary.html', context)
+
+
+def delete_laptop(request):
+    pk=request.GET.get("pk")
+    df = pd.read_excel ('test.xlsx')
+  
+    
+    df = df.query("pk != "+pk)
+    df.to_excel('test.xlsx')
+    df = pd.read_excel ('test.xlsx')
+    posts=[]
+    for  index, row in df.iterrows():
+        posts.append({
+           'pk': pk,
+            'type': row['type'],
+             'price': row['price'],
+            'status': row['status'],
+             'issues': row['issues'],
+     
+              }) 
+
+
+    #items=df
+    context = {
+        'items': posts,
+        'header': 'Laptops',
+    }
+  
+    return render(request, 'blog/dictionary.html', context)

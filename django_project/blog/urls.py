@@ -1,5 +1,6 @@
 
 from django.urls import path
+from django.conf.urls import url
 from . import views
 
 urlpatterns = [
@@ -11,4 +12,13 @@ urlpatterns = [
     path('downloadexcel', views.download_excel_data),
     path('dtranslation', views.download_excel_transcription),
     path('ddictionary', views.download_excel_data),
+    path('dictionary', views.dictionary_link, name='dictionary_click'),
+
+#diciontary datatable 
+ 
+    url(r'^laptops$', views.display_laptops, name="display_laptops"),
+    #url(r'^laptops/delete/(?P<pk>\d+)$', views.delete_laptop, name="delete_laptop"),
+    #url(r'^laptops/delete/(?P<pk>\d+)$', views.delete_laptop, name="delete_laptop"),
+    #path('dictionary', views.delete_laptop, name='delete_laptop'),
+    url(r'^laptops$', views.delete_laptop, name="delete_laptop"),
 ]
