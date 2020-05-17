@@ -65,27 +65,19 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
             retweetcount = tweet.retweet_count
             #hashtags = tweet.entities['hashtags']
             username = tweet.user.screen_name
+            url =  f"https://twitter.com/user/status/{tweet.id}"
             try:
                     text = tweet.retweeted_status.full_text
             except AttributeError:  # Not a Retweet
                     text = tweet.full_text
         
             
-            ith_tweet = [ location, tweetcreatedts, retweetcount, text, username]
-            #data =  { 
-             #    'location': location,
-              #   'tweetcreatedts': tweetcreatedts,
-               # 'retweetcount': retweetcount,
-                # 'text': text,
-               # 'username':username    
-           # }  
-            #result = firebase.post('twitter',data) 
             
-            query = """INSERT into twitter(location,tweetcreatedts,retweetcount,text,Username)
-                          VALUES (?,?,?,?,?)"""
-            param = (location, tweetcreatedts, retweetcount, text, username)
+            query = """INSERT into twitter(location,tweetcreatedts,retweetcount,text,Username,links)
+                          VALUES (?,?,?,?,?,?)"""
+            param = (location, tweetcreatedts, retweetcount, text, username,url)
             cursor.execute(query,param)
-            db_tweets.loc[len(db_tweets)] = ith_tweet
+            #db_tweets.loc[len(db_tweets)] = ith_tweet
             noTweets += 1
         # Run ended:
         end_run = time.time()
@@ -97,7 +89,7 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
         duration_run = round((end_run-start_run)/60, 2)
         print('no. of tweets scraped for run {} is {}'.format(i + 1, noTweets))
         print('time take for {} run to complete is {} mins'.format(i+1, duration_run))
-        #time.sleep(920) #15 minute sleep time
+        time.sleep(920) #15 minute sleep time
 
 # Once all runs have completed, save them to a single csv file:
     from datetime import datetime
@@ -113,7 +105,7 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
 
 
 def job():
-    df = pd.read_excel ('dictionary.xlsx')
+    df = pd.read_excel ('dictionarytwets.xlsx')
     mylist = df['words'].tolist()
     search_words=""
     count=0
@@ -127,8 +119,8 @@ def job():
     #search_words = "#tariqjamil OR #COVID-19 OR #pakistan"
     date_since = "2020-04-23"
     #numTweets = 2500
-    numTweets = 500
-    numRuns = 1
+    numTweets = 2500
+    numRuns = 6
     # Call the function scraptweet1
     scraptweets(search_words, date_since, numTweets, numRuns)
     return
@@ -136,9 +128,9 @@ def job():
 
 # In[ ]:
 
-job()
-#schedule.every().day.at("16:03").do(job)
-#schedule.every().day.at("16:03").do(job)
+#job()
+schedule.every().day.at("16:03").do(job)
+schedule.every().day.at("16:03").do(job)
 
 
 

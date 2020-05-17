@@ -256,7 +256,8 @@ def detial_click(request):
                 'dated': row[2],
                 'retweetcount': row[3],
                 'location': row[1],
-                'sentiment': sentiments, }) 
+                'urll':row[6],
+                'sentiment': sentiments }) 
        
         cursor.close()
         
