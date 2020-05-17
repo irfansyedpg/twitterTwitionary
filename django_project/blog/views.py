@@ -416,12 +416,42 @@ def dictionary_link(request):
 
 
 def delete_laptop(request):
+
+
     pk=request.GET.get("pk")
     df = pd.read_excel ('dictionary.xlsx')
   
     
     df = df.query("pk != "+pk)
     df.to_excel('dictionary.xlsx')
+    df = pd.read_excel ('dictionary.xlsx')
+    posts=[]
+
+ 
+    for  index, row in df.iterrows():
+      posts.append({
+           'words': row['words'],
+           'pk': row['pk'],
+     
+              }) 
+
+
+    #items=df
+    context = {
+        'items': posts,
+        'header': 'Laptops',
+    }
+  
+    return render(request, 'blog/dictionary.html', context)
+
+def insertkeywords(request):
+
+    keywords=request.GET.get("words")
+    df = pd.read_excel ('dictionary.xlsx')
+    lstvalue=df['pk'].tail(1).index.item()
+    df= df.append({'pk' : lstvalue+5 , 'words' : keywords} , ignore_index=True)
+    if  keywords:
+        df.to_excel('dictionary.xlsx')
     df = pd.read_excel ('dictionary.xlsx')
     posts=[]
 

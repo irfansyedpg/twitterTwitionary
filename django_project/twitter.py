@@ -11,9 +11,7 @@ import re
 import pandas as pd
 import tweepy
 import os
-import csv
-from firebase import firebase
-firebase = firebase.FirebaseApplication('https://twitionary.firebaseio.com/', None)  
+
 import sqlite3
 
 
@@ -99,27 +97,14 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
         duration_run = round((end_run-start_run)/60, 2)
         print('no. of tweets scraped for run {} is {}'.format(i + 1, noTweets))
         print('time take for {} run to complete is {} mins'.format(i+1, duration_run))
-        time.sleep(920) #15 minute sleep time
+        #time.sleep(920) #15 minute sleep time
 
 # Once all runs have completed, save them to a single csv file:
     from datetime import datetime
-    # Obtain timestamp in a readable format
-    to_csv_timestamp = datetime.today().strftime('%Y%m%d_%H%M%S')
-
-    #path = os.getcwd()
-    #filename = path + '/python/' + to_csv_timestamp + '_sahkprotests_tweets.csv'
-    filename =  'tweets.csv'
- 
-        #fd.write(db_tweets)
-    #db_tweets.to_csv(filename, index = False)
-    #db_tweets.to_csv(filename, mode='a', header=False)
-    #print(type(db_tweets))
-    #print(db_tweets)
     
     
     
     program_end = time.time()
-    print(filename)
     print('Scraping has completed!')
     print('Total time taken to scrap is {} minutes.'.format(round(program_end - program_start)/60, 2))
 
@@ -142,8 +127,8 @@ def job():
     #search_words = "#tariqjamil OR #COVID-19 OR #pakistan"
     date_since = "2020-04-23"
     #numTweets = 2500
-    numTweets = 2500
-    numRuns = 6
+    numTweets = 500
+    numRuns = 1
     # Call the function scraptweet1
     scraptweets(search_words, date_since, numTweets, numRuns)
     return
@@ -151,9 +136,9 @@ def job():
 
 # In[ ]:
 
-
+job()
 #schedule.every().day.at("16:03").do(job)
-schedule.every().day.at("16:03").do(job)
+#schedule.every().day.at("16:03").do(job)
 
 
 

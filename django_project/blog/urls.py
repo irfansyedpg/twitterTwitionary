@@ -13,6 +13,7 @@ urlpatterns = [
     path('dtranslation', views.download_excel_transcription),
     path('ddictionary', views.download_excel_data),
     path('dictionary', views.dictionary_link, name='dictionary_click'),
+    path('insertkeywords', views.insertkeywords),
 
 #diciontary datatable 
  
