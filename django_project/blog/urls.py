@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^laptops$', views.display_laptops, name="display_laptops"),
     #url(r'^laptops/delete/(?P<pk>\d+)$', views.delete_laptop, name="delete_laptop"),
     #url(r'^laptops/delete/(?P<pk>\d+)$', views.delete_laptop, name="delete_laptop"),
-    #path('dictionary', views.delete_laptop, name='delete_laptop'),
-    url(r'^laptops$', views.delete_laptop, name="delete_laptop"),
+    #path('dictionary', views.delete_laptop, name='delete_laptop')
+    #url(r'^laptops$', views.delete_laptop, name="delete_laptop")
+    path(r'^laptops$', views.delete_laptop, name="delete_laptop")
 ]

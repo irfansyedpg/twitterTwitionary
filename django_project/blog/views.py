@@ -434,15 +434,17 @@ def delete_laptop(request):
     df.to_excel('test.xlsx')
     df = pd.read_excel ('test.xlsx')
     posts=[]
+
+ 
     for  index, row in df.iterrows():
         posts.append({
-           'pk': pk,
+           'pk': row['pk'],
             'type': row['type'],
              'price': row['price'],
             'status': row['status'],
              'issues': row['issues'],
      
-              }) 
+              })  
 
 
     #items=df
