@@ -6,18 +6,6 @@
 
 <div class="text-center"   style="margin-left: 20px; margin-right: 20px; " > 
 
-<div class="add_buttons">
-
-  <div class="button-group">
- <a href="{% url 'display_laptops' %}" class="btn btn-primary btn-md btn-trim" role="button"> Laptops</a>
-
-
-
-
-  </div>
-
-</div>
-
 <div>
 
   <h4>Currently Viewing {{ header }}</h4>
@@ -26,12 +14,9 @@
 <table class="table table-striped table-bordered text-center">
   <thead>
     <tr>
-      <th>id</th>
-      <th>Model</th>
-      <th>Price</th>
-      <th>Status</th>
-      <th>Issues</th>
-      <th></th>
+      <th>Key Words</th>
+     
+      <th>Delete</th>
     </tr>
   </thead>
 
@@ -40,11 +25,8 @@
     {% for item in items %}
 
     <tr>
-      <td>{{ item.pk }}
-      <td>{{ item.type }}</td>
-      <td>{{ item.price }} $</td>
-      <td>{{ item.status }}</td>
-      <td>{{ item.issues }}</td>
+      <td>{{ item.words }}
+
 
       <td>
    <a href="{% url 'delete_laptop'%}?pk= {{ item.pk }}" class="btn btn-danger btn-sm" role="button" aria-pressed="true" > x</a>

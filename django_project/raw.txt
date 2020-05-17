@@ -1,0 +1,12 @@
+  <!-- 
+<div class="add_buttons">
+
+<div class="button-group">
+ <a href="{% url 'display_laptops' %}" class="btn btn-primary btn-md btn-trim" role="button"> Laptops</a>
+
+
+
+
+  </div> 
+</div>
+-->
