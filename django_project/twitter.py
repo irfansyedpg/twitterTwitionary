@@ -105,32 +105,35 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
 
 
 def job():
-    df = pd.read_excel ('dictionarytwets.xlsx')
-    mylist = df['words'].tolist()
-    search_words=""
-    count=0
-    for a in mylist:
-        if count==0:
-            search_words="#"+a.replace(" ", "")
-        else:
-            search_words=search_words+" OR #"+a.replace(" ", "")
-        count=1
-    #search_words=search_words+" OR #tariqjamil"
-    #search_words = "#tariqjamil OR #COVID-19 OR #pakistan"
-    date_since = "2020-04-23"
-    #numTweets = 2500
-    numTweets = 2500
-    numRuns = 6
-    # Call the function scraptweet1
-    scraptweets(search_words, date_since, numTweets, numRuns)
-    return
+    try:
+        df = pd.read_excel ('dictionarytwets.xlsx')
+        mylist = df['words'].tolist()
+        search_words=""
+        count=0
+        for a in mylist:
+            if count==0:
+                search_words="#"+a.replace(" ", "")
+            else:
+                search_words=search_words+" OR #"+a.replace(" ", "")
+            count=1
+
+        date_since = "2020-05-20"
+
+        numTweets = 2500
+        numRuns = 6
+
+        scraptweets(search_words, date_since, numTweets, numRuns)
+    except Exception as e:
+        print(e)
+    finally:        
+        return
 
 
 # In[ ]:
 
-#job()
-schedule.every().day.at("16:03").do(job)
-schedule.every().day.at("16:03").do(job)
+job()
+#schedule.every().day.at("16:03").do(job)
+
 
 
 
