@@ -89,7 +89,7 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
         duration_run = round((end_run-start_run)/60, 2)
         print('no. of tweets scraped for run {} is {}'.format(i + 1, noTweets))
         print('time take for {} run to complete is {} mins'.format(i+1, duration_run))
-        time.sleep(920) #15 minute sleep time
+        #time.sleep(920) #15 minute sleep time
 
 # Once all runs have completed, save them to a single csv file:
     from datetime import datetime
@@ -137,7 +137,7 @@ job()
 
 
 
-while True:
-    schedule.run_pending()
-    time.sleep(60) # wait one minute
+#while True:
+ #   schedule.run_pending()
+  #  time.sleep(60) # wait one minute
 
