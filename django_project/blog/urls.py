@@ -9,6 +9,7 @@ urlpatterns = [
     path('translation', views.translation, name="blog-about"),
     path('actionUrl', views.button_click),
     path('detial_click', views.detial_click, name='detial_click'),
+    path('login', views.login, name='login'),
     path('downloadexcel', views.download_excel_data),
     path('dtranslation', views.download_excel_transcription),
     path('ddictionary', views.download_excel_data),

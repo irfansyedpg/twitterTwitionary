@@ -120,7 +120,7 @@ def job():
         date_since = "2020-05-20"
 
         numTweets = 2500
-        numRuns = 6
+        numRuns = 2
 
         scraptweets(search_words, date_since, numTweets, numRuns)
     except Exception as e:

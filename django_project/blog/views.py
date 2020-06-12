@@ -215,6 +215,18 @@ def translation(request):
 
 
 
+def login(request):
+
+   
+
+    context = {
+
+      
+
+    }
+
+    # (request,the blog i am requestin,my json object)
+    return render(request, 'blog/login.html', context)
     
  
 

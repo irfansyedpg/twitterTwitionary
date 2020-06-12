@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # for authentications 
+  #'register.apps.RegisterConfig', # <--- add this
+  
 ]
 
 MIDDLEWARE = [
@@ -126,5 +129,6 @@ STATIC_URL = '/static/'
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 GS_BUCKET_NAME = 'bucketirfansyed'
 
+CRISPY_TEMPLATE_PACK="bootstrap4"
 
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file("gcpcri.json")
