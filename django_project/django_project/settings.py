@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # for authentications 
   #'register.apps.RegisterConfig', # <--- add this
+   'crispy_forms',
   
 ]
 
@@ -108,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'ur-rPK' # change language fom us-en to ur_rPK
+#LANGUAGE_CODE = 'ur-rPK' # change language fom us-en to ur_rPK
 
 TIME_ZONE = 'UTC'
 
@@ -132,3 +133,5 @@ GS_BUCKET_NAME = 'bucketirfansyed'
 CRISPY_TEMPLATE_PACK="bootstrap4"
 
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file("gcpcri.json")
+
+LOGIN_REDIRECT_URL = "/blog"

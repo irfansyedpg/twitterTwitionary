@@ -1,5 +1,4 @@
 
-
 {% load static %}
 
 <!DOCTYPE html>
@@ -24,14 +23,9 @@
 
     <link href="{% static 'blog/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href=" {% static 'blog/css/font-awesome.min.css' %}" rel="stylesheet">
-    <link href="  {% static 'blog/css/material-icons.css' %} rel="stylesheet">
-
-
-
-
-
-
-    <script src="{% static 'blog/js/vendor/modernizr-2.8.3.min.js' %} "></script>
+	<link href="  {% static 'blog/css/material-icons.css' %} rel="stylesheet">
+	
+	<script src="{% static 'blog/js/vendor/modernizr-2.8.3.min.js' %} "></script>
 
     <script src="{% static 'blog/js/vendor/jquery-1.12.4.min.js' %} "></script>
     <script src="{% static 'blog/js/vendor/bootstrap.min.js' %} "></script>
@@ -61,58 +55,45 @@
 
 
 
-  {% if title %}
-  <title> Twitionary- {{ title }} </title>
-  {% else %}
-  <title> Twitionary-  </title>
-  {% endif %}
-
-</head>
-
-<body>
 
 
 
 
-    <header class="site-header">
-      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-        <div class="container">
-          <a class="navbar-brand mr-4" href="/blog">Twitionary </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarToggle">
-            <div class="navbar-nav mr-auto">
+<body class="hold-transition login-page">
+	<div class="login-box">
+	  <div class="login-logo">
+		<a href="#"><b>Mobilise</b> twitionary</a>
+	  </div>
+	  <!-- /.login-logo -->
+	  <div class="login-box-body">
+		<p class="login-box-msg">Sign in to start your session</p>
 
-              <strong>     <a class="nav-item nav-link navbar-brand mr-4" href="home">Home</a> </strong>
-            <a class="nav-item nav-link navbar-brand mr-4" href="translation">News</a> 
-             <a class="nav-item nav-link navbar-brand mr-4" href="detial_click">Twitter</a> 
-             <a class="nav-item nav-link navbar-brand mr-4" href="dictionary">Dictionary</a> 
-            
+	
 
-          </div>
-       
-      </div>
-  </div>
+		
+		 
+			{% load crispy_forms_tags %}
+			<form method="post" class="from-group">
+				{% csrf_token %}
+				{{form|crispy}}
+				<p>Don't have an accoount? Create one <a href="/admin">here</a></p>
+				<button type="submit" class="btn btn-success">Login</button>	
+				</form>
+	  
 
-</nav>
-</header>
-
-
-    <div >
-    
-{% if user.is_authenticated  %}
-  {% block content %}
-  {% endblock %}
-
-{% else %}
-<a href="/admin">you are not loged in</a>
-{% endif %}
-  </div>
+			</div>
+			<!-- /.login-box-body -->
+		  </div>
+		  <!-- /.login-box -->
+		  
+		  <!-- jQuery 3 -->
+		
+		
+		</body>
 
 
 
-<!-- Optional JavaScript -->
+	<!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
