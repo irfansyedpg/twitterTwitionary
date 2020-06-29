@@ -87,11 +87,14 @@
               <strong>     <a class="nav-item nav-link navbar-brand mr-4" href="home">Home</a> </strong>
             <a class="nav-item nav-link navbar-brand mr-4" href="translation">News</a> 
              <a class="nav-item nav-link navbar-brand mr-4" href="detial_click">Twitter</a> 
-             <a class="nav-item nav-link navbar-brand mr-4" href="dictionary">Dictionary</a> 
+             <a class="nav-item nav-link navbar-brand mr-4" href="dictionary">Dictionary</a>
+             
+        
             
 
           </div>
-       
+          <a class="nav-item nav-link navbar-brand  float-right"  href="/logout">Logout</a> 
+
       </div>
   </div>
 
@@ -106,7 +109,45 @@
   {% endblock %}
 
 {% else %}
-<a href="/admin">you are not loged in</a>
+    <!--START TOP AREA-->
+    <header class="top-area" id="home">
+      <div class="header-top-area">
+          <!--MAINMENU AREA-->
+          <div class="mainmenu-area" id="mainmenu-area">
+              <div class="mainmenu-area-bg"
+
+
+               ></div>
+
+          </div>
+          <!--END MAINMENU AREA END-->
+      </div>
+      <div class="welcome-text-area white">
+          <div class="area-bg"></div>
+          <div class="welcome-area">
+              <div class="container">
+                  <div class="row flex-v-center">
+
+                      <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                          <div class="welcome-text">
+                              <h1>Unable to Acces Mobilise Twitionary</h1>
+                              <p>
+
+                                <a href="/login">   <H4> Please login In here    </H4> </a></p>
+
+                          </div>
+                      </div>
+                      <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12" >
+                         
+                              <img src="{% static 'blog/img/home/phone.png' %}" alt="">
+                      </div>
+                
+                   
+                  </div>
+              </div>
+          </div>
+      </div>
+  </header>
 {% endif %}
   </div>
 

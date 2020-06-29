@@ -1,13 +1,11 @@
 from os import environ
 from django.db import models
-# from django.core.files.storage import default_storage
-# from google.cloud import pubsub_v1  # Google cloud publication subscribion library
+
 import time           # time date libarary
 import json           # Json paring
 
 from django.shortcuts import render
-# from django.http import HttpResponse
-# import argparse  # for Parsing
+
 import io        # seting eniromental variable
 import os        # setting enivromental varible
 import xlwt
@@ -44,17 +42,18 @@ from requests.auth import HTTPDigestAuth
 import json
 from datetime import datetime
 
-
-def button_click(request):
+#getNews When Get News Button Clicked
+def getNewsButton(request):
 
     posts=[]
     date=request.GET.get("date")
+    dateto=request.GET.get("date2")
     country=request.GET.get("contry")
     lang=request.GET.get("lang")
     if lang=='Urdu':
-        posts=get_news_urdu(date,country)
+        posts=getNewsUrdu(date,country)
     else:
-        posts=get_news_elnglish(date,country)
+        posts=getNewsEnglish(date,country)
 
 
     context = {
@@ -68,7 +67,7 @@ def button_click(request):
     return render(request, 'blog/translation.html', context)
 
 
-def get_news_elnglish(newsdate,country):
+def getNewsEnglish(newsdate,country):
 
 
 
@@ -133,7 +132,7 @@ def get_news_elnglish(newsdate,country):
 
 
 
-def get_news_urdu(newsdate,country):
+def getNewsUrdu(newsdate,country):
 
 
 
@@ -200,7 +199,7 @@ def translation(request):
 
     datee=datetime.today().strftime('%Y-%m-%d')
     posts=[]
-    posts=get_news_elnglish(datee,'World')
+    posts=getNewsEnglish(datee,'World')
 
     context = {
 

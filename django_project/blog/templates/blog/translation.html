@@ -7,102 +7,116 @@
 
 <div class="row" style="margin:30px;">
 
-  <div class="col-sm-12 col-md-7 col-lg-7" style="text-align: center;"></div>
 
-
-  <div class="col-sm-12 col-md-5 col-lg-5">
+  <div class="col-sm-12 col-md-6 col-lg-6">
 
 
 
     <div class="form-group">
       <form action='actionUrl' method='GET'>
 
-   <div class="row" style="margin-top: 10px;">
+        <div class="row" style="margin-top: 10px;">
 
-        <div class="col-sm-12 col-md-4 col-lg-4" style="text-align: end;">
-          <label style="margin-top: 2px;" for="date">Select Region</label>
+          <div class="col-sm-12 col-md-4 col-lg-3" style="text-align: start;">
+            <label style="margin-top: 2px;" for="date">Select Region</label>
+          </div>
+          <div class="col-sm-12 col-md-9 col-lg-9">
+            <div class="dropdown ">
+
+              <select class="form-control" style="height: 30px;" id="contry" name="contry">
+                <option>World</option>
+                <option>pakistan</option>
+                <option>united kingdom</option>
+                <option>thailand</option>
+                <option>malaysia</option>
+                <option>israel</option>
+                <option>japan</option>
+                <option>new zealand</option>
+                <option>australia</option>
+                <option>croatia</option>
+                <option>belgium</option>
+                <option>ukaine</option>
+                <option>south africa</option>
+                <option>india</option>
+                <option>brazil</option>
+                <option>iran</option>
+                <option>Greece</option>
+                <option>china</option>
+                <option>united states</option>
+                <option>argentina</option>
+                <option>mexico</option>
+
+                <option>india</option>
+               
+                <option>mexico</option>
+                <option>mexico</option>
+                <option>mexico</option>
+
+              </select>
+            </div>
+          </div>
+
+
         </div>
-        <div class="col-sm-12 col-md-8 col-lg-8">
-          <div class="dropdown ">
-           
-            <select class="form-control" style="height: 30px;" id="contry" name="contry">  
-              <option>World</option>
-              <option>pakistan</option>
-              <option>thailand</option>
-              <option>malaysia</option>
-              <option>israel</option>
-              <option>japan</option>
-              <option>new zealand</option>
-              <option>australia</option>
-              <option>croatia</option>
-              <option>belgium</option>
-              <option>ukaine</option>
-              <option>south africa</option>
-              <option>india</option>
-              <option>brazil</option>
-              <option>iran</option>
-              <option>Greece</option>
-              <option>china</option>
-              <option>united states</option>
-              <option>argentina</option>
-              <option>mexico</option>
-           
-            </select>
+
+        <div class="row" style="margin-top: 10px;">
+          <div class="col-sm-12 col-md-4 col-lg-3" style="text-align: start;">
+            <label style="margin-top: 2px;" for="date">Select Language</label>
+          </div>
+          <div class="col-sm-12 col-md-9 col-lg-9">
+            <div class="dropdown ">
+
+              <select class="form-control" style="height: 30px;" id="lang" name="lang">
+                <option>English</option>
+                <option>Urdu</option>
+
+
+              </select>
+            </div>
+          </div>
+
+
+        </div>
+
+
+        <div class="row" style="margin-top: 20px;">
+
+          <div class="col-sm-12 col-md-4 col-lg-3" style="text-align: start;">
+            <label style="margin-top: 2px;" for="date">Select From Date</label>
+          </div>
+          <div class="col-sm-12 col-md-4 col-lg-4">
+            <input type="date" class="form-control" id="date" name="date" value={{ today }}>
+
+          </div>
+          <div class="col-sm-12 col-md-1 col-lg-1" style="padding: 0%;"> <label style="margin-top: 2px;" for="date">To Date</label> </div>
+          <div class="col-sm-12 col-md-4 col-lg-4">
+
+
+            <input type="date" class="form-control" id="date2" name="date" value={{ today }}>
+          </div>
+
+
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+
+          <div class="col-sm-12 col-md-4 col-lg-4" style="text-align: end;">
+
+          </div>
+          <div class="col-sm-12 col-md-8 col-lg-8">
+            <button for="date" class="btn btn-primary " type='submit' style="margin-top: 15px;"> Get News
+            </button>
+
           </div>
         </div>
 
-      
+
     </div>
 
-    <div class="row" style="margin-top: 10px;">
-    <div class="col-sm-12 col-md-4 col-lg-4" style="text-align: end;">
-      <label style="margin-top: 2px;" for="date">Select Language</label>
-    </div>
-    <div class="col-sm-12 col-md-8 col-lg-8">
-      <div class="dropdown ">
-       
-        <select class="form-control" style="height: 30px;" id="lang" name="lang">  
-          <option>English</option>
-          <option>Urdu</option>
-         
-       
-        </select>
-      </div>
-    </div>
-
-  
-</div>
 
 
-    <div class="row"  style="margin-top: 20px;">
-
-    <div class="col-sm-12 col-md-4 col-lg-4" style="text-align: end;">
-      <label style="margin-top: 2px;" for="date">Select Date</label>
-    </div>
-    <div class="col-sm-12 col-md-8 col-lg-8">
-      <input type="date" class="form-control" id="date" name="date" value={{ today }}>
-    </div>
+    </form>
   </div>
-
-  <div class="row"  style="margin-top: 10px;">
-
-    <div class="col-sm-12 col-md-4 col-lg-4" style="text-align: end;">
-
-    </div>
-    <div class="col-sm-12 col-md-8 col-lg-8">
-      <button for="date" class="btn btn-primary " type='submit' style="margin-top: 15px;"> Get News
-      </button>
-     
-    </div>
-  </div>
-   
-
-  </div>
-
-
-
-  </form>
-</div>
 </div>
 
 </div>
@@ -135,7 +149,7 @@
     <p class="article-content">{{ post.prgh }}</p>
     <p class="article-content"><strong>{{ post.News }}: </strong>{{ post.date }}</p>
     <p> {{ post.words }}</p>
-    <p class="article-content">Sentiment Analysis:   <strong> {{ post.sentiment }} </strong></p>
+    <p class="article-content">Sentiment Analysis: <strong> {{ post.sentiment }} </strong></p>
   </div>
 </div>
 {% endfor %}
