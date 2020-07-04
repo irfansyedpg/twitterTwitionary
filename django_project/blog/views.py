@@ -10,6 +10,7 @@ import io        # seting eniromental variable
 import os        # setting enivromental varible
 import xlwt
 from django.http import HttpResponse
+import sys
 
 # my scraping code start here
 
@@ -19,8 +20,11 @@ import time
 from bs4 import BeautifulSoup
 import re
 import sqlite3
+import sys
 from firebase import firebase
 firebase = firebase.FirebaseApplication('https://twitionary.firebaseio.com/', None) 
+#from datetime import timedelta
+import datetime
 
 
 
@@ -35,7 +39,7 @@ import pandas as pd
 import time
 import re
 import tweepy
-# json object to go to translation page
+# json object to go to news page
 
 import requests
 from requests.auth import HTTPDigestAuth
@@ -46,86 +50,85 @@ from datetime import datetime
 def getNewsButton(request):
 
     posts=[]
-    date=request.GET.get("date")
-    dateto=request.GET.get("date2")
+    date1=request.GET.get("date1")
+    date2=request.GET.get("date2")
     country=request.GET.get("contry")
-    lang=request.GET.get("lang")
-    if lang=='Urdu':
-        posts=getNewsUrdu(date,country)
-    else:
-        posts=getNewsEnglish(date,country)
+    #lang=request.GET.get("lang")
+  #  if lang=='Urdu':
+       # posts=getNewsUrdu(date,country)
+    #else:
+    posts=getNewsEnglish(date1,date2,country)
+    countries=getCountryNames()
 
 
     context = {
 
         'posts': posts,
-        'today':date
+      
+        'country':countries,
+         'date1':date1,
+         'date2':date2
 
     }
 
-    # (request,the blog i am requestin,my json object)
-    return render(request, 'blog/translation.html', context)
+    
+    return render(request, 'blog/news.html', context)
 
 
-def getNewsEnglish(newsdate,country):
+def getNewsEnglish(newsdate1,newsdate2,country):
 
 
+    if newsdate1==newsdate2:
+        datee=datetime.today().strftime('%Y-%m-%d')
+        datee2=datetime.today() + timedelta(days=1)
+        datee2=datee2.strftime('%Y-%m-%d')
+        newsdate1=datee
+        newsdate2=datee2
 
     posts = []
     df = pd.read_excel ('dictionary.xlsx')
     mylist = df['words'].tolist()
-    r = re.compile('|'.join([r'\b%s\b' % w for w in mylist]), flags=re.I)
     
-    url = "https://newshunt.io/getDateNews/"+newsdate
+    r = re.compile('|'.join([r'\b%s\b' % w for w in mylist]), flags=re.I)
 
-    count=[]
+    url = "https://newshunt.io/getBetweenDates/"+newsdate1+'/'+newsdate2
+    if country!='World':
+        url="https://newshunt.io/getBetweenDates/"+newsdate1+'/'+newsdate2+'/'+country
+    
+   
+
+    print(url)
+
+  
     myResponse = requests.get(url, verify=True)
     if(myResponse.ok):
         jData = json.loads(myResponse.content)
 
         jData=jData['news']
         for key in jData:
-            if key['country'] not in count:
-                count.append(key['country'])
             listt=r.findall(key['description'])
-            if country==key['country']:
-                if listt:
-                    header=re.sub('^A-Za-z0-9]+ +', ' ',key['title'])
-                    prgh=re.sub('^A-Za-z0-9]+ +', ' ',key['description'])
-                    header=re.sub("\s\s+", " ", header)
-                    prgh=re.sub("\s\s+", " ", prgh)
-                    sentiments=sentiment(prgh)
-                    posts.append({
+            
+            
+            if listt:
+                header=re.sub('^A-Za-z0-9]+ +', ' ',key['title'])
+                prgh=re.sub('^A-Za-z0-9]+ +', ' ',key['description'])
+                header=re.sub("\s\s+", " ", header)
+                prgh=re.sub("\s\s+", " ", prgh)
+                sentiments=sentiment(prgh)
+                posts.append({
                  
-                'href': key['url'],
-                'img':  key['media'],
-                'header': header,
-                'prgh':prgh ,
-                'date': newsdate,
-                'News':key['source'],
-                'words':key['country'],
-                'sentiment':sentiments,
+            'href': key['url'],
+            'img':  key['media'],
+            'header': header,
+            'prgh':prgh ,
+            'date': key['pub_date'],
+            'News':key['source'],
+            'words':key['country'],
+            'sentiment':sentiments,
+            'keyWord':listt,
      
              })
-            elif country=="World":
-                 if listt:
-                    header=re.sub('^A-Za-z0-9]+ +', ' ',key['title'])
-                    prgh=re.sub('^A-Za-z0-9]+ +', ' ',key['description'])
-                    header=re.sub("\s\s+", " ", header)
-                    prgh=re.sub("\s\s+", " ", prgh)
-                    sentiments=sentiment(prgh)
-                    posts.append({
-                 
-                'href': key['url'],
-                'img':  key['media'],
-                'header': header,
-                'prgh':prgh ,
-                'date': newsdate,
-                'News':key['source'],
-                'words':key['country'],
-                 'sentiment':sentiments,
-     
-             })
+            
                  
             
     return posts
@@ -195,23 +198,51 @@ def getNewsUrdu(newsdate,country):
             
     return posts
 
-def translation(request):
+from datetime import datetime, timedelta
+countries=[]
+def news(request):
+
+    
 
     datee=datetime.today().strftime('%Y-%m-%d')
+ 
+
+ 
+    
+
     posts=[]
-    posts=getNewsEnglish(datee,'World')
+    posts=getNewsEnglish(datee,datee,'pakistan')
+    
+    countries=getCountryNames()
 
     context = {
 
         'posts': posts,
-        'today':datee
+        'date1':datee,
+        'date2':datee,
+        'country':countries
 
     }
 
-    # (request,the blog i am requestin,my json object)
-    return render(request, 'blog/translation.html', context)
-    # return render(request, 'blog/translation.html', {'tital': 'translation'})
+    
 
+    # (request,the blog i am requestin,my json object)
+    return render(request, 'blog/news.html', context)
+    # return render(request, 'blog/news.html', {'tital': 'news'})
+
+def getCountryNames():
+    url = "https://newshunt.io/getCountriesIrfan"
+
+    country=[]
+    myResponse = requests.get(url, verify=True)
+    if(myResponse.ok):
+        jData = json.loads(myResponse.content)
+        jData=jData['country']
+
+        for key in jData:
+            country.append(key["name"])
+
+    return country        
 
 
 def login(request):
@@ -380,7 +411,7 @@ def download_excel_transcription(request):
     font_style.font.bold = True
 
     # column header names, you can use your own headers here
-    columns = ['AudioName Name', 'Translation', 'Confidance', 'InterviewTime', 'Audio URL', ]
+    columns = ['AudioName Name', 'news', 'Confidance', 'InterviewTime', 'Audio URL', ]
 
     # write column headers in sheet
     for col_num in range(len(columns)):

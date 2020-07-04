@@ -9,7 +9,7 @@ Watching for file changes with StatReloader
 [30/Mar/2020 11:21:39] "GET /static/blog/css/bootstrap.min.css HTTP/1.1" 304 0
 [30/Mar/2020 11:21:39] "GET /static/blog/css/font-awesome.min.css HTTP/1.1" 304 0
 [30/Mar/2020 11:21:39] "GET /static/blog/js/vendor/modernizr-2.8.3.min.js HTTP/1.1" 304 0
-[30/Mar/2020 11:21:39] "GET /blog/translation HTTP/1.1" 200 126906
+[30/Mar/2020 11:21:39] "GET /blog/news HTTP/1.1" 200 126906
 [30/Mar/2020 11:21:39] "GET /static/blog/js/vendor/jquery-1.12.4.min.js HTTP/1.1" 304 0
 [30/Mar/2020 11:21:39] "GET /static/blog/js/vendor/bootstrap.min.js HTTP/1.1" 304 0
 [30/Mar/2020 11:21:39] "GET /static/blog/js/vendor/jquery.easing.1.3.js HTTP/1.1" 304 0
@@ -25,8 +25,8 @@ Watching for file changes with StatReloader
 [30/Mar/2020 11:21:40] "GET /static/blog/js/jquery.ajaxchimp.js HTTP/1.1" 304 0
 [30/Mar/2020 11:21:40] "GET /static/blog/js/jquery.sticky.js HTTP/1.1" 304 0
 [30/Mar/2020 11:21:40] "GET /static/blog/js/main.js HTTP/1.1" 304 0
-[30/Mar/2020 11:22:10] "GET /blog/translation HTTP/1.1" 200 126907
-[30/Mar/2020 11:22:19] "GET /blog/translation HTTP/1.1" 200 126907
+[30/Mar/2020 11:22:10] "GET /blog/news HTTP/1.1" 200 126907
+[30/Mar/2020 11:22:19] "GET /blog/news HTTP/1.1" 200 126907
 [30/Mar/2020 11:23:46] "GET /static/blog/main.css HTTP/1.1" 200 1136
 [30/Mar/2020 11:23:46] "GET /static/blog/css/normalize.css HTTP/1.1" 200 7708
 [30/Mar/2020 11:23:46] "GET /static/blog/css/modal-video.min.css HTTP/1.1" 200 2069
@@ -36,7 +36,7 @@ Watching for file changes with StatReloader
 [30/Mar/2020 11:23:47] "GET /static/blog/css/font-awesome.min.css HTTP/1.1" 200 29063
 [30/Mar/2020 11:23:47] "GET /static/blog/css/animate.css HTTP/1.1" 200 79571
 [30/Mar/2020 11:23:47] "GET /static/blog/js/vendor/modernizr-2.8.3.min.js HTTP/1.1" 200 15514
-[30/Mar/2020 11:23:47] "GET /blog/translation HTTP/1.1" 200 126906
+[30/Mar/2020 11:23:47] "GET /blog/news HTTP/1.1" 200 126906
 [30/Mar/2020 11:23:47] "GET /static/blog/js/vendor/bootstrap.min.js HTTP/1.1" 200 37046
 [30/Mar/2020 11:23:47] "GET /static/blog/js/vendor/jquery.easing.1.3.js HTTP/1.1" 200 9335
 [30/Mar/2020 11:23:47] "GET /static/blog/js/vendor/jquery-migrate-1.2.1.min.js HTTP/1.1" 200 7200
@@ -65,13 +65,13 @@ Traceback (most recent call last):
   File "/usr/local/lib/python3.6/dist-packages/django/core/handlers/base.py", line 113, in _get_response
     response = wrapped_callback(request, *callback_args, **callback_kwargs)
   File "/home/mobilise1984/django/twitterTwitionary/django_project/blog/views.py", line 40, in button_click
-    return render(request, 'blog/translation.html', context)
+    return render(request, 'blog/news.html', context)
 NameError: name 'context' is not defined
 [30/Mar/2020 11:24:56] "GET /blog/actionUrl? HTTP/1.1" 500 62446
 Not Found: /favicon.ico
 [30/Mar/2020 11:26:02] "GET /favicon.ico HTTP/1.1" 404 2084
-[30/Mar/2020 11:26:13] "GET /blog/translation HTTP/1.1" 200 126906
-[30/Mar/2020 11:26:34] "GET /blog/translation HTTP/1.1" 200 126906
+[30/Mar/2020 11:26:13] "GET /blog/news HTTP/1.1" 200 126906
+[30/Mar/2020 11:26:34] "GET /blog/news HTTP/1.1" 200 126906
 [30/Mar/2020 11:26:34] "GET /static/blog/main.css HTTP/1.1" 200 1136
 [30/Mar/2020 11:26:34] "GET /static/blog/css/normalize.css HTTP/1.1" 200 7708
 [30/Mar/2020 11:26:34] "GET /static/blog/css/animate.css HTTP/1.1" 200 79571
@@ -116,7 +116,7 @@ Not Found: /favicon.ico
 [30/Mar/2020 12:50:25] "GET /static/blog/css/bootstrap.min.css HTTP/1.1" 304 0
 [30/Mar/2020 12:50:25] "GET /static/blog/css/font-awesome.min.css HTTP/1.1" 304 0
 [30/Mar/2020 12:50:26] "GET /static/blog/js/vendor/modernizr-2.8.3.min.js HTTP/1.1" 304 0
-[30/Mar/2020 12:50:26] "GET /blog/translation HTTP/1.1" 200 129898
+[30/Mar/2020 12:50:26] "GET /blog/news HTTP/1.1" 200 129898
 [30/Mar/2020 12:50:26] "GET /static/blog/js/vendor/jquery-1.12.4.min.js HTTP/1.1" 304 0
 [30/Mar/2020 12:50:26] "GET /static/blog/js/vendor/bootstrap.min.js HTTP/1.1" 304 0
 [30/Mar/2020 12:50:26] "GET /static/blog/js/vendor/jquery.easing.1.3.js HTTP/1.1" 304 0
@@ -5244,7 +5244,10 @@ Bad Request: /version
 [09/Apr/2020 18:10:33] code 400, message Bad HTTP/0.9 request type ('\x00')
 [09/Apr/2020 18:10:33] "            " 400 -
 [09/Apr/2020 18:10:33] code 400, message Bad request syntax ('TVNM1   \rMNRD1   \rSWVN1   \rIPPV1   ')
-[09/Apr/2020 18:10:33] "TVNM1   MNRD1   SWVN1   IPPV1   " 400 -
+[09/Apr/2020 18:10:33] "TVNM1   
+MNRD1   
+SWVN1   
+IPPV1   " 400 -
 [09/Apr/2020 18:10:33] code 400, message Bad request syntax ('\x00\x00\x07\x00\x08\x00\x03\x00\x04\x00\x05\x00\x06')
 [09/Apr/2020 18:10:33] "       " 400 -
 [09/Apr/2020 18:10:33] code 400, message Bad request syntax ('\x00\x01n')
@@ -11428,7 +11431,8 @@ Invalid HTTP_HOST header: 'instance-2.us-central1-a.c.twitionary.internal'. You 
 Bad Request: /
 [21/Apr/2020 16:00:21] "GET / HTTP/1.1" 400 59744
 Not Found: /phpmyadmin/scripts/setup.php
-[21/Apr/2020 16:31:31] "GET /phpmyadmin/scripts/setup.php HTTP/1.0" 404 2136
+[21/Apr/2020 16:31:31] "GET /phpmyadmin/scripts/setup.php
+ HTTP/1.0" 404 2136
 ----------------------------------------
 Exception happened during processing of request from ('172.105.89.161', 57230)
 Traceback (most recent call last):

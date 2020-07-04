@@ -1,4 +1,4 @@
-def translation(request):
+def news(request):
 
     posts = []
     df = pd.read_excel ('dictionary.xlsx')
@@ -94,8 +94,8 @@ def translation(request):
     }
 
     # (request,the blog i am requestin,my json object)
-    return render(request, 'blog/translation.html', context)
-    # return render(request, 'blog/translation.html', {'tital': 'translation'})
+    return render(request, 'blog/news.html', context)
+    # return render(request, 'blog/news.html', {'tital': 'news'})
 '''
 
 
