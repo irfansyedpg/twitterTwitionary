@@ -1,26 +1,13 @@
-   <option>pakistan</option>
-                <option>united kingdom</option>
-                <option>thailand</option>
-                <option>malaysia</option>
-                <option>israel</option>
-                <option>japan</option>
-                <option>new zealand</option>
-                <option>australia</option>
-                <option>croatia</option>
-                <option>belgium</option>
-                <option>ukaine</option>
-                <option>south africa</option>
-                <option>india</option>
-                <option>brazil</option>
-                <option>iran</option>
-                <option>Greece</option>
-                <option>china</option>
-                <option>united states</option>
-                <option>argentina</option>
-                <option>mexico</option>
 
-                <option>india</option>
-               
-                <option>russia</option>
-                <option>mexico</option>
-                <option>mexico</option>
+
+  <div class="col-sm-11 col-md-6 col-lg-9">
+    <a href={{ post.href }} target="_blank">
+      <h3 class="article-content" style=" text-align: left">{{ post.header }}</h3>
+    </a>
+    <p class="article-content">{{ post.prgh }}</p>
+    <p class="article-content"><strong>{{ post.News }}: </strong>{{ post.date }}</p>
+    <p> {{ post.words }}</p>
+    <p class="article-content">Sentiment Analysis: <strong> {{ post.sentiment }} </strong></p>
+    <p class="article-content">Searched KeyWords: <strong> {{ post.keyWord }} </strong></p>
+  </div>
+</div>

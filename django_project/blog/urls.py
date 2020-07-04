@@ -10,9 +10,9 @@ urlpatterns = [
     path('actionUrl', views.getNewsButton),
     path('detial_click', views.detial_click, name='detial_click'),
     path('login', views.login, name='login'),
-    path('downloadexcel', views.download_excel_data),
-    path('dtranslation', views.download_excel_transcription),
-    path('ddictionary', views.download_excel_data),
+
+  
+
     path('dictionary', views.dictionary_link, name='dictionary_click'),
     path('insertkeywords', views.insertkeywords),
 

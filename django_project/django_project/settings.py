@@ -25,6 +25,10 @@ SECRET_KEY = '(9*!v7oamc+4n5!&9^p#zn4!6i^c&wo$sos$-%b_^+-(+5by%r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+#irfan this is to logout when not use
+SESSION_SECURITY_EXPIRE_AFTER=1800
+SESSION_SECURITY_WARN_AFTER=1740
+#irfan this is to logout when not use
 
 ALLOWED_HOSTS = ['127.0.0.1','34.68.136.134']
 
@@ -135,3 +139,4 @@ CRISPY_TEMPLATE_PACK="bootstrap4"
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file("gcpcri.json")
 
 LOGIN_REDIRECT_URL = "/blog"
+LOGOUT_REDIRECT_URL = '/login'

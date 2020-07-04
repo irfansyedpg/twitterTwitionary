@@ -27,10 +27,10 @@
                 <option>World</option>
                 {% for cunt in country  %}
                 <option>{{ cunt }}</option>
-           
+
 
                 {% endfor %}
-             
+
 
               </select>
             </div>
@@ -65,11 +65,12 @@
           <div class="col-sm-12 col-md-4 col-lg-3" style="text-align: start;">
             <label style="margin-top: 2px;" for="date">Select From Date</label>
           </div>
-          <div class="col-sm-12 col-md-4 col-lg-4" >
+          <div class="col-sm-12 col-md-4 col-lg-4">
             <input type="date" class="form-control" id="date1" name="date1" value={{ date1 }}>
 
           </div>
-          <div class="col-sm-12 col-md-1 col-lg-1" style="padding: 0%;"> <label style="margin-top: 2px;" for="date">To Date</label> </div>
+          <div class="col-sm-12 col-md-1 col-lg-1" style="padding: 0%;"> <label style="margin-top: 2px;" for="date">To
+              Date</label> </div>
           <div class="col-sm-12 col-md-4 col-lg-4">
 
 
@@ -85,7 +86,7 @@
 
           </div>
           <div class="col-sm-12 col-md-8 col-lg-9">
-            <button for="date" class="btn btn-primary " type='submit' style="margin-top: 15px; float: right;;"> Get News
+            <button for="date" class="btn btn-primary " type='submit' style="margin-top: 15px; float: left;"> Get News
             </button>
 
           </div>
@@ -100,64 +101,50 @@
   </div>
 </div>
 
-</div>
 
 
-
-<div class="text-center" style="background: #F6F6F6; " />
-{% for post in posts  %}
+<div class="text-center" style="background: #f2f2f2; ">
 
 
+  {% for post in posts  %}
 
-<div class="row" style="margin: 10px; background: #FFFFFF;">
-  <div class="col-sm-11 col-md-5 col-lg-2">
+  <div class="row" style="margin: 5px; background: #FFFFFF;">
+    <div class="col-sm-11 col-md-5 col-lg-3" style="margin: 10px;">
 
-    <div class="thumbnail">
+      <div class=" thumbnail">
+        <a href={{ post.href }} target="_blank">
+          <img src={{ post.img }}></a>
+      </div>
+    </div>
+   
+
+    <div class="col-sm-11 col-md-6 col-lg-8" style="text-align: left; margin: 20px; margin-left: -5px;">
+      <span> <strong>{{ post.country }} </strong> </span>
+      <span>- {{ post.News }} </span>
+      <span style="float: right;">{{ post.date }} </span>
       <a href={{ post.href }} target="_blank">
-        <img src={{ post.img }}>
-
+        <h3 class="article-content" style=" text-align: left">{{ post.header }}</h3>
       </a>
+      <p class="article-content">{{ post.prgh }} </p>
+
+
+
+      <span> <strong> Searched KeyWords </strong> {{ post.keyWord }} </span>
+
+      <span style="float: right; "> <strong>Sentiment Analysis- </strong> {{ post.sentiment }} </span>
+
+
     </div>
   </div>
 
-  <div class="col-sm-1 col-md-1 col-lg-1">
-  </div>
+  {% endfor %}
 
-  <div class="col-sm-11 col-md-6 col-lg-9">
-    <a href={{ post.href }} target="_blank">
-      <h3 class="article-content" style=" text-align: center">{{ post.header }}</h3>
-    </a>
-    <p class="article-content">{{ post.prgh }}</p>
-    <p class="article-content"><strong>{{ post.News }}: </strong>{{ post.date }}</p>
-    <p> {{ post.words }}</p>
-    <p class="article-content">Sentiment Analysis: <strong> {{ post.sentiment }} </strong></p>
-    <p class="article-content">Searched KeyWords: <strong> {{ post.keyWord }} </strong></p>
-  </div>
-</div>
-{% endfor %}
-
-
-
-
-
-
-
-
-
-
-<form action='dtranslation' method='GET' style="margin-top: 10px;">
-
-
-  <button class="article-title" type='submit'> Click Me For Download transcription </button>
-
-
-</form>
-<form action='ddictionary' method='GET' style="margin-top: 10px;">
-
-
-  <button class="article-title" type='submit'> Click Me For Download Word Dictionary </button>
-</form>
 
 </div>
+
+
+
+
+
 
 {% endblock content %}

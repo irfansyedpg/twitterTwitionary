@@ -123,7 +123,7 @@ def getNewsEnglish(newsdate1,newsdate2,country):
             'prgh':prgh ,
             'date': key['pub_date'],
             'News':key['source'],
-            'words':key['country'],
+            'country':key['country'],
             'sentiment':sentiments,
             'keyWord':listt,
      
@@ -344,95 +344,6 @@ def sentiment(text):
         return 'positive'
     else: 
         return 'negative'
-def download_excel_data(request):
-        # content-type of response
-    response = HttpResponse(content_type='application/ms-excel')
-
-    # decide file name
-    response['Content-Disposition'] = 'attachment; filename="SSRWordDictinary.xls"'
-
-    # creating workbook
-    wb = xlwt.Workbook(encoding='utf-8')
-
-    # adding sheet
-    ws = wb.add_sheet("sheet1")
-
-    # Sheet header, first row
-    row_num = 0
-
-    font_style = xlwt.XFStyle()
-    # headers are bold
-    font_style.font.bold = True
-
-    # column header names, you can use your own headers here
-    columns = ['Transcription Name', 'Word', 'Confidance', 'Start Time', 'End  Time', ]
-
-    # write column headers in sheet
-    for col_num in range(len(columns)):
-        ws.write(row_num, col_num, columns[col_num], font_style)
-
-    # Sheet body, remaining rows
-    font_style = xlwt.XFStyle()
-
-
-    for my_row in data:
-        row_num = row_num + 1
-        ws.write(row_num, 0, my_row[0], font_style)
-        ws.write(row_num, 1, my_row[1], font_style)
-        ws.write(row_num, 2, my_row[2], font_style)
-        ws.write(row_num, 3, my_row[3], font_style)
-        ws.write(row_num, 4, my_row[4], font_style)
-
-    wb.save(response)
-    return response
-
-
-
-def download_excel_transcription(request):
-
-    # content-type of response
-    response = HttpResponse(content_type='application/ms-excel')
-
-    # decide file name
-    response['Content-Disposition'] = 'attachment; filename="SSRTranslation.xls"'
-
-    # creating workbook
-    wb = xlwt.Workbook(encoding='utf-8')
-
-    # adding sheet
-    ws = wb.add_sheet("sheet1")
-
-    # Sheet header, first row
-    row_num = 0
-    row_index = 0
-
-    font_style = xlwt.XFStyle()
-    # headers are bold
-    font_style.font.bold = True
-
-    # column header names, you can use your own headers here
-    columns = ['AudioName Name', 'news', 'Confidance', 'InterviewTime', 'Audio URL', ]
-
-    # write column headers in sheet
-    for col_num in range(len(columns)):
-        ws.write(row_num, col_num, columns[col_num], font_style)
-
-    # Sheet body, remaining rows
-    font_style = xlwt.XFStyle()
-
-    # get your data, from database or from a text file...
-
-    for my_row in lstAdName:
-        row_num = row_num+1
-        ws.write(row_num, 0, lstAdName[row_index], font_style)
-        ws.write(row_num, 1, lstTranslation[row_index], font_style)
-        ws.write(row_num, 2, lstConfidance[row_index], font_style)
-        ws.write(row_num, 3, lstDate[row_index], font_style)
-        ws.write(row_num, 4, lstUrl[row_index], font_style)
-        row_index=row_index+1
-
-    wb.save(response)
-    return response
 
 
 #dicinoaty data table
