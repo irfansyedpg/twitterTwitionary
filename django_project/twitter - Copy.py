@@ -11,7 +11,8 @@ import re
 import pandas as pd
 import tweepy
 import os
-import mysql.connector
+
+import sqlite3
 
 
 # In[3]:
@@ -26,42 +27,19 @@ auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth,wait_on_rate_limit=True)
 
 
-#SQL Connection String strats
-mydb = mysql.connector.connect(
-    host="localhost",
-    database="twittter",
-    user="root",
-    passwd="",
-  
-) 
-mycursor = mydb.cursor()
-
-
-# mydb = {
-# 'default': {
-#     'ENGINE': 'django.db.backends.mysql',
-#     'NAME': 'lastkymq_tweets',
-#     'HOST': '162.213.253.14',
-#     'PORT': '3306',
-#     'USER': 'lastkymq_tweets',
-#     'PASSWORD': 'xLIw!gJn}ZWx',
-# }}
-# mycursor = mydb.cursor()
-# SQL Connection String Ends
-
-
 # In[33]:
 
 
 def scraptweets(search_words, date_since, numTweets, numRuns):
     
     
+    sqliteConnection = sqlite3.connect('SQLite_Python.db')
+    cursor = sqliteConnection.cursor()
     print('function called')
 
     db_tweets = pd.DataFrame(columns = [ 'location', 'tweetcreatedts',
                                         'retweetcount', 'text', 'hashtags'])
     program_start = time.time()
-    mydb._open_connection() #mysql connection opens 
   
     
     for i in range(0, numRuns):
@@ -95,25 +73,19 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
         
             
             
-            query = "INSERT into twitter(location,tweetcreatedts,retweetcount,text,Username,links) VALUES (%s, %s, %s, %s, %s, %s)"
-            val = (location, tweetcreatedts, retweetcount, text, username,url)
-            #query = "INSERT into twitter_table(twitter_text) VALUES (%s)"
-            #val = (location, tweetcreatedts, retweetcount, text, username,url)
-            #val = (text)
-            mycursor.execute(query,val)
+            query = """INSERT into twitter(location,tweetcreatedts,retweetcount,text,Username,links)
+                          VALUES (?,?,?,?,?,?)"""
+            param = (location, tweetcreatedts, retweetcount, text, username,url)
+            cursor.execute(query,param)
             #db_tweets.loc[len(db_tweets)] = ith_tweet
             noTweets += 1
-            mydb.commit()
-    
-   
-
-
         # Run ended:
         end_run = time.time()
-        
-        mydb.close()
+        sqliteConnection.commit()
+        cursor.close()
 
-     
+        if (sqliteConnection):
+            sqliteConnection.close()
         duration_run = round((end_run-start_run)/60, 2)
         print('no. of tweets scraped for run {} is {}'.format(i + 1, noTweets))
         print('time take for {} run to complete is {} mins'.format(i+1, duration_run))
