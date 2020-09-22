@@ -41,7 +41,7 @@ mycursor = mydb.cursor()
 def scraptweets(search_words, date_since, numTweets, numRuns):
     
     
-    print('function called')
+    print('function called function')
     # print(search_words)
     
   
