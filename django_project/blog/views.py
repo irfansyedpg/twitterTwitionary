@@ -45,7 +45,21 @@ import requests
 from requests.auth import HTTPDigestAuth
 import json
 from datetime import datetime
+#used for chart
+from .fusioncharts import FusionCharts
+from collections import OrderedDict
+import mysql.connector
 
+# SQL Connection String strats
+mydb = mysql.connector.connect(
+    host="localhost",
+    database="twitter",
+    user="root",
+    passwd="",
+)
+cursor = mydb.cursor()
+# countcursor = mydb.cursor(buffered=True)
+# SQL Connection String Ends
 #getNews When Get News Button Clicked
 def getNewsButton(request):
 
@@ -269,7 +283,8 @@ def home(request):
 # Twiteer scraping
 
 def detial_click(request):
-
+     
+     
     #df = pd.read_csv ('tweets.csv')
     posts=[]
     #for index, row in df.iterrows():
@@ -281,16 +296,68 @@ def detial_click(request):
           #      'location': row['location'],
      
            #     }) 
+    pie3d = FusionCharts("pie3d", "ex2" , "100%", "400", "chart-1", "json",
+        # The data is passed as a string in the `dataSource` as parameter.
+    """{
+        "chart": {
+            "caption": "Recommended Portfolio Split",
+            "subCaption" : "For a net-worth of $1M",
+            "showValues":"1",
+            "showPercentInTooltip" : "0",
+            "numberPrefix" : "$",
+            "enableMultiSlicing":"1",
+            "theme": "fusion"
+        },
+        "data": [{
+            "label": "Equity",
+            "value": "300000"
+        }, {
+            "label": "Debt",
+            "value": "230000"
+        }, {
+            "label": "Bullion",
+            "value": "180000"
+        }, {
+            "label": "Real-estate",
+            "value": "270000"
+        }, {
+            "label": "Insurance",
+            "value": "20000"
+        }]
+    }"""),
 
+    # returning complete JavaScript and HTML code, which is used to generate chart in the browsers.
+#   return  render(request, 'blog/translationdetail.html', {'output' : pie3d.render(), 'chartTitle': 'Pie 3D Chart'})
+# def get_AudioName_mysql():
+
+#     sql = "select audioName from ssrDataa"
+#     mydb._open_connection()
+#     mycursor.execute(sql)
+#     myresult = mycursor.fetchall()
+#     my_list = []
+#     for x in myresult:
+#         my_list.append(x[0])
+
+#     mydb.close()
+#     return my_list
+
+
+# lstAdName = []
+# lstTranslation = []
+# lstConfidance = []
+# lstDate = []
+# lstUrl = []
     try:
-        sqliteConnection = sqlite3.connect('SQLite_Python.db', timeout=20)
-        cursor = sqliteConnection.cursor()
-        print("Connected to SQLite")
-
+        # sqliteConnection = sqlite3.connect('SQLite_Python.db', timeout=20)
+        # cursor = sqliteConnection.cursor()
+    
+        cursor.cursor()
+        print("Connected to Mysql")
         sqlite_select_query = """SELECT * FROM twitter ORDER BY id DESC LIMIT 30000"""
         cursor.execute(sqlite_select_query)
         
         for row in cursor:
+            print("des",row[7])
             sentiments=sentiment(row[4])
             posts.append({
                'text': row[4],
@@ -299,6 +366,7 @@ def detial_click(request):
                 'retweetcount': row[3],
                 'location': row[1],
                 'urll':row[6],
+                
                 'sentiment': sentiments }) 
        
         cursor.close()
@@ -324,17 +392,139 @@ def detial_click(request):
      
            #     }) 
 
+    print('pie3',pie3d)
+
     context = {
 
-        'posts': posts
-      
+        'posts': posts,
+        'output':pie3d
 
 
     }
+
     # (request,the blog i am requestin,my json object)
     return render(request, 'blog/translationdetail.html', context)
 
+    #used for chart
+# from .fusioncharts import FusionCharts
+def chart(request):
+     
+     
+    #df = pd.read_csv ('tweets.csv')
+    posts=[]
+    #for index, row in df.iterrows():
+     #   posts.append({
+      #          'text': row['text'],
+       #         'username': row['Username'],
+        #        'dated': row['tweetcreatedts'],
+         #       'retweetcount': row['retweetcount'],
+          #      'location': row['location'],
+     
+           #     }) 
+    mydb._open_connection()
+    sqlite_select_query = """SELECT * FROM tbl_twitter ORDER BY id DESC LIMIT 30000"""
+    cursor.execute(sqlite_select_query)
+        
+    for row in cursor:
+        print("des",row[7])
+        sentiments=sentiment(row[4])
+        posts.append({
+        'text': row[4],
+            'username': row[5],
+            'dated': row[2],
+            'retweetcount': row[3],
+            'location': row[1],
+            'urll':row[6],
+            'description':row[7],
+            'following':row[8],
+            'followers':row[9],
+            'sentiment': sentiments }) 
+    mydb.commit()
+    #show data from 2nd table
+    tweets_countq_query = """select COUNT(distinct Username) as username,COUNT(Id),COUNT(distinct location) as location from tbl_twitter order by Id"""
+    cursor.execute(tweets_countq_query)
+    count_row = cursor.fetchone()
+    count_username = count_row[0]
+    tweets_count = count_row[1]
+    tweets_location = count_row[2]
+    #end query
     
+    #here we can show data from excel sheet total key words
+    import openpyxl as xl
+    wb = xl.load_workbook("dictionary.xlsx", enumerate)
+    sheet = wb.worksheets[0]
+
+    tweets_total_keywords = sheet.max_row
+    # column_count = sheet.max_column
+    print(tweets_total_keywords)
+
+
+# start charts from here
+    dataSource = OrderedDict()
+     # The `chartConfig` dict contains key-value pairs of data for chart attribute
+    chartConfig = OrderedDict()
+    chartConfig["caption"] = "TWEETS BY SENTIMENT"
+    # chartConfig["subCaption"] = "In MMbbl = One Million barrels"
+    # chartConfig["xAxisName"] = "Country"
+    # chartConfig["yAxisName"] = "Reserves (MMbbl)"
+    # chartConfig["numberSuffix"] = "K"
+    chartConfig["theme"] = "fusion"
+
+    dataSource["chart"] = chartConfig
+    dataSource["data"] = []
+
+    # The data for the chart should be in an array wherein each element of the array  is a JSON object having the `label` and `value` as keys.
+    # Insert the data into the `dataSource['data']` list.
+    dataSource["data"].append({"label": 'Total Tweets', "value": tweets_count})
+    dataSource["data"].append({"label": 'Total Users', "value": count_username})
+    dataSource["data"].append({"label": 'Total Location', "value": tweets_location})
+    dataSource["data"].append({"label": 'Key Words Define', "value": tweets_total_keywords})
+
+    
+    # dataSource["data"].append({"label": 'Terrible', "value": '115'})
+
+    pie3d = FusionCharts("pie3d", "ex2" , "100%", "400", "chart-1", "json",
+        # The data is passed as a string in the `dataSource` as parameter.
+   
+    {
+        "chart": {
+            "caption": "TWEETS BY TYPE",
+            # "subCaption" : "For a net-worth of $1M",
+            "showValues":"1",
+            "showPercentInTooltip" : "0",
+            # "numberPrefix" : "$",
+            "enableMultiSlicing":"1",
+            "theme": "fusion"
+        },
+        "data": [{
+            "label": "Total Tweets",
+            "value": tweets_count
+            
+        }, {
+            "label": "Total Users",
+            "value":count_username
+        }, {
+            "label": "Total Location",
+            "value": tweets_location
+        }, {
+            "label": "Key Words Define",
+            "value": tweets_total_keywords
+        
+        }]
+    })
+
+    column2D = FusionCharts("column2d", "myFirstChart", "600", "400", "myFirstchart-container", "json", dataSource)
+  
+    # returning complete JavaScript and HTML code, which is used to generate chart in the browsers.
+#   return  render(request, 'blog/translationdetail.html', {'output' : pie3d.render(), 'chartTitle': 'Pie 3D Chart'})
+
+   
+    #End here we can show data from excel sheet total key words
+
+    return render(request, 'blog/translationdetail.html', {
+        'posts': posts,'output':pie3d.render(),'output1':column2D.render(),'tweets_count':tweets_count,'count_username':count_username,'tweets_location':tweets_location,'tweets_total_keywords':tweets_total_keywords
+    })
+
 
 from textblob import TextBlob
 def sentiment(text):

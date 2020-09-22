@@ -11,8 +11,7 @@ import re
 import pandas as pd
 import tweepy
 import os
-
-import sqlite3
+import mysql.connector
 
 
 # In[3]:
@@ -27,19 +26,39 @@ auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth,wait_on_rate_limit=True)
 
 
+#SQL Connection String strats
+mydb = mysql.connector.connect(
+    host="localhost",
+    database="twitter",
+    user="root",
+    passwd="",
+  
+) 
+mycursor = mydb.cursor()
 # In[33]:
 
 
 def scraptweets(search_words, date_since, numTweets, numRuns):
     
     
-    sqliteConnection = sqlite3.connect('SQLite_Python.db')
-    cursor = sqliteConnection.cursor()
     print('function called')
+    # print(search_words)
+    
+  
+    # split_words=search_words.split("OR")
+    # for i in range(len(split_words)):
+	#     print(split_words[i])
+	#     print(i)
+    # split_words=search_words.split("OR")
+    # for i in enumerate(split_words):
+    #     path = i
+
+    
 
     db_tweets = pd.DataFrame(columns = [ 'location', 'tweetcreatedts',
                                         'retweetcount', 'text', 'hashtags'])
     program_start = time.time()
+    mydb._open_connection() #mysql connection opens 
   
     
     for i in range(0, numRuns):
@@ -50,20 +69,27 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
         tweets = tweepy.Cursor(api.search, q=search_words, lang="en", since=date_since, tweet_mode='extended').items(numTweets)
 
         tweet_list = [tweet for tweet in tweets]
-
+        # print(tweet_list)
         noTweets = 0
         for tweet in tweet_list:
 
-            #username = tweet.user.screen_name
-            #acctdesc = tweet.user.description
+            # username = tweet.user.screen_name
+            acctdesc = tweet.user.description
+
             location = tweet.user.location
-            #following = tweet.user.friends_count
-            #followers = tweet.user.followers_count
-            #totaltweets = tweet.user.statuses_count
-            #usercreatedts = tweet.user.created_at
+
+            following = tweet.user.friends_count
+            followers = tweet.user.followers_count
+            totaltweets = tweet.user.statuses_count
+            usercreatedts = tweet.user.created_at
+
             tweetcreatedts = tweet.created_at
             retweetcount = tweet.retweet_count
-            #hashtags = tweet.entities['hashtags']
+
+            hashtags = tweet.entities['hashtags']
+            # tweetId= tweet.id
+
+            # print(tweetId)
             username = tweet.user.screen_name
             url =  f"https://twitter.com/user/status/{tweet.id}"
             try:
@@ -71,21 +97,47 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
             except AttributeError:  # Not a Retweet
                     text = tweet.full_text
         
-            
-            
-            query = """INSERT into twitter(location,tweetcreatedts,retweetcount,text,Username,links)
-                          VALUES (?,?,?,?,?,?)"""
-            param = (location, tweetcreatedts, retweetcount, text, username,url)
-            cursor.execute(query,param)
+            # split_words=search_words.split("OR")
+            # for i in range(len(split_words)):
+            #      print(split_words[i])
+            # if split_words[i] in hashtags :
+            #      print("Yes, 'at' found in List : " , split_words[i])
+            query = "INSERT into tbl_twitter(location,tweetcreatedts,retweetcount,text,Username,links,acctdesc,following,followers,totaltweets,usercreatedts) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            val = (location, tweetcreatedts, retweetcount, text, username,url,acctdesc,following,followers,totaltweets,usercreatedts)
+            mycursor.execute(query,val)
+            # print("1 record inserted, ID:", mycursor.lastrowid)
+            twitter_col_id=mycursor.lastrowid
+            # print("1 record inserted, ID:",twitter_col_id)
+
+
+            path=[]
+            for i in enumerate(hashtags):
+                 path.append(i[1]['text'].split(","))
+                 for j in path:
+                      query1 = "INSERT into tbl_hashtags(title) VALUES (%s)"
+                      val1 = (j)
+                      
+            mycursor.execute(query1,val1)
+            # query = "INSERT into tbl_hashtags(location) VALUES (%s)"
+            # val = (location)
+            # query = "INSERT into twitter_table(twitter_text) VALUES (%s)"
+            #val = (location, tweetcreatedts, retweetcount, text, username,url)
+            # val = (text)
+            # mycursor.execute(query,val)
             #db_tweets.loc[len(db_tweets)] = ith_tweet
             noTweets += 1
+            mydb.commit()
+            # print("1 record inserted, ID:", mycursor.lastrowid)
+    
+   
+
+
         # Run ended:
         end_run = time.time()
-        sqliteConnection.commit()
-        cursor.close()
+        
+        mydb.close()
 
-        if (sqliteConnection):
-            sqliteConnection.close()
+     
         duration_run = round((end_run-start_run)/60, 2)
         print('no. of tweets scraped for run {} is {}'.format(i + 1, noTweets))
         print('time take for {} run to complete is {} mins'.format(i+1, duration_run))
@@ -108,6 +160,8 @@ def job():
     try:
         df = pd.read_excel ('dictionarytwets.xlsx')
         mylist = df['words'].tolist()
+        print(mylist)
+        # print(mylist)
         search_words=""
         count=0
         for a in mylist:
@@ -115,12 +169,14 @@ def job():
                 search_words="#"+a.replace(" ", "")
             else:
                 search_words=search_words+" OR #"+a.replace(" ", "")
+                
             count=1
+        # search_words1=search_words
+        # print(search_words1)
+        date_since = "2020-07-16"
 
-        date_since = "2020-05-20"
-
-        numTweets = 2500
-        numRuns = 2
+        numTweets = 500
+        numRuns = 1
 
         scraptweets(search_words, date_since, numTweets, numRuns)
     except Exception as e:

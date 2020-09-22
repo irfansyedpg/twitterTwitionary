@@ -8,7 +8,7 @@ urlpatterns = [
     path('home', views.home, name="blog-about"),
     path('news', views.news, name="blog-about"),
     path('actionUrl', views.getNewsButton),
-    path('detial_click', views.detial_click, name='detial_click'),
+    path('detial_click', views.chart, name='detial_click'),
     path('login', views.login, name='login'),
 
   
