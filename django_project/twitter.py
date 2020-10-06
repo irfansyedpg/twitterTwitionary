@@ -28,7 +28,13 @@ api = tweepy.API(auth,wait_on_rate_limit=True)
 
 #SQL Connection String strats
 mydb = mysql.connector.connect(
+    #   host="104.197.221.129",
+    # # host="localhost",
+    # database="twitter",
+    # user="twitteruser",
+    # passwd="irfansyed",
     host="localhost",
+    # host="localhost",
     database="twitter",
     user="root",
     passwd="",
@@ -41,7 +47,7 @@ mycursor = mydb.cursor()
 def scraptweets(search_words, date_since, numTweets, numRuns):
     
     
-    print('function called')
+    print('function called function')
     # print(search_words)
     
   
@@ -96,26 +102,20 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
                     text = tweet.retweeted_status.full_text
             except AttributeError:  # Not a Retweet
                     text = tweet.full_text
-        
-            # split_words=search_words.split("OR")
-            # for i in range(len(split_words)):
-            #      print(split_words[i])
-            # if split_words[i] in hashtags :
-            #      print("Yes, 'at' found in List : " , split_words[i])
             query = "INSERT into tbl_twitter(location,tweetcreatedts,retweetcount,text,Username,links,acctdesc,following,followers,totaltweets,usercreatedts) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             val = (location, tweetcreatedts, retweetcount, text, username,url,acctdesc,following,followers,totaltweets,usercreatedts)
             mycursor.execute(query,val)
             # print("1 record inserted, ID:", mycursor.lastrowid)
             twitter_col_id=mycursor.lastrowid
-            # print("1 record inserted, ID:",twitter_col_id)
-
-
             path=[]
-            for i in enumerate(hashtags):
-                 path.append(i[1]['text'].split(","))
-                 for j in path:
-                      query1 = "INSERT into tbl_hashtags(title) VALUES (%s)"
-                      val1 = (j)
+            for i in hashtags:
+                tagtext= i['text']
+                print(['text'])
+                #  id='123'
+            #      for j in path: 
+            #           print('--',j)
+                query1 = "INSERT into tbl_hashtags(title,twitter_id) VALUES (%s, %s)"
+                val1 = (tagtext,twitter_col_id)
                       
             mycursor.execute(query1,val1)
             # query = "INSERT into tbl_hashtags(location) VALUES (%s)"
@@ -160,7 +160,6 @@ def job():
     try:
         df = pd.read_excel ('dictionarytwets.xlsx')
         mylist = df['words'].tolist()
-        print(mylist)
         # print(mylist)
         search_words=""
         count=0
@@ -173,9 +172,9 @@ def job():
             count=1
         # search_words1=search_words
         # print(search_words1)
-        date_since = "2020-07-16"
+        date_since = "2020-09-20"
 
-        numTweets = 500
+        numTweets = 30000
         numRuns = 1
 
         scraptweets(search_words, date_since, numTweets, numRuns)

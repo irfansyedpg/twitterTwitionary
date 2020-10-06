@@ -10,7 +10,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <link rel="stylesheet" href="{% static 'blog/main.css' %}">
 
@@ -21,15 +20,10 @@
     <link rel="stylesheet" href=" {% static 'blog/css/stellarnav.min.css' %} ">
     <link rel="stylesheet" href="{% static 'blog/css/owl.carousel.css' %} ">
     <link rel="stylesheet" href="{% static 'blog/css/slick.css' %} ">
-
-    <link href="{% static 'blog/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- <link href="{% static 'blog/css/bootstrap.min.css' %}" rel="stylesheet"> -->
     <link href=" {% static 'blog/css/font-awesome.min.css' %}" rel="stylesheet">
     <link href="  {% static 'blog/css/material-icons.css' %} rel="stylesheet">
-
-
-
-
-
 
     <script src="{% static 'blog/js/vendor/modernizr-2.8.3.min.js' %} "></script>
 
@@ -74,7 +68,7 @@
 
 
 
-    <header class="site-header">
+    <header class="site-header mb-5">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
           <a class="navbar-brand mr-4" href="/blog">Twitionary </a>
@@ -86,7 +80,7 @@
 
               <strong>     <a class="nav-item nav-link navbar-brand mr-4" href="home">Home</a> </strong>
             <a class="nav-item nav-link navbar-brand mr-4" href="news">News</a> 
-             <a class="nav-item nav-link navbar-brand mr-4" href="detial_click">Twitter</a> 
+             <a class="nav-item nav-link navbar-brand mr-4" href="twitter_search">Twitter</a> 
              <a class="nav-item nav-link navbar-brand mr-4" href="dictionary">Dictionary</a>
              
         
@@ -102,7 +96,7 @@
 </header>
 
 
-    <div >
+  
     
 <!-- {% if user.is_authenticated  %} -->
   {% block content %}
@@ -110,7 +104,7 @@
 
 <!-- {% else %} -->
     <!--START TOP AREA-->
-    <header class="top-area" id="home">
+    <header class="top-area mb-5" id="home">
       <div class="header-top-area">
           <!--MAINMENU AREA-->
           <div class="mainmenu-area" id="mainmenu-area">
@@ -149,13 +143,12 @@
       </div>
   </header>
 <!-- {% endif %} -->
-  </div>
 
 
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">

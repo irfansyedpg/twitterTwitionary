@@ -309,11 +309,11 @@ jQuery(document).on('ready', function ($) {
 
 
 
-jQuery(window).on('load', function () {
-    "use strict";
-    /*--------------------------
-        PRE LOADER
-    ----------------------------*/
-    $(".preeloader").fadeOut(1000);
+// jQuery(window).on('load', function () {
+//     "use strict";
+//     /*--------------------------
+//         PRE LOADER
+//     ----------------------------*/
+//     $(".preeloader").fadeOut(1000);
 
-});
+// });
