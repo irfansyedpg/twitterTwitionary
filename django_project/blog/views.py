@@ -360,6 +360,21 @@ def sentiment(text):
     else:
         return 'negative'
 
+#this is used for sentence analysis
+def sentiment_analysis(text):
+   
+    synt_analysis = TextBlob(text)
+    if synt_analysis.sentiment.polarity>=1.0:
+        return 'Great'
+    elif synt_analysis.sentiment.polarity>=0.7:
+        return 'Good'
+    elif synt_analysis.sentiment.polarity>=0.0:  
+        return 'Neutral'
+    elif synt_analysis.sentiment.polarity>=-0.6999998 :  
+         return 'Bad'
+    elif synt_analysis.sentiment.polarity>=-1.0:  
+        return 'Terrible'
+
 
 # dicinoaty data table
 
@@ -513,10 +528,23 @@ def twitter_details(request):
     price_lte = request.GET['date1']
     sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id DESC LIMIT 3000"
     cursor.execute(sqlite_select_query,(price_lte,))
-
+    greatcounter = 0
+    goodcounter = 0
+    noutralcounter = 0
+    badcounter = 0
+    terriblecounter = 0
     for row in cursor:
-        sentiments = sentiment(row[4])
-        print(sentiments)
+        sentiments = sentiment_analysis(row[4])
+        if sentiments =='Great':
+            greatcounter+=1
+        if sentiments =='Good':
+            goodcounter+=1
+        if sentiments =='Neutral':
+            noutralcounter+=1
+        if sentiments =='Bad':
+            badcounter+=1
+        if sentiments =='Terrible':
+            terriblecounter+=1
         posts.append({
             'text': row[4],
             'username': row[5],
@@ -528,14 +556,21 @@ def twitter_details(request):
             'following': row[8],
             'followers': row[9],
             'sentiment': sentiments})
+    print('great',greatcounter)
+    print('good',goodcounter)
+    print('nutral',noutralcounter)
+    print('bad',badcounter)
+    print('terr',terriblecounter)
     mydb.commit()
     # show data from 2nd table
-    tweets_countq_query = """select COUNT(distinct Username) as username,COUNT(a.Id),COUNT(distinct location) as location from tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id"""
+    tweets_countq_query = """select COUNT(distinct Username) as username,COUNT(a.Id),COUNT(distinct location) as location,COUNT(retweetcount),COUNT(totaltweets) from tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id"""
     cursor.execute(tweets_countq_query,(price_lte,))
     count_row = cursor.fetchone()
     count_username = count_row[0]
     tweets_count = count_row[1]
     tweets_location = count_row[2]
+    retweets_count = count_row[3]
+    total_tweets = count_row[4]
     # end query
 
     # here we can show data from excel sheet total key words
@@ -600,8 +635,10 @@ def twitter_details(request):
     return render(request, 'blog/twitter_details.html', {
         'posts': posts, 
         'output': pie3d.render(), 
-        'output1': column2D.render(), 'tweets_count': tweets_count, 'count_username': count_username, 'tweets_location': tweets_location, 'tweets_total_keywords': tweets_total_keywords
+        'output1': column2D.render(), 'tweets_count': tweets_count, 'count_username': count_username, 'tweets_location': tweets_location, 'tweets_total_keywords': tweets_total_keywords,
+        'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'retweets':retweets_count,'totalTweets':total_tweets
     })
+   
 
 def insertkeywords(request):
 

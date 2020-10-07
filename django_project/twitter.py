@@ -93,10 +93,14 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
             retweetcount = tweet.retweet_count
 
             hashtags = tweet.entities['hashtags']
-            # tweetId= tweet.id
+            tweet_id= tweet.id
 
             # print(tweetId)
             username = tweet.user.screen_name
+
+           
+
+
             url =  f"https://twitter.com/user/status/{tweet.id}"
             try:
                     text = tweet.retweeted_status.full_text
@@ -110,14 +114,17 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
             path=[]
             for i in hashtags:
                 tagtext= i['text']
-                print(['text'])
-                #  id='123'
-            #      for j in path: 
-            #           print('--',j)
                 query1 = "INSERT into tbl_hashtags(title,twitter_id) VALUES (%s, %s)"
                 val1 = (tagtext,twitter_col_id)
                       
             mycursor.execute(query1,val1)
+            print(username)
+            replies=[]
+            for tweet in tweepy.Cursor(api.search,q='to:'+username, result_type='recent', timeout=999999).items(1000):
+                if hasattr(tweet, 'in_reply_to_status_id_str'):
+                    if (tweet.in_reply_to_status_id_str==tweet_id):
+                        ryplycount=replies.append(tweet)
+                        print('repl',ryplycount)
             # query = "INSERT into tbl_hashtags(location) VALUES (%s)"
             # val = (location)
             # query = "INSERT into twitter_table(twitter_text) VALUES (%s)"
@@ -174,7 +181,7 @@ def job():
         # print(search_words1)
         date_since = "2020-09-20"
 
-        numTweets = 30000
+        numTweets = 500
         numRuns = 1
 
         scraptweets(search_words, date_since, numTweets, numRuns)
