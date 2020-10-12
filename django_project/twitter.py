@@ -98,9 +98,9 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
              print(user.screen_name) 
              followers_scrname=user.screen_name
              followers_name=user.name
-             followers_text=user.retweeted_status.text
+            #  followers_text=user.retweeted_status.text
              print(user.name) 
-             print(followers_text) 
+            #  print(followers_text) 
              followersurl =  f"https://twitter.com/{user.screen_name}"
              print(followersurl) 
              
