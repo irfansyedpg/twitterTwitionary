@@ -52,11 +52,10 @@ import mysql.connector
 
 # SQL Connection String strats
 mydb = mysql.connector.connect(
-      host="104.197.221.129",
-    # host="localhost",
+    host="localhost",
     database="twitter",
-    user="twitteruser",
-    passwd="irfansyed",
+    user="root",
+    passwd="",
 )
 cursor = mydb.cursor()
 # countcursor = mydb.cursor(buffered=True)
