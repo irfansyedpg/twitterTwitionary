@@ -518,15 +518,46 @@ def search_keywords(request):
     #twitter details
 # Twiteer scraping
 def twitter_search(request):
-    
      return render(request, 'blog/twitter_search.html')
+#twitter list page to show the tweets
+def twitter_list(request):
+       
+    posts = []
+    mydb._open_connection()
+    search = request.GET.get('search')
+    btn1 = request.GET.get('btn1')
+    print("request", btn1)
+    if search==None:
+        sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id ORDER BY a.Id DESC LIMIT 50"
+        cursor.execute(sqlite_select_query)
+    elif btn1=='tweets':
+        sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id DESC LIMIT 10"
+        cursor.execute(sqlite_select_query,(search,))
+   
+    for row in cursor:
+      
+        posts.append({
+            'text': row[4],
+            'username': row[5],
+            'dated': row[2],
+            'retweetcount': row[3],
+            'location': row[1],
+            'urll': row[6],
+            'description': row[7],
+            'following': row[8],
+            'followers': row[9],
+            'tweetsdate':row[11]})
+    mydb.commit()
+    return render(request, 'blog/twitter_list.html', {
+        'posts': posts })
+   
 
 def twitter_details(request):
     
     posts = []
     mydb._open_connection()
     price_lte = request.GET['date1']
-    sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id DESC LIMIT 3000"
+    sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id DESC LIMIT 50"
     cursor.execute(sqlite_select_query,(price_lte,))
     greatcounter = 0
     goodcounter = 0
@@ -556,15 +587,11 @@ def twitter_details(request):
             'following': row[8],
             'followers': row[9],
             'sentiment': sentiments})
-    print('great',greatcounter)
-    print('good',goodcounter)
-    print('nutral',noutralcounter)
-    print('bad',badcounter)
-    print('terr',terriblecounter)
     mydb.commit()
     # show data from 2nd table
     tweets_countq_query = """select COUNT(distinct Username) as username,COUNT(a.Id),COUNT(distinct location) as location,COUNT(retweetcount),COUNT(totaltweets) from tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id"""
     cursor.execute(tweets_countq_query,(price_lte,))
+
     count_row = cursor.fetchone()
     count_username = count_row[0]
     tweets_count = count_row[1]
@@ -572,7 +599,24 @@ def twitter_details(request):
     retweets_count = count_row[3]
     total_tweets = count_row[4]
     # end query
-
+    coutdate = []
+    cout_bydate = """select count(totaltweets),date(usercreatedts) as date FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s GROUP by day(tweetcreatedts)"""
+    cursor.execute(cout_bydate,(price_lte,))
+    for count_date_row in cursor:
+    # count_date_row = cursor.fetchone()
+        # print(count_date_row)
+         coutdate.append({
+            #  t=count_date_row[1]
+            #  date.strftime('%m/%d/%Y')
+            'couttweets': count_date_row[0],
+            'bydate':count_date_row[1].strftime('%m/%d/%Y')
+            })
+    mydb.commit()
+        # count_tweets = count_date_row[0]
+        # show_date = count_date_row[1]
+    #count by date total tweets
+    print(coutdate)
+    #end query
     # here we can show data from excel sheet total key words
     import openpyxl as xl
     wb = xl.load_workbook("dictionary.xlsx", enumerate)
@@ -580,62 +624,8 @@ def twitter_details(request):
 
     tweets_total_keywords = sheet.max_row
     # column_count = sheet.max_column
-    
-
-    
-# start charts from here
-    dataSource = OrderedDict()
-    # The `chartConfig` dict contains key-value pairs of data for chart attribute
-    chartConfig = OrderedDict()
-    chartConfig["caption"] = "TWEETS BY SENTIMENT"
-    chartConfig["theme"] = "fusion"
-
-    dataSource["chart"] = chartConfig
-    dataSource["data"] = []
-    dataSource["data"].append({"label": 'Total Tweets', "value": tweets_count})
-    dataSource["data"].append(
-        {"label": 'Total Users', "value": count_username})
-    dataSource["data"].append(
-        {"label": 'Total Location', "value": tweets_location})
-    dataSource["data"].append(
-        {"label": 'Key Words Define', "value": tweets_total_keywords})
-    pie3d = FusionCharts("pie3d", "ex2", "100%", "400", "chart-1", "json",
-                         # The data is passed as a string in the `dataSource` as parameter.
-
-                         {
-                             "chart": {
-                                 "caption": "TWEETS BY TYPE",
-                                 # "subCaption" : "For a net-worth of $1M",
-                                 "showValues": "1",
-                                 "showPercentInTooltip": "0",
-                                 # "numberPrefix" : "$",
-                                 "enableMultiSlicing": "1",
-                                 "theme": "fusion"
-                             },
-                             "data": [{
-                                 "label": "Total Tweets",
-                                 "value": tweets_count
-
-                             }, {
-                                 "label": "Total Users",
-                                 "value": count_username
-                             }, {
-                                 "label": "Total Location",
-                                 "value": tweets_location
-                             }, {
-                                 "label": "Key Words Define",
-                                 "value": tweets_total_keywords
-
-                             }]
-                         })
-
-    column2D = FusionCharts("column2d", "myFirstChart", "600",
-                            "400", "myFirstchart-container", "json", dataSource)
-
     return render(request, 'blog/twitter_details.html', {
-        'posts': posts, 
-        'output': pie3d.render(), 
-        'output1': column2D.render(), 'tweets_count': tweets_count, 'count_username': count_username, 'tweets_location': tweets_location, 'tweets_total_keywords': tweets_total_keywords,
+        'posts': posts,'coutdate': json.dumps(coutdate),'tweets_count': tweets_count, 'count_username': count_username, 'tweets_location': tweets_location, 'tweets_total_keywords': tweets_total_keywords,
         'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'retweets':retweets_count,'totalTweets':total_tweets
     })
    

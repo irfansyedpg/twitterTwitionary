@@ -43,24 +43,15 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 # In[33]:
 
-
+# langs = {'ar': 'Arabic', 'bg': 'Bulgarian', 'ca': 'Catalan', 'cs': 'Czech', 'da': 'Danish', 'de': 'German', 'el': 'Greek', 'en': 'English', 'es': 'Spanish', 'et': 'Estonian',
+#          'fa': 'Persian', 'fi': 'Finnish', 'fr': 'French', 'hi': 'Hindi', 'hr': 'Croatian', 'hu': 'Hungarian', 'id': 'Indonesian', 'is': 'Icelandic', 'it': 'Italian', 'iw': 'Hebrew',
+#          'ja': 'Japanese', 'ko': 'Korean', 'lt': 'Lithuanian', 'lv': 'Latvian', 'ms': 'Malay', 'nl': 'Dutch', 'no': 'Norwegian', 'pl': 'Polish', 'pt': 'Portuguese', 'ro': 'Romanian',
+#          'ru': 'Russian', 'sk': 'Slovak', 'sl': 'Slovenian', 'sr': 'Serbian', 'sv': 'Swedish', 'th': 'Thai', 'tl': 'Filipino', 'tr': 'Turkish', 'uk': 'Ukrainian', 'ur': 'Urdu',
+#          'vi': 'Vietnamese', 'zh_CN': 'Chinese (simplified)', 'zh_TW': 'Chinese (traditional)'}
 def scraptweets(search_words, date_since, numTweets, numRuns):
     
     
     print('function called function')
-    # print(search_words)
-    
-  
-    # split_words=search_words.split("OR")
-    # for i in range(len(split_words)):
-	#     print(split_words[i])
-	#     print(i)
-    # split_words=search_words.split("OR")
-    # for i in enumerate(split_words):
-    #     path = i
-
-    
-
     db_tweets = pd.DataFrame(columns = [ 'location', 'tweetcreatedts',
                                         'retweetcount', 'text', 'hashtags'])
     program_start = time.time()
@@ -73,12 +64,12 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
         start_run = time.time()
     
         tweets = tweepy.Cursor(api.search, q=search_words, lang="en", since=date_since, tweet_mode='extended').items(numTweets)
-
+          
+        
         tweet_list = [tweet for tweet in tweets]
         # print(tweet_list)
         noTweets = 0
         for tweet in tweet_list:
-
             # username = tweet.user.screen_name
             acctdesc = tweet.user.description
 
@@ -98,8 +89,43 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
             # print(tweetId)
             username = tweet.user.screen_name
 
-           
+            # for tweet in tweets:
+            # if tweet.lang == "en":
+            #     a.append(tweet.text)
+                #Do the stuff here
+            print('username',username)
+            for user in tweepy.Cursor(api.followers, screen_name=username).items():
+             print(user.screen_name) 
+             followers_scrname=user.screen_name
+             followers_name=user.name
+             followers_text=user.retweeted_status.text
+             print(user.name) 
+             print(followers_text) 
+             followersurl =  f"https://twitter.com/{user.screen_name}"
+             print(followersurl) 
+             
+            # ids = []
+            # for page in tweepy.Cursor(api.followers_ids, screen_name=username).pages():
+          
+            # sleeptime = 4
+            # pages = tweepy.Cursor(api.followers, screen_name=username).pages()
 
+
+            # while True:
+            #     try:
+            #         page = next(pages)
+            #         time.sleep(sleeptime)
+            #     except tweepy.TweepError: #taking extra care of the "rate limit exceeded"
+            #         time.sleep(60*15) 
+            #         page = next(pages)
+            #     except StopIteration:
+            #         break
+            # for user in page:
+            #     print('user.id_str',user.id_str)
+            #     print('user.screen_name',user.screen_name)
+            #     print('user.followers_count',user.followers_count)
+
+            # print(ids)
 
             url =  f"https://twitter.com/user/status/{tweet.id}"
             try:
@@ -118,13 +144,13 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
                 val1 = (tagtext,twitter_col_id)
                       
             mycursor.execute(query1,val1)
-            print(username)
-            replies=[]
-            for tweet in tweepy.Cursor(api.search,q='to:'+username, result_type='recent', timeout=999999).items(1000):
-                if hasattr(tweet, 'in_reply_to_status_id_str'):
-                    if (tweet.in_reply_to_status_id_str==tweet_id):
-                        ryplycount=replies.append(tweet)
-                        print('repl',ryplycount)
+            # print(username)
+            # replies=[]
+            # for tweet in tweepy.Cursor(api.search,q='to:'+username, result_type='recent', timeout=999999).items(1000):
+            #     if hasattr(tweet, 'in_reply_to_status_id_str'):
+            #         if (tweet.in_reply_to_status_id_str==tweet_id):
+            #             ryplycount=replies.append(tweet)
+            #             print('repl',ryplycount)
             # query = "INSERT into tbl_hashtags(location) VALUES (%s)"
             # val = (location)
             # query = "INSERT into twitter_table(twitter_text) VALUES (%s)"
@@ -181,7 +207,7 @@ def job():
         # print(search_words1)
         date_since = "2020-09-20"
 
-        numTweets = 500
+        numTweets = 1000
         numRuns = 1
 
         scraptweets(search_words, date_since, numTweets, numRuns)

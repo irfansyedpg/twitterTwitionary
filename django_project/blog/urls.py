@@ -15,4 +15,5 @@ urlpatterns = [
     path('search', views.search_keywords,name='search_page'),
     path('twitter_details', views.twitter_details,name='twitter_details'),
     path('twitter_search', views.twitter_search,name='twitter_search'),
+    path('twitter_list', views.twitter_list,name='twitter_list'),
 ]
