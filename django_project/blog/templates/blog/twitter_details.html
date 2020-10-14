@@ -1,0 +1,559 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://npmcdn.com/masonry-layout@4.0/dist/masonry.pkgd.js"></script>
+<style>
+    .bg-orange {
+        background-color: #f34851
+    }
+    
+    body {
+        background: #f9f9f9;
+    }
+    
+    .grid {
+        width: 100%;
+        max-width: 940px;
+        margin: 50px auto;
+    }
+    
+    .grid-item {
+        width: 300px;
+        float: left;
+    }
+
+    
+</style>
+<div class="container mt-5 mb-5" style="margin-top: 100px !important;">
+    <h3 class="font-weight-light">Twitter search & analytics for <span class="font-weight-bold">'file'</span></h3>
+    <p>this is ny daynanic {{tweets_count}}</p>
+    <div class="row">
+        <div class="col-sm-5 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-4 text-center">
+                            <h6 class="text-uppercase">Tweets</h6>
+                            <p>100</p>
+                        </div>
+                        <div class="col-sm-4 text-center">
+                            <h6 class="text-uppercase">Timeframe</h6>
+                            <p>1m</p>
+                        </div>
+                        <div class="col-sm-4 text-center">
+                            <h6 class="text-uppercase">Reach</h6>
+                            <p>113,330</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-7 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3 text-center">
+                            <h6 class="text-uppercase">Impressions</h6>
+                            <p>100,334</p>
+                        </div>
+                        <div class="col-sm-3 text-center">
+                            <h6 class="text-uppercase">Total RT's</h6>
+                            <p>445,887</p>
+                        </div>
+                        <div class="col-sm-3 text-center">
+                            <h6 class="text-uppercase">Total Faves</h6>
+                            <p>113,330</p>
+                        </div>
+                        <div class="col-sm-3 text-center">
+                            <h6 class="text-uppercase">Replies</h6>
+                            <p>17</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3 justify-content-center">
+        <div class="col-sm-10 ">
+            <div class="row">
+                <div class="col-sm-6 mb-3">
+                    <div class="card">
+                        <div class="card-header">Tweets By Sentiments</div>
+                        <div class="card-body">
+                            <div id="Sentiments"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 mb-3">
+                    <div class="card">
+                        <div class="card-header">Tweets By Type</div>
+                        <div class="card-body">
+                            <div id="ByType"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 mb-3">
+                    <div class="card">
+                        <div class="card-header">Tweets By Source</div>
+                        <div class="card-body">
+                            <div id="BySource"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 mb-3">
+                    <div class="card">
+                        <div class="card-header">Tweets By Language</div>
+                        <div class="card-body">
+                            <div id="ByLanguage"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 mb-3">
+                    <div class="card">
+                        <div class="card-header">Tweets Over Time</div>
+                        <div class="card-body">
+                            <div id="ByTime"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+  
+    <div class="row mb-3 justify-content-center">
+        <div class="col-sm-12 ">
+            <h5>Twitter Feed</h5>
+            <div class="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 350, "gutter":20 }'>
+              
+                {% for post in posts  %}
+                  <div class="grid-item">
+                    <blockquote class="twitter-tweet">
+                        <a href={{ post.urll }}></a>
+                    </blockquote>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+window.twttr = function(d, s, id) {
+    var t, js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js, fjs);
+    return window.twttr || (t = {
+        _e: [],
+        ready: function(f) {
+            t._e.push(f)
+        }
+    });
+}(document, 'script', 'twitter-wjs');
+
+// When widget is ready, run masonry
+twttr.ready(function(twttr) {
+    twttr.events.bind('loaded', function(event) {
+        $('.grid').masonry({
+            itemSelector: '.grid-item',
+            columnWidth: 300,
+            gutter: 20
+        });
+    });
+});
+</script>
+
+<script>
+
+    var greate =JSON.parse("{{great}}");
+    var good =JSON.parse("{{good}}");
+    var nuetral =JSON.parse("{{nutral}}");
+    var bad =JSON.parse("{{bad}}");
+    var terrible =JSON.parse("{{terr}}");
+// Build the chart
+Highcharts.chart('Sentiments', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: ' '
+    },
+    tooltip: {
+        pointFormat: '{name} <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    credits: {
+        enabled: false
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        }
+    },
+    legend: {
+        align: 'right',
+        verticalAlign: 'top',
+        layout: 'vertical',
+        x: 0,
+        y: 100
+    },
+    series: [{
+        name: '',
+        colorByPoint: true,
+        data: [{
+            name: 'Great',
+            y: greate,
+            sliced: false,
+            selected: true,
+        }, {
+            name: 'Good',
+            y: good
+        }, {
+            name: 'Neutral',
+            y: nuetral
+        }, {
+            name: 'Bad',
+            y: bad
+        }, {
+            name: 'Terrible',
+            y: terrible
+        }]
+    }]
+});
+
+// Build the chart
+var retweets =JSON.parse("{{retweets}}");
+var totalTweets =JSON.parse("{{totalTweets}}");
+alert(totalTweets)
+Highcharts.chart('ByType', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: ''
+    },
+    tooltip: {
+        pointFormat: '{name} <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    credits: {
+        enabled: false
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        }
+    },
+    legend: {
+        align: 'right',
+        verticalAlign: 'top',
+        layout: 'vertical',
+        x: 0,
+        y: 100
+    },
+    series: [{
+        name: '',
+        colorByPoint: true,
+        data: [{
+            name: 'Tweets',
+            y:totalTweets,
+            sliced: false,
+            selected: true
+        }, {
+            name: 'Retweets',
+            y: retweets
+        }, {
+            name: 'Replies',
+            y: 3200
+        }]
+    }]
+});
+// Build the chart
+Highcharts.chart('BySource', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: ''
+    },
+    tooltip: {
+        pointFormat: '{name} <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    credits: {
+        enabled: false
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        }
+    },
+    legend: {
+        align: 'right',
+        verticalAlign: 'top',
+        layout: 'vertical',
+        x: 0,
+        y: 100
+    },
+    series: [{
+        name: ' ',
+        colorByPoint: true,
+        data: [{
+            name: 'iPhone',
+            y: 61.41,
+            sliced: false,
+            selected: true
+        }, {
+            name: 'Android',
+            y: 11.84
+        }, {
+            name: 'Twitter Web App',
+            y: 10.85
+        }, {
+            name: 'iPad',
+            y: 4.67
+        }, {
+            name: 'TweetDeck',
+            y: 4.18
+        }, {
+            name: 'addempsea',
+            y: 7.05
+        }]
+    }]
+});
+
+// Build the chart
+Highcharts.chart('ByLanguage', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: ''
+    },
+    tooltip: {
+        pointFormat: '{name} <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    credits: {
+        enabled: false
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        }
+    },
+    legend: {
+        align: 'right',
+        verticalAlign: 'top',
+        layout: 'vertical',
+        x: 0,
+        y: 100
+    },
+    series: [{
+        name: '',
+        colorByPoint: true,
+        data: [{
+            name: 'English',
+            y: 11.84,
+            sliced: false,
+            selected: true
+        }, {
+            name: 'Urdu',
+            y: 10.85
+        }, {
+            name: 'Arabic',
+            y: 4.67
+        }, {
+            name: 'Italian',
+            y: 4.18
+        }, {
+            name: 'French',
+            y: 7.05
+        }, {
+            name: 'Spanish',
+            y: 7.05
+        }, {
+            name: 'Portuguese',
+            y: 7.05
+        }, {
+            name: 'Korean',
+            y: 7.05
+        }, {
+            name: 'Japan',
+            y: 7.05
+        }, {
+            name: 'Chines',
+            y: 7.05
+        }]
+    }]
+});
+// var coutdate =JSON.parse('{{coutdate.couttweets}}');
+var mydict = JSON.parse('{{ coutdate|safe }}');
+
+console.log('coutdate',mydict)
+//for show the count values
+let tweetsArray = [];
+let bydate=[];
+
+let bydateArr=[];
+for (const tweets of mydict) {
+    var d = new Date(tweets.bydate);
+    var year = d.getFullYear();
+    var month = d.getMonth();
+    var day = d.getDay();
+    var formater = day+'/'+month+'/'+year;
+    tweetsArray.push([formater,tweets.couttweets]);
+    // var item = tweets.bydate.split('"').join('')+',';
+    // bydate = item;
+    // bydate.push();
+    bydateArr.push(formater)
+}
+console.log(bydateArr);
+
+// Highcharts.chart('ByTime1', {
+//     chart: {
+//         type: 'column',
+//         options3d: {
+//             enabled: true,
+//             alpha: 10,
+//             beta: 25,
+//             depth: 70
+//         }
+//     },
+//     title: {
+//         text: '3D chart with null values'
+//     },
+//     subtitle: {
+//         text: 'Notice the difference between a 0 value and a null point'
+//     },
+//     plotOptions: {
+//         column: {
+//             depth: 25
+//         }
+//     },
+//     xAxis: {
+//         categories: bydate,
+//         labels: {
+//             skew3d: true,
+//             style: {
+//                 fontSize: '16px'
+//             }
+//         }
+//     },
+//     yAxis: {
+//         title: {
+//             text: null
+//         }
+//     },
+//     series: [{
+//         name: 'Sales',
+//         data: tweetsArray
+//     }]
+// });
+Highcharts.chart('ByTime', {
+
+    title: {
+        text: ''
+    },
+
+    time: {
+        timezone: 'Pakistan/Karachi'
+    },
+    xAxis: {
+        type: 'datetime',
+        categories: bydateArr
+    },
+    credits: {
+        enabled: false
+    },
+
+    series: [{
+        name: 'Tweets',
+        data: tweetsArray,
+        // pointStart: bydate,
+    }],
+
+
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+
+});
+</script>
+{% endblock content %}
+

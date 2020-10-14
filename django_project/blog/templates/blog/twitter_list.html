@@ -1,0 +1,225 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block content %}
+<script src="https://npmcdn.com/masonry-layout@4.0/dist/masonry.pkgd.js"></script>
+<style>
+    .bg-orange {
+        background-color: #f34851
+    }
+    
+    body {
+        background: #f9f9f9;
+    }
+    
+    .grid {
+        width: 100%;
+        max-width: 940px;
+        margin: 50px auto;  
+    }
+    
+    .grid-item {
+        width: 300px;
+        float: left;
+    }
+    
+    .overlay {
+        height: 100%;
+        width: 100%;
+        /* display: none; */
+        /* position: fixed; */
+        z-index: 1;
+        top: 0;
+        left: 0;
+        /* background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.5); */
+        /* Black with a little bit see-through */
+    }
+    /* The content */
+    
+    .overlay-content {
+        position: relative;
+        top: 46%;
+        /* width: 60%; */
+        text-align: left;
+        margin-top: 30px;
+        margin: auto;
+    }
+    /* Style the search field */
+    
+    .overlay input[type=text] {
+        padding: 15px;
+        font-size: 17px;
+        border: none;
+        float: left;
+        width: 80%;
+        background: white;
+        border: 1px solid #d6d6d6;
+    }
+    
+    input {
+        color: -internal-light-dark(black, white);
+    }
+    
+    input:focus {
+        outline: -webkit-focus-ring-color 0px 0px !important;
+    }
+    /* .overlay input[type=text]:hover {
+        background: #f1f1f1;
+    } */
+    /* Style the submit button */
+    
+    .overlay button {
+        float: left;
+        width: 20%;
+        padding: 15px;
+        background: #f34851e8;
+        font-size: 17px;
+        border: none;
+        cursor: pointer;
+        color: #fff;
+        border-radius: 0px !important;
+    }
+    
+    .overlay button:hover {
+        background: #f34851;
+        border-radius: 0px !important;
+    }
+    
+    .bg-orange {
+        background-color: #f34851
+    }
+    
+    .form-control {
+        height: 55px !important;
+        border-radius: 0px !important;
+    }
+    
+    .form-control:focus {
+        box-shadow: 0 0 0 0rem rgba(0, 0, 0, 0) !important;
+    }
+    
+    .btn:focus {
+        box-shadow: 0 0 0 0rem rgba(0, 0, 0, 0) !important;
+    }
+</style>
+<div class="container mt-5 mb-5" style="margin-top: 100px !important;">
+    <h6 class="font-weight-light">Enter a Twitter user name to view all their tweets, likes, followers or timeline</h6>
+    
+    <form action='twitter_list' method='GET'>
+        <div class="row mb-3">
+        <div class="col-sm-7">
+            <div class="overlay">
+                <div class="overlay-content">
+                   
+                        <input type="text" class="form-control" placeholder="What are you looking for?" name="search" id="search" value={{ search }}>
+                        <!-- <button type="submit" class="btn text-white"><i class="fa fa-search"></i></button> -->
+                       
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5 mb-3">
+        <div class="col-sm-8">
+            <h6 class="font-weight-light">Select the info you would like to view for this user</h6>
+            <div class="d-flex p-3 text-white">
+                <button type="submit"  name="btn1" value="tweets" class="p-2 m-2 bg-info">Tweets</i></button>
+                <button type="submit"  name="btn2" class="p-2 m-2 bg-info">Timeline</i></button>
+                <button type="submit"  class="p-2 m-2 bg-info">Likes</i></button>
+                <button type="submit"  class="p-2 m-2 bg-info">Followers</i></button>
+                <button type="submit"  class="p-2 m-2 bg-info">Following</i></button>
+                <!-- <div class="p-2 m-2 bg-info">Tweets</div>
+                <div class="p-2 m-2 bg-info">Timeline</div>
+                <div class="p-2 m-2 bg-info">Likes</div>
+                <div class="p-2 m-2 bg-info">Followers</div>
+                <button class="btn btn-primary">Following</button> -->
+                <!-- <div>
+                    <input id="search" name="search" type="text" class="query-search" placeholder="Search...">
+                    <input onclick="setGetParameter()" type="button" class="btn btn-primary" value = "View Details"/>
+                </div> -->
+            </div>
+        </div>
+       
+    </div>
+</form>
+    <hr>
+    <div class="row mt-5 mb-3 justify-content-center">
+        <div class="col-sm-12 ">
+            
+            <h5>Username Feed</h5>
+            <div class="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 25.5555%, "gutter":20 }'>
+                {% for post in posts  %}
+                <div id="results">
+                    <ul><li>{{post.text}}<a target="_blank" href={{post.urll}}> <span class="grey">{{post.tweetsdate}}</span></a></li>
+              </ul>
+                </div>
+                        <!-- <div class="grid-item">
+                 
+                    <blockquote class="twitter-tweet">
+                       <a href={{post.urll}}></a>
+                    </blockquote>
+                   
+                </div> -->
+                {% empty %}
+                <h1>Sorry, no tweets in this list.</h1>
+                {% endfor %}
+             </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Twitter widget is loading.
+    window.twttr = function(d, s, id) {
+        var t, js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+        return window.twttr || (t = {
+            _e: [],
+            ready: function(f) {
+                t._e.push(f)
+            }
+        });
+    }(document, 'script', 'twitter-wjs');
+
+    // When widget is ready, run masonry
+    twttr.ready(function(twttr) {
+        twttr.events.bind('loaded', function(event) {
+            $('.grid').masonry({
+                itemSelector: '.grid-item',
+                columnWidth: 300,
+                gutter: 20
+            });
+        });
+    });
+</script>
+<script>
+    function setGetParameter(){
+    var search_word = $("#search").val();
+    alert(search_word);
+    $.ajax({
+      type: "POST",
+      url: "{{ 'twitter_list'}}",
+      data: search_word,
+      success: function(result){
+        alert("Success");
+      }
+    });
+}
+    function call_counter(url, pk) {
+        alert();
+        window.open(url);
+        $.get('YOUR_VIEW_HERE/'+pk+'/', function (data) {
+
+            alert("counter updated!");
+        });
+    }
+</script>
+
+
+
+{% endblock content %}

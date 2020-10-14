@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+    {% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'tweets/assets/images/favicon.png' %}">
+    <title>Adminmart Template - The Ultimate Multipurpose admin template</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'tweets/assets/extra-libs/c3/c3.min.css' %}">
+    <link rel="stylesheet" href="{% static 'tweets/assets/libs/chartist/dist/chartist.min.css' %}">
+    <link rel="stylesheet" href="{% static 'tweets/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css' %}">
+    <link rel="stylesheet" href="{% static 'tweets/dist/css/style.min.css' %}">
+    <link rel="stylesheet" href="{% static 'tweets/assets/extra-libs/prism/prism.css' %}">
+</head>
+
+<body>
+
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar" data-navbarbg="skin6">
+            <nav class="navbar top-navbar navbar-expand-md">
+                <div class="navbar-header" data-logobg="skin6">
+                    <!-- This is for the sidebar toggle which is visible on mobile only -->
+                    <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i
+                            class="ti-menu ti-close"></i></a>
+                    <!-- ============================================================== -->
+                    <!-- Logo -->
+                    <!-- ============================================================== -->
+                    <div class="navbar-brand">
+                        <!-- Logo icon -->
+                        <a href="index.html">
+                            <b class="logo-icon">
+                                <!-- Dark Logo icon -->
+                                <img src="{% static 'tweets/assets/images/logo-icon.png' %}" alt="homepage" class="dark-logo" />
+                                
+                                <!-- Light Logo icon -->
+                                <img src="{% static 'tweets/assets/images/logo-icon.png' %}" alt="homepage" class="light-logo" />
+                            </b>
+                            <!--End Logo icon -->
+                            <!-- Logo text -->
+                            <span class="logo-text">
+                                <!-- dark Logo text -->
+                                <img src="{% static 'tweets/assets/images/logo-text.png' %}" alt="homepage" class="dark-logo" />
+                                <!-- Light Logo text -->
+                                <img src="{% static 'tweets/assets/images/logo-light-text.png' %}" class="light-logo" alt="homepage" />
+                            </span>
+                        </a>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- End Logo -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- Toggle which is visible on mobile only -->
+                    <!-- ============================================================== -->
+                    <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)"
+                        data-toggle="collapse" data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i
+                            class="ti-more"></i></a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                    <!-- ============================================================== -->
+                    <!-- toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+                        <!-- create new -->
+                        <!-- ============================================================== -->
+                    </ul>
+                    <!-- ============================================================== -->
+                    <!-- Right side toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav">
+                        <!-- ============================================================== -->
+                        <!-- Search -->
+                        <!-- ============================================================== -->
+                        <!-- <li class="nav-item d-none d-md-block">
+                            <a class="nav-link" href="javascript:void(0)">
+                                <form>
+                                    <div class="customize-input" style="max-width: 100%;">
+                                        <input class="form-control custom-shadow custom-radius border-0 bg-white"
+                                            type="search" placeholder="Search" aria-label="Search">
+                                        <i class="form-control-icon" data-feather="search"></i>
+                                    </div>
+                                </form>
+                            </a>
+                        </li> -->
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <img src="{% static 'tweets/assets/images/users/profile-pic.jpg' %}" alt="user" class="rounded-circle"
+                                    width="40">
+                                <span class="ml-2 d-none d-lg-inline-block"><span>Hello,</span> <span
+                                        class="text-dark">Jason Doe</span> <i data-feather="chevron-down"
+                                        class="svg-icon"></i></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
+                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="user"
+                                        class="svg-icon mr-2 ml-1"></i>
+                                    My Profile</a>
+                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="credit-card"
+                                        class="svg-icon mr-2 ml-1"></i>
+                                    My Balance</a>
+                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="mail"
+                                        class="svg-icon mr-2 ml-1"></i>
+                                    Inbox</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="settings"
+                                        class="svg-icon mr-2 ml-1"></i>
+                                    Account Setting</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="power"
+                                        class="svg-icon mr-2 ml-1"></i>
+                                    Logout</a>
+                                <div class="dropdown-divider"></div>
+                                <div class="pl-4 p-3"><a href="javascript:void(0)" class="btn btn-sm btn-info">View
+                                        Profile</a></div>
+                            </div>
+                        </li>
+                        <!-- ============================================================== -->
+                        <!-- User profile and search -->
+                        <!-- ============================================================== -->
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+
+
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar" data-sidebarbg="skin6">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar" data-sidebarbg="skin6">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li class="list-divider"></li>
+                        <li class="nav-small-cap"><span class="hide-menu">Twiiter Analystics</span></li>
+
+                        <li class="sidebar-item"> <a class="sidebar-link" href="search.html"
+                                aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
+                                    class="hide-menu">Search Keyword
+                                </span></a>
+                        </li>
+                        <li class="sidebar-item"> <a class="sidebar-link" href="mapper.html"
+                                aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
+                                    class="hide-menu">Tweets Mapper
+                                </span></a>
+                        </li>
+
+                        <li class="sidebar-item"> <a class="sidebar-link" href="ticket-list.html"
+                                aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
+                                    class="hide-menu">Thread Hunter
+                                </span></a>
+                        </li>
+
+                        <li class="sidebar-item"> <a class="sidebar-link" href="ticket-list.html"
+                                aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
+                                    class="hide-menu">Reports
+                                </span></a>
+                        </li>
+
+                        <li class="sidebar-item"> <a class="sidebar-link" href="ticket-list.html"
+                            aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
+                                class="hide-menu">Deine Keywords
+                            </span></a>
+                        </li>
+
+                        <li class="list-divider"></li>
+                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="authentication-login1.html"
+                                aria-expanded="false"><i data-feather="log-out" class="feather-icon"></i><span
+                                    class="hide-menu">Logout</span></a></li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <div class="container-fluid">
+            
+                <!----- Search Twitter------>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Search Keywords</h4>
+                                <form class="mt-4">
+                                    <div class="form-group" style="width: 100%;">
+                                        <input type="text" class="form-control" value="" placeholder="Enter Keyword Hashing or Websites">
+                                    </div>
+                                </form>
+                                <h6>Find tweets that contain keywords or hashtag</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!----- Search Twitter------>
+
+
+                <!-------Tweets Meter------>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                                        <h5>Tweetes</h5>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                                        <h5>TimeFrame</h5>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                                        <h5>Reach</h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                                        <h5>100</h5>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                                        <h5>1200</h5>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                                        <h5>1600</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                        <h5>Tweetes</h5>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                        <h5>TimeFrame</h5>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                        <h5>Reach</h5>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                        <h5>Reach</h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                        <h5>100</h5>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                        <h5>500</h5>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                        <h5>600</h5>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                        <h5>800</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-------Tweets Meter------>
+
+                <!--------Tweets Analysis-->
+                <div class="row">
+                    <div class="col-sm-6 col-sm-6 col-lg-6 col-xs-12 mb-3">
+                        <div class="card">
+                            <div class="card-header">Tweets By Sentiments</div>
+                            <div class="card-body">
+                                <div id="Sentiments"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-sm-6 col-lg-6 col-xs-12 mb-3">
+                        <div class="card">
+                            <div class="card-header">Tweets By Type</div>
+                            <div class="card-body">
+                                <div id="ByType"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6 col-sm-6 col-lg-6 col-xs-12 mb-3">
+                        <div class="card">
+                            <div class="card-header">Tweets By Source</div>
+                            <div class="card-body">
+                                <div id="BySource"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-sm-6 col-lg-6 col-xs-12 mb-3">
+                        <div class="card">
+                            <div class="card-header">Tweets By Language</div>
+                            <div class="card-body">
+                                <div id="ByLanguage"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 mb-3">
+                        <div class="card">
+                            <div class="card-header">Tweets Over Time</div>
+                            <div class="card-body">
+                                <div id="ByTime"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <!--------Tweets Analysis-->
+
+                 <!------ All Tweets------->
+
+                <div class="row">
+                    <h5>Twitter Feed</h5>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 ml-5">
+                    <div class="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 450, "gutter":30 }'>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/ziegfiroyt/status/643519526508888064"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/tribunabi/status/625360348489646080"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/pedestrian/status/741438374968328192"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/tribundergi/status/662992624593338368"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/losev1998/status/740423736113893376"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/astro_reid/status/500638760040529922"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/acikfutbol/status/679268483452895236"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/semttakimi/status/671683576950341632"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/SciencePorn/status/632942683384872963"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/NatGeo/status/733786918668865536"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/inthemoodfortw/status/740880017979265024"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/unblockio/status/420560882456739840"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/tribundergi/status/670224495085551616"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/AstroSamantha/status/605681391871754240"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/tribundergi/status/705356184648335360"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/ziegfiroyt/status/41585690970333184"></a>
+                            </blockquote>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="{% static 'tweets/assets/libs/jquery/dist/jquery.min.js' %} "></script>
+    <script src="{% static 'tweets/assets/libs/popper.js/dist/umd/popper.min.js' %} "></script>
+    <script src="{% static 'tweets/assets/libs/bootstrap/dist/js/bootstrap.min.js' %} "></script>
+    <script src="{% static 'tweets/dist/js/app-style-switcher.js' %} "></script>
+    <script src="{% static 'tweets/dist/js/feather.min.js' %} "></script>
+    <script src="{% static 'tweets/dist/js/sidebarmenu.js' %} "></script>
+    <script src="{% static 'tweets/dist/js/custom.min.js' %} "></script>
+    <script src="{% static 'tweets/assets/extra-libs/c3/d3.min.js' %} "></script>
+    <script src="{% static 'tweets/assets/libs/chartist/dist/chartist.min.js' %} "></script>
+    <script src="{% static 'tweets/assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js' %} "></script>
+    <script src="{% static 'tweets/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js' %} "></script>
+    <script src="{% static 'tweets/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js' %} "></script>
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <!-- <script src="./assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="./assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="./assets/libs/bootstrap/dist/js/bootstrap.min.js"></script> -->
+    <!-- apps -->
+    <!-- apps -->
+    <!-- <script src="./dist/js/app-style-switcher.js"></script> -->
+    <!-- <script src="./dist/js/feather.min.js"></script>
+    <script src="./assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="./dist/js/sidebarmenu.js"></script> -->
+    <!--Custom JavaScript -->
+    <!-- <script src="./dist/js/custom.min.js"></script> -->
+    <!--This page JavaScript -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://npmcdn.com/masonry-layout@4.0/dist/masonry.pkgd.js"></script>
+    <!-- <script src="./assets/extra-libs/c3/d3.min.js"></script>
+    <script src="./assets/extra-libs/c3/c3.min.js"></script>
+    <script src="./assets/libs/chartist/dist/chartist.min.js"></script> -->
+    <!-- <script src="./assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
+    <script src="./assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script> -->
+    <!-- <script src="./assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="./dist/js/pages/dashboards/dashboard1.min.js"></script> -->
+
+    <script>
+        // Twitter widget is loading.
+        window.twttr = function (d, s, id) {
+            var t, js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+            return window.twttr || (t = {
+                _e: [],
+                ready: function (f) {
+                    t._e.push(f)
+                }
+            });
+        }(document, 'script', 'twitter-wjs');
+
+        // When widget is ready, run masonry
+        twttr.ready(function (twttr) {
+            twttr.events.bind('loaded', function (event) {
+                $('.grid').masonry({
+                    itemSelector: '.grid-item',
+                    columnWidth: 400,
+                    gutter: 15
+                });
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        // Build the chart
+        Highcharts.chart('Sentiments', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Sentiments'
+            },
+            tooltip: {
+                pointFormat: '{name} <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            legend: {
+                align: 'right',
+                verticalAlign: 'top',
+                layout: 'vertical',
+                x: 0,
+                y: 100
+            },
+            series: [{
+                name: '',
+                data: [{
+                    name: 'Great',
+                    y: 61.41,
+                    sliced: false,
+                    selected: true,
+                }, {
+                    name: 'Good',
+                    y: 11.84,
+                }, {
+                    name: 'Neutral',
+                    y: 10.85
+                }, {
+                    name: 'Bad',
+                    y: 4.67
+                }, {
+                    name: 'Terrible',
+                    y: 4.18
+                }]
+            }]
+        });
+
+        // Build the chart
+        Highcharts.chart('ByType', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: ''
+            },
+            tooltip: {
+                pointFormat: '{name} <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            legend: {
+                align: 'right',
+                verticalAlign: 'top',
+                layout: 'vertical',
+                x: 0,
+                y: 100
+            },
+            series: [{
+                name: '',
+                colorByPoint: true,
+                data: [{
+                    name: 'Tweets',
+                    y: 61.41,
+                    sliced: false,
+                    selected: true
+                }, {
+                    name: 'Retweets',
+                    y: 11.84
+                }, {
+                    name: 'Replies',
+                    y: 10.85
+                }]
+            }]
+        });
+        // Build the chart
+        Highcharts.chart('BySource', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: ''
+            },
+            tooltip: {
+                pointFormat: '{name} <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            legend: {
+                align: 'right',
+                verticalAlign: 'top',
+                layout: 'vertical',
+                x: 0,
+                y: 100
+            },
+            series: [{
+                name: ' ',
+                colorByPoint: true,
+                data: [{
+                    name: 'iPhone',
+                    y: 61.41,
+                    sliced: false,
+                    selected: true
+                }, {
+                    name: 'Android',
+                    y: 11.84
+                }, {
+                    name: 'Twitter Web App',
+                    y: 10.85
+                }, {
+                    name: 'iPad',
+                    y: 4.67
+                }, {
+                    name: 'TweetDeck',
+                    y: 4.18
+                }, {
+                    name: 'addempsea',
+                    y: 7.05
+                }]
+            }]
+        });
+        // Build the chart
+        Highcharts.chart('ByLanguage', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: ''
+            },
+            tooltip: {
+                pointFormat: '{name} <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            legend: {
+                align: 'right',
+                verticalAlign: 'top',
+                layout: 'vertical',
+                x: 0,
+                y: 100
+            },
+            series: [{
+                name: '',
+                colorByPoint: true,
+                data: [{
+                    name: 'English',
+                    y: 11.84,
+                    sliced: false,
+                    selected: true
+                }, {
+                    name: 'Urdu',
+                    y: 10.85
+                }, {
+                    name: 'Arabic',
+                    y: 4.67
+                }, {
+                    name: 'Italian',
+                    y: 4.18
+                }, {
+                    name: 'French',
+                    y: 7.05
+                }, {
+                    name: 'Spanish',
+                    y: 7.05
+                }, {
+                    name: 'Portuguese',
+                    y: 7.05
+                }, {
+                    name: 'Korean',
+                    y: 7.05
+                }, {
+                    name: 'Japan',
+                    y: 7.05
+                }, {
+                    name: 'Chines',
+                    y: 7.05
+                }]
+            }]
+        });
+
+        Highcharts.chart('ByTime', {
+
+            title: {
+                text: ''
+            },
+
+            time: {
+                timezone: 'Pakistan/Karachi'
+            },
+            xAxis: {
+                type: 'datetime'
+            },
+            credits: {
+                enabled: false
+            },
+
+            series: [{
+                data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+                pointStart: Date.UTC(0, 1),
+                pointInterval: 36e5
+            }],
+
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: 'horizontal',
+                            align: 'center',
+                            verticalAlign: 'bottom'
+                        }
+                    }
+                }]
+            }
+
+        });
+    </script>
+
+
+</body>
+
+</html>

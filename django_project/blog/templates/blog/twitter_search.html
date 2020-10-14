@@ -1,0 +1,112 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    body,
+    html {
+        height: 100%;
+        margin: 0;
+        overflow-y: hidden
+    }
+    
+    .bg {
+        /* The image used */
+        background-image: url("{% static 'blog/img/images/bg-1.jpg' %}");
+        /* Full height */
+        height: 100%;
+        /* Center and scale the image nicely */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    /* The overlay effect with black background */
+    
+    .overlay {
+        height: 100%;
+        width: 100%;
+        /* display: none; */
+        /* position: fixed; */
+        z-index: 1;
+        top: 0;
+        left: 0;
+        /* background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.5); */
+        /* Black with a little bit see-through */
+    }
+    /* The content */
+    
+    .overlay-content {
+        position: relative;
+        top: 46%;
+        width: 60%;
+        text-align: center;
+        margin-top: 30px;
+        margin: auto;
+    }
+    /* Style the search field */
+    
+    .overlay input[type=text] {
+        padding: 15px;
+        font-size: 17px;
+        border: none;
+        float: left;
+        width: 80%;
+        background: white;
+    }
+    
+    input {
+        color: -internal-light-dark(black, white);
+    }
+    
+    input:focus {
+        outline: -webkit-focus-ring-color 0px 0px !important;
+    }
+    
+    .overlay input[type=text]:hover {
+        background: #f1f1f1;
+    }
+    /* Style the submit button */
+    
+    .overlay button {
+        float: left;
+        width: 20%;
+        padding: 15px;
+        background: #f34851e8;
+        font-size: 17px;
+        border: none;
+        cursor: pointer;
+        color: #fff;
+    }
+    
+    .overlay button:hover {
+        background: #f34851;
+    }
+    
+    .bg-orange {
+        background-color: #f34851
+    }
+    
+    .form-control {
+        height: 55px !important;
+        border-radius: 0px !important;
+    }
+    .btn-buttom{
+        padding-bottom: 23px !important;
+    }
+</style>
+<div class="bg">
+    <div class="overlay">
+        <div class="overlay-content">
+            <form action='twitter_details' method='GET'>
+                <input type="text" class="form-control" placeholder="What are you looking for?" id="date1" name="date1" value={{ date1 }}>
+                <button type="submit" for="date"  class="btn text-white btn-buttom"><i class="fa fa-search"></i></button>
+            </form>
+            <p style="text-align: left;color:#fff;">ex. Game, Music, Video, Photography</p>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
