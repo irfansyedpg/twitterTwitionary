@@ -28,16 +28,16 @@ api = tweepy.API(auth,wait_on_rate_limit=True)
 
 #SQL Connection String strats
 mydb = mysql.connector.connect(
-    #   host="104.197.221.129",
+    host="104.155.148.67",
+    # # host="localhost",
+    database="twitter",
+    user="twitteruser",
+    passwd="irfansyed",
+    # host="localhost",
     # # host="localhost",
     # database="twitter",
-    # user="twitteruser",
-    # passwd="irfansyed",
-    host="localhost",
-    # host="localhost",
-    database="twitter",
-    user="root",
-    passwd="",
+    # user="root",
+    # passwd="",
   
 ) 
 mycursor = mydb.cursor()
@@ -93,16 +93,16 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
             # if tweet.lang == "en":
             #     a.append(tweet.text)
                 #Do the stuff here
-            print('username',username)
-            for user in tweepy.Cursor(api.followers, screen_name=username).items():
-             print(user.screen_name) 
-             followers_scrname=user.screen_name
-             followers_name=user.name
-            #  followers_text=user.retweeted_status.text
-             print(user.name) 
-            #  print(followers_text) 
-             followersurl =  f"https://twitter.com/{user.screen_name}"
-             print(followersurl) 
+            # print('username',username)
+            # for user in tweepy.Cursor(api.followers, screen_name=username).items():
+            #  print(user.screen_name) 
+            #  followers_scrname=user.screen_name
+            #  followers_name=user.name
+            # #  followers_text=user.retweeted_status.text
+            #  print(user.name) 
+            # #  print(followers_text) 
+            #  followersurl =  f"https://twitter.com/{user.screen_name}"
+            #  print(followersurl) 
              
             # ids = []
             # for page in tweepy.Cursor(api.followers_ids, screen_name=username).pages():

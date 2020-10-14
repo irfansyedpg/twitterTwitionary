@@ -30,7 +30,7 @@ SESSION_SECURITY_EXPIRE_AFTER = 1800
 SESSION_SECURITY_WARN_AFTER = 1740
 # irfan this is to logout when not use
 
-ALLOWED_HOSTS = ['127.0.0.1', '34.68.136.134']
+ALLOWED_HOSTS = ['127.0.0.1', '34.69.221.248']
 
 
 # Application definition

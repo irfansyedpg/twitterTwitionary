@@ -32,9 +32,9 @@ from bs4 import BeautifulSoup
 import re
 import sqlite3
 import sys
-from firebase import firebase
-firebase = firebase.FirebaseApplication(
-    'https://twitionary.firebaseio.com/', None)
+# from firebase import firebase
+# firebase = firebase.FirebaseApplication(
+#     'https://twitionary.firebaseio.com/', None)
 #from datetime import timedelta
 
 
@@ -46,14 +46,15 @@ firebase = firebase.FirebaseApplication(
 
 # SQL Connection String strats
 mydb = mysql.connector.connect(
-    # host="104.197.221.129",
-    # database="twitter",
-    # user="twitteruser",
-    # passwd="irfansyed",
-    host="localhost",
+    host="104.155.148.67",
+    # # host="localhost",
     database="twitter",
-    user="root",
-    passwd="",
+    user="twitteruser",
+    passwd="irfansyed",
+    # host="localhost",
+    # database="twitter",
+    # user="root",
+    # passwd="",
 )
 cursor = mydb.cursor()
 # countcursor = mydb.cursor(buffered=True)
