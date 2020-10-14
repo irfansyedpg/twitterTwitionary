@@ -553,7 +553,7 @@ def twitter_list(request):
    
 
 def twitter_details(request):
-    
+    #fayazkhan
     posts = []
     mydb._open_connection()
     price_lte = request.GET['date1']
