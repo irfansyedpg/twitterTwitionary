@@ -255,7 +255,8 @@ def login(request):
 def home(request):
     return render(request, 'blog/home.html', {'tital': 'Home'})
 
-
+def index (request):
+    return render(request, 'blog/index.html')
 # Twiteer scraping
 def chart(request):
 
@@ -553,10 +554,11 @@ def twitter_list(request):
    
 
 def twitter_details(request):
-    #fayazkhan
+    
     posts = []
     mydb._open_connection()
-    price_lte = request.GET['date1']
+    price_lte = request.GET.get('search')
+    
     sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id DESC LIMIT 50"
     cursor.execute(sqlite_select_query,(price_lte,))
     greatcounter = 0
@@ -598,6 +600,7 @@ def twitter_details(request):
     tweets_location = count_row[2]
     retweets_count = count_row[3]
     total_tweets = count_row[4]
+    print(total_tweets)
     # end query
     coutdate = []
     cout_bydate = """select count(totaltweets),date(usercreatedts) as date FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s GROUP by day(tweetcreatedts)"""
@@ -611,11 +614,12 @@ def twitter_details(request):
             'couttweets': count_date_row[0],
             'bydate':count_date_row[1].strftime('%m/%d/%Y')
             })
+            # print(couttweets)
     mydb.commit()
         # count_tweets = count_date_row[0]
         # show_date = count_date_row[1]
     #count by date total tweets
-    print(coutdate)
+    
     #end query
     # here we can show data from excel sheet total key words
     import openpyxl as xl
@@ -624,7 +628,7 @@ def twitter_details(request):
 
     tweets_total_keywords = sheet.max_row
     # column_count = sheet.max_column
-    return render(request, 'blog/twitter_details.html', {
+    return render(request, 'blog/index.html', {
         'posts': posts,'coutdate': json.dumps(coutdate),'tweets_count': tweets_count, 'count_username': count_username, 'tweets_location': tweets_location, 'tweets_total_keywords': tweets_total_keywords,
         'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'retweets':retweets_count,'totalTweets':total_tweets
     })
