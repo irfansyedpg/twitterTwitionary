@@ -604,7 +604,8 @@ def twitter_details(request):
     print(total_tweets)
     # end query
     coutdate = []
-    cout_bydate = """select count(totaltweets),date(usercreatedts) as date FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s GROUP by day(tweetcreatedts)"""
+    cout_bydate = """select count(a.id),date(tweetcreatedts) as date FROM twitter.tbl_twitter a JOIN twitter.tbl_hashtags b on a.Id=b.twitter_id WHERE b.title=%s  
+group by date(tweetcreatedts)"""
     cursor.execute(cout_bydate,(price_lte,))
     for count_date_row in cursor:
     # count_date_row = cursor.fetchone()
