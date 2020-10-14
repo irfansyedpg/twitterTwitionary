@@ -18,3 +18,4 @@ urlpatterns = [
     path('twitter_list', views.twitter_list,name='twitter_list'),
     path('index', views.index,name='index'),
 ]
+#helo
