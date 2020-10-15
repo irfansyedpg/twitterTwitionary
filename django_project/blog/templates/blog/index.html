@@ -261,7 +261,7 @@
                                         <h5>Retweets</h5>
                                     </div>
                                     <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
-                                        <h5>Reach</h5>
+                                        <h5>Location</h5>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -272,7 +272,7 @@
                                         <h5>{{retweets}}</h5>
                                     </div>
                                     <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
-                                        <h5>1600</h5>
+                                        <h5>{{tweets_location}}</h5>
                                     </div>
                                 </div>
                             </div>
@@ -286,7 +286,7 @@
                                         <h5>Tweetes</h5>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                        <h5>TimeFrame</h5>
+                                        <h5>Impressions</h5>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
                                         <h5>Reach</h5>
@@ -300,7 +300,7 @@
                                         <h5>100</h5>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                        <h5>500</h5>
+                                        <h5>{{total_followers}}</h5>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
                                         <h5>600</h5>
@@ -529,6 +529,7 @@
         });
         var retweets =JSON.parse("{{retweets}}");
         var totalTweets =JSON.parse("{{totalTweets}}"); 
+       
         // Build the chart
         Highcharts.chart('ByType', {
             chart: {

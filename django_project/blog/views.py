@@ -592,7 +592,7 @@ def twitter_details(request):
             'sentiment': sentiments})
     mydb.commit()
     # show data from 2nd table
-    tweets_countq_query = """select COUNT(distinct Username) as username,COUNT(a.Id),COUNT(distinct location) as location,COUNT(retweetcount),COUNT(totaltweets) from tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id"""
+    tweets_countq_query = """select COUNT(distinct Username) as username,COUNT(a.Id),COUNT(distinct location) as location,SUM(retweetcount),COUNT(totaltweets),sum(followers) as Followers from tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id"""
     cursor.execute(tweets_countq_query,(price_lte,))
 
     count_row = cursor.fetchone()
@@ -601,6 +601,7 @@ def twitter_details(request):
     tweets_location = count_row[2]
     retweets_count = count_row[3]
     total_tweets = count_row[4]
+    total_followers = count_row[5]
     print(total_tweets)
     # end query
     coutdate = []
@@ -632,7 +633,7 @@ group by date(tweetcreatedts)"""
     # column_count = sheet.max_column
     return render(request, 'blog/index.html', {
         'posts': posts,'coutdate': json.dumps(coutdate),'tweets_count': tweets_count, 'count_username': count_username, 'tweets_location': tweets_location, 'tweets_total_keywords': tweets_total_keywords,
-        'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'retweets':retweets_count,'totalTweets':total_tweets
+        'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'retweets':retweets_count,'totalTweets':total_tweets,'total_followers':total_followers
     })
    
 
