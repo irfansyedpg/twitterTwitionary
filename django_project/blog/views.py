@@ -43,6 +43,13 @@ import sys
 # json object to go to news page
 
 # used for chart
+consumer_key = "iJFZnuM0YHqwvFilNUBSVkzJU"
+consumer_secret = "412n9RVFyUc4lRH3RWBU4kRT1lz5NHWg81d6FEoMPQEvYJPRio"
+access_token = "813456180-jXG4M0Kpc80UjJF4bhwA0z9Bx8aZfAht4veyxSgc"
+access_token_secret = "Cvh3gsUS5Y4HpyfD1UdlMLfpxlqa47iYFo3vxogpP6blR"
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+api = tweepy.API(auth,wait_on_rate_limit=True)
 
 # SQL Connection String strats
 mydb = mysql.connector.connect(
@@ -528,7 +535,6 @@ def twitter_list(request):
     mydb._open_connection()
     search = request.GET.get('search')
     btn1 = request.GET.get('btn1')
-    print("request", btn1)
     if search==None:
         sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id ORDER BY a.Id DESC LIMIT 50"
         cursor.execute(sqlite_select_query)
@@ -555,86 +561,166 @@ def twitter_list(request):
    
 
 def twitter_details(request):
-    
-    posts = []
-    mydb._open_connection()
-    price_lte = request.GET.get('search')
-    
-    sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id DESC LIMIT 50"
-    cursor.execute(sqlite_select_query,(price_lte,))
-    greatcounter = 0
-    goodcounter = 0
-    noutralcounter = 0
-    badcounter = 0
-    terriblecounter = 0
-    for row in cursor:
-        sentiments = sentiment_analysis(row[4])
-        if sentiments =='Great':
-            greatcounter+=1
-        if sentiments =='Good':
-            goodcounter+=1
-        if sentiments =='Neutral':
-            noutralcounter+=1
-        if sentiments =='Bad':
-            badcounter+=1
-        if sentiments =='Terrible':
-            terriblecounter+=1
-        posts.append({
-            'text': row[4],
-            'username': row[5],
-            'dated': row[2],
-            'retweetcount': row[3],
-            'location': row[1],
-            'urll': row[6],
-            'description': row[7],
-            'following': row[8],
-            'followers': row[9],
-            'sentiment': sentiments})
-    mydb.commit()
-    # show data from 2nd table
-    tweets_countq_query = """select COUNT(distinct Username) as username,COUNT(a.Id),COUNT(distinct location) as location,SUM(retweetcount),COUNT(totaltweets),sum(followers) as Followers from tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id"""
-    cursor.execute(tweets_countq_query,(price_lte,))
+        realtime = request.GET.get('realtime')
+        database = request.GET.get('database')
+        if realtime=='realtime':
+            search_words = request.GET.get('search')
+            print(search_words)
+            date_since="2020-09-20"
+            numTweets=50
+            numRuns=1
+            rtotalTweets=0
+            tweets_location=0
+            retweets=0
+            #text syntaments
+            greatcounter = 0
+            goodcounter = 0
+            noutralcounter = 0
+            badcounter = 0
+            terriblecounter = 0
+            total_followers=0
+            posts=[]
+            coutdate=[]
+            for i in range(0, numRuns):
+                start_run = time.time()
+                tweets = tweepy.Cursor(api.search, q=search_words, lang="en", since=date_since, tweet_mode='extended').items(numTweets)
+                print(tweets)
+                tweet_list = [tweet for tweet in tweets]
+                # print(tweet_list)
+                noTweets = 0
+                for tweet in tweet_list:
+                    rtotalTweets+=1
+                    acctdesc = tweet.user.description
+                    location = tweet.user.location
+                    if location!='':
+                        tweets_location+=1
+                    following = tweet.user.friends_count
+                    followers = tweet.user.followers_count
+                    total_followers=total_followers+followers
+                    totaltweets = tweet.user.statuses_count
+                    usercreatedts = tweet.user.created_at
+                    tweetcreatedts = tweet.created_at
+                    coutdate.append({
+                    #  t=count_date_row[1]
+                    #  date.strftime('%m/%d/%Y')
+                    'couttweets': rtotalTweets,
+                    'bydate':tweetcreatedts.strftime('%m/%d/%Y')
+                    })
+                    retweetcount = tweet.retweet_count
+                    retweets=retweets+retweetcount
+                    # retweets=retweetcount+retweetcount
+                    hashtags = tweet.entities['hashtags']
+                    # tweet_id= tweet.id
+                    username = tweet.user.screen_name
+                    # print(username)
+                    url =  f"https://twitter.com/user/status/{tweet.id}"
+                    posts.append({
+                    'urll': url})
+                    print(posts)
+                # print('count',rtotalTweets)
+                # print('tweets_location',tweets_location)
+                # print('retweetcount',retweets)
+                # print('tweet',tweet)
+                try:
+                    text = tweet.retweeted_status.full_text
+                except AttributeError:  # Not a Retweet
+                    text = tweet.full_text
+                sentiments = sentiment_analysis(text)
+                if sentiments =='Great':
+                    greatcounter+=1
+                if sentiments =='Good':
+                    goodcounter+=1
+                if sentiments =='Neutral':
+                    noutralcounter+=1
+                if sentiments =='Bad':
+                    badcounter+=1
+                if sentiments =='Terrible':
+                    terriblecounter+=1
+                return render(request, 'blog/index.html',{'totalTweets':rtotalTweets,'tweets_location':tweets_location,'retweets':retweets,'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'total_followers':total_followers,'posts': posts,'coutdate': json.dumps(coutdate)})
+                
+        elif database=='database':
+            
+            #insert the data into database
+            print('database')
+            posts = []
+            mydb._open_connection()
+            price_lte = request.GET.get('search')
+            
+            sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id DESC LIMIT 50"
+            cursor.execute(sqlite_select_query,(price_lte,))
+            greatcounter = 0
+            goodcounter = 0
+            noutralcounter = 0
+            badcounter = 0
+            terriblecounter = 0
+            for row in cursor:
+                sentiments = sentiment_analysis(row[4])
+                if sentiments =='Great':
+                    greatcounter+=1
+                if sentiments =='Good':
+                    goodcounter+=1
+                if sentiments =='Neutral':
+                    noutralcounter+=1
+                if sentiments =='Bad':
+                    badcounter+=1
+                if sentiments =='Terrible':
+                    terriblecounter+=1
+                posts.append({
+                    'text': row[4],
+                    'username': row[5],
+                    'dated': row[2],
+                    'retweetcount': row[3],
+                    'location': row[1],
+                    'urll': row[6],
+                    'description': row[7],
+                    'following': row[8],
+                    'followers': row[9],
+                    'sentiment': sentiments})
+                print(posts)
+            mydb.commit()
+            # show data from 2nd table
+            tweets_countq_query = """select COUNT(distinct Username) as username,COUNT(a.Id),COUNT(distinct location) as location,SUM(retweetcount),COUNT(totaltweets),sum(followers) as Followers from tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id"""
+            cursor.execute(tweets_countq_query,(price_lte,))
 
-    count_row = cursor.fetchone()
-    count_username = count_row[0]
-    tweets_count = count_row[1]
-    tweets_location = count_row[2]
-    retweets_count = count_row[3]
-    total_tweets = count_row[4]
-    total_followers = count_row[5]
-    print(total_tweets)
-    # end query
-    coutdate = []
-    cout_bydate = """select count(a.id),date(tweetcreatedts) as date FROM twitter.tbl_twitter a JOIN twitter.tbl_hashtags b on a.Id=b.twitter_id WHERE b.title=%s  
-group by date(tweetcreatedts)"""
-    cursor.execute(cout_bydate,(price_lte,))
-    for count_date_row in cursor:
-    # count_date_row = cursor.fetchone()
-        # print(count_date_row)
-         coutdate.append({
-            #  t=count_date_row[1]
-            #  date.strftime('%m/%d/%Y')
-            'couttweets': count_date_row[0],
-            'bydate':count_date_row[1].strftime('%m/%d/%Y')
+            count_row = cursor.fetchone()
+            count_username = count_row[0]
+            tweets_count = count_row[1]
+            tweets_location = count_row[2]
+            retweets_count = count_row[3]
+            total_tweets = count_row[4]
+            total_followers = count_row[5]
+            # end query
+            coutdate = []
+            cout_bydate = """select count(a.id),date(tweetcreatedts) as date FROM twitter.tbl_twitter a JOIN twitter.tbl_hashtags b on a.Id=b.twitter_id WHERE b.title=%s  
+            group by date(tweetcreatedts)"""
+            cursor.execute(cout_bydate,(price_lte,))
+            for count_date_row in cursor:
+            # count_date_row = cursor.fetchone()
+                # print(count_date_row)
+                coutdate.append({
+                    #  t=count_date_row[1]
+                    #  date.strftime('%m/%d/%Y')
+                    'couttweets': count_date_row[0],
+                    'bydate':count_date_row[1].strftime('%m/%d/%Y')
+                    })
+                    # print(couttweets)
+            mydb.commit()
+                # count_tweets = count_date_row[0]
+                # show_date = count_date_row[1]
+            #count by date total tweets
+            
+            #end query
+            # here we can show data from excel sheet total key words
+            import openpyxl as xl
+            wb = xl.load_workbook("dictionary.xlsx", enumerate)
+            sheet = wb.worksheets[0]
+
+            tweets_total_keywords = sheet.max_row
+            # column_count = sheet.max_column
+            return render(request, 'blog/index.html', {
+                'posts': posts,'coutdate': json.dumps(coutdate),'tweets_count': tweets_count, 'count_username': count_username, 'tweets_location': tweets_location, 'tweets_total_keywords': tweets_total_keywords,
+                'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'retweets':retweets_count,'totalTweets':total_tweets,'total_followers':total_followers
             })
-            # print(couttweets)
-    mydb.commit()
-        # count_tweets = count_date_row[0]
-        # show_date = count_date_row[1]
-    #count by date total tweets
-    
-    #end query
-    # here we can show data from excel sheet total key words
-    import openpyxl as xl
-    wb = xl.load_workbook("dictionary.xlsx", enumerate)
-    sheet = wb.worksheets[0]
-
-    tweets_total_keywords = sheet.max_row
-    # column_count = sheet.max_column
-    return render(request, 'blog/index.html', {
-        'posts': posts,'coutdate': json.dumps(coutdate),'tweets_count': tweets_count, 'count_username': count_username, 'tweets_location': tweets_location, 'tweets_total_keywords': tweets_total_keywords,
-        'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'retweets':retweets_count,'totalTweets':total_tweets,'total_followers':total_followers
-    })
    
 
 def insertkeywords(request):

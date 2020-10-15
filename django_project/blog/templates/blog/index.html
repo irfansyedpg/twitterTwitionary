@@ -233,11 +233,13 @@
                             <div class="card-body">
                                 <h4 class="card-title">Search Keywords</h4>
                                 <form action='twitter_details' method='GET'>
-                                    <div class="form-group" style="width: 100%;display: flex;">
-                                        <input type="text" class="form-control" name="search" id="search"  placeholder="Enter Keyword Hashing or Websites" value={{ search }}>
-                                         <button type="submit" class="btn btn-primary">Search</button>
-                                    </div>
-                                </form>
+                                     <div class="form-group" style="width: 100%;display: flex;"> 
+                                        <input type="text" class="form-control" name="search" id="search" placeholder="Enter Keyword Hashing or Websites" value={{ search }}>
+                                         <button type="submit" class="btn btn-primary">Search</button> 
+                                        </div> 
+                                        <input type="checkbox" style="width:15px;height:15px;" value="realtime" name="realtime">&nbsp;Real Time 
+                                        <input type="checkbox" style="width:15px;height:15px;" value="database" name="database">&nbsp;Database 
+                                    </form>
                                 <h6>Find tweets that contain keywords or hashtag</h6>
                             </div>
                         </div>
@@ -289,25 +291,21 @@
                                         <h5>Impressions</h5>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                        <h5>Reach</h5>
+                                        <h5>Location</h5>
                                     </div>
-                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                        <h5>Reach</h5>
-                                    </div>
+                                  
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                        <h5>100</h5>
+                                        <h5>{{totalTweets}}</h5>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
                                         <h5>{{total_followers}}</h5>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                        <h5>600</h5>
+                                        <h5>{{tweets_location}}</h5>
                                     </div>
-                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                        <h5>800</h5>
-                                    </div>
+                                   
                                 </div>
                             </div>
                         </div>
@@ -728,8 +726,8 @@
         // });
 
 // var coutdate =JSON.parse('{{coutdate.couttweets}}');
-var mydict = JSON.parse('{{ coutdate|safe }}');
-console.log('coutdate',mydict)
+
+var mydict = JSON.parse('{{ coutdate|safe }}')
 let tweetsArray = [];
 let bydate=[];
 
