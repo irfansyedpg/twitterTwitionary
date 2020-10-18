@@ -4,7 +4,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    path('', views.home, name="blog-home"),
+    path('', views.index, name="blog-home"),
     path('home', views.home, name="blog-about"),
     path('news', views.news, name="blog-about"),
     path('actionUrl', views.getNewsButton),
@@ -17,5 +17,6 @@ urlpatterns = [
     path('twitter_search', views.twitter_search,name='twitter_search'),
     path('twitter_list', views.twitter_list,name='twitter_list'),
     path('index', views.index,name='index'),
+    path('mapper', views.mapper,name='mapper'),
 ]
 #helo

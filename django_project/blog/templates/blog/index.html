@@ -1,340 +1,137 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-    {% load static %}
-  
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'tweets/assets/images/favicon.png' %}">
-    <title>Adminmart Template - The Ultimate Multipurpose admin template</title>
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'tweets/assets/extra-libs/c3/c3.min.css' %}">
-    <link rel="stylesheet" href="{% static 'tweets/assets/libs/chartist/dist/chartist.min.css' %}">
-    <link rel="stylesheet" href="{% static 'tweets/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css' %}">
-    <link rel="stylesheet" href="{% static 'tweets/dist/css/style.min.css' %}">
-    <link rel="stylesheet" href="{% static 'tweets/assets/extra-libs/prism/prism.css' %}">
-    {% if title %}
-    <title> Twitionary- {{ title }} </title>
-    {% else %}
-    <title> Twitionary-  </title>
-    {% endif %}
-  
-</head>
+{% extends "blog/header.html" %}
+{% load static %}
+
+{% block content %}
 
 <body>
- 
-    <!-- ============================================================== -->
-    <!-- Preloader - style you can find in spinners.css -->
-    <!-- ============================================================== -->
-    <div class="preloader">
-        <div class="lds-ripple">
-            <div class="lds-pos"></div>
-            <div class="lds-pos"></div>
-        </div>
-    </div>
-  
-    <!-- ============================================================== -->
-    <!-- Main wrapper - style you can find in pages.scss -->
-    <!-- ============================================================== -->
-    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-        data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
-        <!-- ============================================================== -->
-        <!-- Topbar header - style you can find in pages.scss -->
-        <!-- ============================================================== -->
 
-        <!-- ============================================================== -->
-        <!-- Topbar header - style you can find in pages.scss -->
-        <!-- ============================================================== -->
-        <header class="topbar" data-navbarbg="skin6">
-            <nav class="navbar top-navbar navbar-expand-md">
-                <div class="navbar-header" data-logobg="skin6">
-                    <!-- This is for the sidebar toggle which is visible on mobile only -->
-                    <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i
-                            class="ti-menu ti-close"></i></a>
-                    <!-- ============================================================== -->
-                    <!-- Logo -->
-                    <!-- ============================================================== -->
-                    <div class="navbar-brand">
-                        <!-- Logo icon -->
-                        <a href="index.html">
-                            <b class="logo-icon">
-                                <!-- Dark Logo icon -->
-                                <img src="{% static 'tweets/assets/images/logo-icon.png' %}" alt="homepage" class="dark-logo" />
-                                
-                                <!-- Light Logo icon -->
-                                <img src="{% static 'tweets/assets/images/logo-icon.png' %}" alt="homepage" class="light-logo" />
-                            </b>
-                            <!--End Logo icon -->
-                            <!-- Logo text -->
-                            <span class="logo-text">
-                                <!-- dark Logo text -->
-                                <img src="{% static 'tweets/assets/images/logo-text.png' %}" alt="homepage" class="dark-logo" />
-                                <!-- Light Logo text -->
-                                <img src="{% static 'tweets/assets/images/logo-light-text.png' %}" class="light-logo" alt="homepage" />
-                            </span>
-                        </a>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!-- End Logo -->
-                    <!-- ============================================================== -->
-                    <!-- ============================================================== -->
-                    <!-- Toggle which is visible on mobile only -->
-                    <!-- ============================================================== -->
-                    <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)"
-                        data-toggle="collapse" data-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i
-                            class="ti-more"></i></a>
-                </div>
-                <!-- ============================================================== -->
-                <!-- End Logo -->
-                <!-- ============================================================== -->
-                <div class="navbar-collapse collapse" id="navbarSupportedContent">
-                    <!-- ============================================================== -->
-                    <!-- toggle and nav items -->
-                    <!-- ============================================================== -->
-                    <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
-                        <!-- create new -->
-                        <!-- ============================================================== -->
-                    </ul>
-                    <!-- ============================================================== -->
-                    <!-- Right side toggle and nav items -->
-                    <!-- ============================================================== -->
-                    <ul class="navbar-nav">
-                        <!-- ============================================================== -->
-                        <!-- Search -->
-                        <!-- ============================================================== -->
-                        <!-- <li class="nav-item d-none d-md-block">
-                            <a class="nav-link" href="javascript:void(0)">
-                                <form>
-                                    <div class="customize-input" style="max-width: 100%;">
-                                        <input class="form-control custom-shadow custom-radius border-0 bg-white"
-                                            type="search" placeholder="Search" aria-label="Search">
-                                        <i class="form-control-icon" data-feather="search"></i>
+    <div class="page-wrapper">
+        <div class="container-fluid">
+
+            <!----- Search Twitter------>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Search Keywords</h4>
+                            <form action='twitter_details' name="frm" id="frm" method='GET'>
+                                <div class="preloader">
+                                    <div class="lds-ripple">
+                                        <div class="lds-pos"></div>
+                                        <div class="lds-pos"></div>
                                     </div>
-                                </form>
-                            </a>
-                        </li> -->
+                                </div>
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <img src="{% static 'tweets/assets/images/users/profile-pic.jpg' %}" alt="user" class="rounded-circle"
-                                    width="40">
-                                <span class="ml-2 d-none d-lg-inline-block"><span>Hello,</span> <span
-                                        class="text-dark">Jason Doe</span> <i data-feather="chevron-down"
-                                        class="svg-icon"></i></span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
-                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="user"
-                                        class="svg-icon mr-2 ml-1"></i>
-                                    My Profile</a>
-                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="credit-card"
-                                        class="svg-icon mr-2 ml-1"></i>
-                                    My Balance</a>
-                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="mail"
-                                        class="svg-icon mr-2 ml-1"></i>
-                                    Inbox</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="settings"
-                                        class="svg-icon mr-2 ml-1"></i>
-                                    Account Setting</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="power"
-                                        class="svg-icon mr-2 ml-1"></i>
-                                    Logout</a>
-                                <div class="dropdown-divider"></div>
-                                <div class="pl-4 p-3"><a href="javascript:void(0)" class="btn btn-sm btn-info">View
-                                        Profile</a></div>
-                            </div>
-                        </li>
-                        <!-- ============================================================== -->
-                        <!-- User profile and search -->
-                        <!-- ============================================================== -->
-                    </ul>
+                                <div class="form-group" style="width: 100%;display: flex;">
+                                    <input type="text" class="form-control" name="search" id="search"
+                                        style="height: 60px;font-size: 26px;"
+                                        placeholder="Enter Keyword Hashing or Websites" value={{ search }}>
+                                    <button type="submit" class="btn btn-primary">Search</button>
+                                </div>
+                                <input type="radio" style="width:15px;height:15px;" value="database" name="database"
+                                id="database" onchange="value2Changed()">&nbsp;<span
+                                style="font-size:20px;" checked>Database </span>
+                                <input type="radio" style="width:15px;height:15px;" value="realtime" name="realtime"
+                                    id="realtime" onchange="value1Changed()">&nbsp;<span style="font-size:20px;">Real
+                                    Time </span>
+                               
+                            </form>
+                        </div>
+                    </div>
                 </div>
-            </nav>
-        </header>
-        <!-- ============================================================== -->
-        <!-- End Topbar header -->
-        <!-- ============================================================== -->
-
-
-        <!-- ============================================================== -->
-        <!-- Left Sidebar - style you can find in sidebar.scss  -->
-        <!-- ============================================================== -->
-        <aside class="left-sidebar" data-sidebarbg="skin6">
-            <!-- Sidebar scroll-->
-            <div class="scroll-sidebar" data-sidebarbg="skin6">
-                <!-- Sidebar navigation-->
-                <nav class="sidebar-nav">
-                    <ul id="sidebarnav">
-                        <li class="list-divider"></li>
-                        <li class="nav-small-cap"><span class="hide-menu">Twiiter Analystics</span></li>
-
-                        <li class="sidebar-item"> <a class="sidebar-link" href="index"
-                                aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
-                                    class="hide-menu">Search Keyword
-                                </span></a>
-                        </li>
-                        <li class="sidebar-item"> <a class="sidebar-link" href="mapper.html"
-                                aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
-                                    class="hide-menu">Tweets Mapper
-                                </span></a>
-                        </li>
-
-                        <li class="sidebar-item"> <a class="sidebar-link" href="ticket-list.html"
-                                aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
-                                    class="hide-menu">Thread Hunter
-                                </span></a>
-                        </li>
-
-                        <li class="sidebar-item"> <a class="sidebar-link" href="ticket-list.html"
-                                aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
-                                    class="hide-menu">Reports
-                                </span></a>
-                        </li>
-
-                        <li class="sidebar-item"> <a class="sidebar-link" href="ticket-list.html"
-                            aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
-                                class="hide-menu">Deine Keywords
-                            </span></a>
-                        </li>
-
-                        <li class="list-divider"></li>
-                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="authentication-login1.html"
-                                aria-expanded="false"><i data-feather="log-out" class="feather-icon"></i><span
-                                    class="hide-menu">Logout</span></a></li>
-                    </ul>
-                </nav>
-                <!-- End Sidebar navigation -->
             </div>
-            <!-- End Sidebar scroll-->
-        </aside>
-        <!-- ============================================================== -->
-        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
-        <!-- ============================================================== -->
 
-        <!-- ============================================================== -->
-        <!-- Page wrapper  -->
-        <!-- ============================================================== -->
-        {% block content %}
-        <div class="page-wrapper">
-            <div class="container-fluid">
-            
-                <!----- Search Twitter------>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Search Keywords</h4>
-                                <form action='twitter_details' method='GET'>
-                                     <div class="form-group" style="width: 100%;display: flex;"> 
-                                        <input type="text" class="form-control" name="search" id="search" placeholder="Enter Keyword Hashing or Websites" value={{ search }}>
-                                         <button type="submit" class="btn btn-primary">Search</button> 
-                                        </div> 
-                                        <input type="checkbox" style="width:15px;height:15px;" value="realtime" name="realtime" id="realtime">&nbsp;Real Time 
-                                        <input type="checkbox" style="width:15px;height:15px;" value="database" name="database" id="database">&nbsp;Database 
-                                    </form>
-                                <h6>Find tweets that contain keywords or hashtag</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!----- Search Twitter------>
+            <!----- Search Twitter------>
 
 
-                <!-------Tweets Meter------>
+            <!-------Tweets Meter------>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
-                                        <h5>Tweetes</h5>
-                                    </div>
-                                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
-                                        <h5>Retweets</h5>
-                                    </div>
-                                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
-                                        <h5>Location</h5>
-                                    </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                                    <h5>Tweetes</h5>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
-                                        <h5>{{totalTweets}}</h5>
-                                    </div>
-                                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
-                                        <h5>{{retweets}}</h5>
-                                    </div>
-                                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
-                                        <h5>{{tweets_location}}</h5>
-                                    </div>
+                                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                                    <h5>Retweets</h5>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                                    <h5>Location</h5>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                        <h5>Tweetes</h5>
-                                    </div>
-                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                        <h5>Impressions</h5>
-                                    </div>
-                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                        <h5>Location</h5>
-                                    </div>
-                                  
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                                    <h5>{{totalTweets}}</h5>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                        <h5>{{totalTweets}}</h5>
-                                    </div>
-                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                        <h5>{{total_followers}}</h5>
-                                    </div>
-                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                        <h5>{{tweets_location}}</h5>
-                                    </div>
-                                   
+                                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                                    <h5>{{retweets}}</h5>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                                    <h5>{{tweets_location}}</h5>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                    <h5>Tweetes</h5>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                    <h5>Impressions</h5>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                    <h5>Location</h5>
+                                </div>
 
-                <!-------Tweets Meter------>
-
-                <!--------Tweets Analysis-->
-                <div class="row">
-                    <div class="col-sm-6 col-sm-6 col-lg-6 col-xs-12 mb-3">
-                        <div class="card">
-                            <div class="card-header">Tweets By Sentiments</div>
-                            <div class="card-body">
-                                <div id="Sentiments"></div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-sm-6 col-lg-6 col-xs-12 mb-3">
-                        <div class="card">
-                            <div class="card-header">Tweets By Type</div>
-                            <div class="card-body">
-                                <div id="ByType"></div>
+                            <div class="row">
+                                <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                    <h5>{{totalTweets}}</h5>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                    <h5>{{total_followers}}</h5>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                    <h5>{{tweets_location}}</h5>
+                                </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- <div class="row">
+            <!-------Tweets Meter------>
+
+            <!--------Tweets Analysis-->
+            <div class="row">
+                <div class="col-sm-6 col-sm-6 col-lg-6 col-xs-12 mb-3">
+                    <div class="card">
+                        <div class="card-header">Tweets By Sentiments</div>
+                        <div class="card-body">
+                            <div id="Sentiments"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-sm-6 col-lg-6 col-xs-12 mb-3">
+                    <div class="card">
+                        <div class="card-header">Tweets By Type</div>
+                        <div class="card-body">
+                            <div id="ByType"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="row">
                     <div class="col-sm-6 col-sm-6 col-lg-6 col-xs-12 mb-3">
                         <div class="card">
                             <div class="card-header">Tweets By Source</div>
@@ -354,82 +151,74 @@
                     </div>
                 </div> -->
 
-                <div class="row">
-                    <div class="col-sm-12 mb-3">
-                        <div class="card">
-                            <div class="card-header">Tweets Over Time</div>
-                            <div class="card-body">
-                                <div id="ByTime"></div>
-                            </div>
+            <div class="row">
+                <div class="col-sm-12 mb-3">
+                    <div class="card">
+                        <div class="card-header">Tweets Over Time</div>
+                        <div class="card-body">
+                            <div id="ByTime"></div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                 <!--------Tweets Analysis-->
+            <!--------Tweets Analysis-->
 
-                 <!------ All Tweets------->
+            <!------ All Tweets------->
 
-                <div class="row">
-                    <h5>Twitter Feed</h5>
-                </div>
+            <div class="row">
+                <h5>Twitter Feed</h5>
+            </div>
 
-                <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 ml-5">
-                        <div class="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 350, "gutter":20 }'>
-              
-                            {% for post in posts  %}
-                              <div class="grid-item">
-                                <blockquote class="twitter-tweet">
-                                    <a href={{ post.urll }}></a>
-                                </blockquote>
-                            </div>
-                            {% endfor %}
+            <div class="row">
+
+                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 ml-5">
+                    <div class="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 350, "gutter":20 }'>
+
+                        {% for post in posts  %}
+                        <div class="grid-item">
+
+                            <blockquote class="twitter-tweet">
+                                <a href={{ post.urll }}></a>
+                            </blockquote>
                         </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    {% endblock content %}
-    <script src="{% static 'blog/js/vendor/jquery-1.12.4.min.js' %} "></script>
-    <script src="{% static 'tweets/assets/libs/popper.js/dist/umd/popper.min.js' %} "></script>
-    <script src="{% static 'tweets/assets/libs/bootstrap/dist/js/bootstrap.min.js' %} "></script>
-    <script src="{% static 'tweets/dist/js/app-style-switcher.js' %} "></script>
-    <script src="{% static 'tweets/dist/js/feather.min.js' %} "></script>
-    <script src="{% static 'tweets/dist/js/sidebarmenu.js' %} "></script>
-    <script src="{% static 'tweets/dist/js/custom.js' %} "></script>
-    <script src="{% static 'tweets/assets/extra-libs/c3/d3.min.js' %} "></script>
-    <script src="{% static 'tweets/assets/libs/chartist/dist/chartist.min.js' %} "></script>
-    <script src="{% static 'tweets/assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js' %} "></script>
-    <script src="{% static 'tweets/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js' %} "></script>
-    <script src="{% static 'tweets/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js' %} "></script> -->
-    <!-- ============================================================== -->
-    <!-- All Jquery -->
-    <!-- ============================================================== -->
-    <!-- <script src="./assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="./assets/libs/popper.js/dist/umd/popper.min.js"></script>
-    <script src="./assets/libs/bootstrap/dist/js/bootstrap.min.js"></script> -->
-    <!-- apps -->
-    <!-- apps -->
-    <!-- <script src="./dist/js/app-style-switcher.js"></script> -->
-    <!-- <script src="./dist/js/feather.min.js"></script>
-    <script src="./assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
-    <script src="./dist/js/sidebarmenu.js"></script> -->
-    <!--Custom JavaScript -->
-    <!-- <script src="./dist/js/custom.min.js"></script> -->
-    <!--This page JavaScript -->
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://npmcdn.com/masonry-layout@4.0/dist/masonry.pkgd.js"></script>
-    <!-- <script src="./assets/extra-libs/c3/d3.min.js"></script>
-    <script src="./assets/extra-libs/c3/c3.min.js"></script>
-    <script src="./assets/libs/chartist/dist/chartist.min.js"></script> -->
-    <!-- <script src="./assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
-    <script src="./assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script> -->
-    <!-- <script src="./assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
-    <script src="./dist/js/pages/dashboards/dashboard1.min.js"></script> -->
+    </div>
 
     <script>
+
+$(function () {
+            $("#database").prop("checked", true);
+            $("#frm").submit(function () {
+                if($("#search").val()==0){
+                   alert("Enter key words") 
+                   return false;
+
+                }
+        });
+    });
+    </script>
+    <script>
+      
+        function value1Changed() {
+
+            document.getElementById("database").checked = false;
+        }
+    </script>
+    <script>
+        function value2Changed() {
+            document.getElementById("realtime").checked = false;
+
+        }
+    </script>
+
+    <script>
+        $(".preloader").fadeIn();
         // Twitter widget is loading.
         window.twttr = function (d, s, id) {
             var t, js, fjs = d.getElementsByTagName(s)[0];
@@ -459,11 +248,11 @@
     </script>
 
     <script type="text/javascript">
-        var greate =JSON.parse("{{great}}");
-        var good =JSON.parse("{{good}}");
-        var nuetral =JSON.parse("{{nutral}}");
-        var bad =JSON.parse("{{bad}}");
-        var terrible =JSON.parse("{{terr}}");
+        var greate = JSON.parse("{{great}}");
+        var good = JSON.parse("{{good}}");
+        var nuetral = JSON.parse("{{nutral}}");
+        var bad = JSON.parse("{{bad}}");
+        var terrible = JSON.parse("{{terr}}");
         // Build the chart
         Highcharts.chart('Sentiments', {
             chart: {
@@ -505,29 +294,29 @@
             },
             series: [{
                 name: '',
-            data: [{
-            name: 'Great',
-            y: greate,
-            sliced: false,
-            selected: true,
-        }, {
-            name: 'Good',
-            y: good
-        }, {
-            name: 'Neutral',
-            y: nuetral
-        }, {
-            name: 'Bad',
-            y: bad
-        }, {
-            name: 'Terrible',
-            y: terrible
+                data: [{
+                    name: 'Great',
+                    y: greate,
+                    sliced: false,
+                    selected: true,
+                }, {
+                    name: 'Good',
+                    y: good
+                }, {
+                    name: 'Neutral',
+                    y: nuetral
+                }, {
+                    name: 'Bad',
+                    y: bad
+                }, {
+                    name: 'Terrible',
+                    y: terrible
+                }]
             }]
-        }]
         });
-        var retweets =JSON.parse("{{retweets}}");
-        var totalTweets =JSON.parse("{{totalTweets}}"); 
-       
+        var retweets = JSON.parse("{{retweets}}");
+        var totalTweets = JSON.parse("{{totalTweets}}");
+
         // Build the chart
         Highcharts.chart('ByType', {
             chart: {
@@ -569,17 +358,17 @@
             },
             series: [{
                 name: '',
-            colorByPoint: true,
-            data: [{
-                name: 'Tweets',
-                y:totalTweets,
-                sliced: false,
-                selected: true
-            }, {
-                name: 'Retweets',
-                y: retweets
-            }
-            ]
+                colorByPoint: true,
+                data: [{
+                    name: 'Tweets',
+                    y: totalTweets,
+                    sliced: false,
+                    selected: true
+                }, {
+                    name: 'Retweets',
+                    y: retweets
+                }
+                ]
             }]
         });
         // Build the chart
@@ -725,67 +514,67 @@
         //     }]
         // });
 
-// var coutdate =JSON.parse('{{coutdate.couttweets}}');
+        // var coutdate =JSON.parse('{{coutdate.couttweets}}');
 
-var mydict = JSON.parse('{{ coutdate|safe }}')
-let tweetsArray = [];
-let bydate=[];
+        var mydict = JSON.parse('{{ coutdate|safe }}')
+        let tweetsArray = [];
+        let bydate = [];
 
-let bydateArr=[];
-for (const tweets of mydict) {
-    var d = new Date(tweets.bydate);
-    var year = d.getFullYear();
-    var month = d.getMonth();
-    var day = d.getDay();
-    var formater = day+'/'+month+'/'+year;
-    tweetsArray.push([formater,tweets.couttweets]);
-    bydateArr.push(formater)
-}
-console.log(bydateArr);
+        let bydateArr = [];
+        for (const tweets of mydict) {
+            var d = new Date(tweets.bydate);
+            var year = d.getFullYear();
+            var month = d.getMonth();
+            var day = d.getDay();
+            var formater = day + '/' + month + '/' + year;
+            tweetsArray.push([formater, tweets.couttweets]);
+            bydateArr.push(formater)
+        }
+        console.log(bydateArr);
 
-Highcharts.chart('ByTime', {
+        Highcharts.chart('ByTime', {
 
-    title: {
-        text: ''
-    },
-
-    time: {
-        timezone: 'Pakistan/Karachi'
-    },
-    xAxis: {
-        type: 'datetime',
-        categories: bydateArr
-    },
-    credits: {
-        enabled: false
-    },
-
-    series: [{
-        name: 'Tweets',
-        data: tweetsArray,
-        // pointStart: bydate,
-    }],
-
-
-    responsive: {
-        rules: [{
-            condition: {
-                maxWidth: 500
+            title: {
+                text: ''
             },
-            chartOptions: {
-                legend: {
-                    layout: 'horizontal',
-                    align: 'center',
-                    verticalAlign: 'bottom'
-                }
-            }
-        }]
-    }
 
-});
+            time: {
+                timezone: 'Pakistan/Karachi'
+            },
+            xAxis: {
+                type: 'datetime',
+                categories: bydateArr
+            },
+            credits: {
+                enabled: false
+            },
+
+            series: [{
+                name: 'Tweets',
+                data: tweetsArray,
+                // pointStart: bydate,
+            }],
+
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: 'horizontal',
+                            align: 'center',
+                            verticalAlign: 'bottom'
+                        }
+                    }
+                }]
+            }
+
+        });
     </script>
 
-
+    {% endblock content %}
 </body>
 
 </html>

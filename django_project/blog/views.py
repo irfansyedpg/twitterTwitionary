@@ -35,8 +35,9 @@ import sys
 # from firebase import firebase
 # firebase = firebase.FirebaseApplication(
 #     'https://twitionary.firebaseio.com/', None)
-#from datetime import timedelta
-
+from datetime import timedelta
+from datetime import datetime
+import openpyxl as xl
 
 # newshunt
 
@@ -53,15 +54,15 @@ api = tweepy.API(auth,wait_on_rate_limit=True)
 
 # SQL Connection String strats
 mydb = mysql.connector.connect(
-    host="104.155.148.67",
-    # # host="localhost",
-    database="twitter",
-    user="twitteruser",
-    passwd="irfansyed",
-    # host="localhost",
+    # host="104.155.148.67",
+    # # # host="localhost",
     # database="twitter",
-    # user="root",
-    # passwd="",
+    # user="twitteruser",
+    # passwd="irfansyed",
+    host="localhost",
+    database="twitter",
+    user="root",
+    passwd="",
 )
 cursor = mydb.cursor()
 # countcursor = mydb.cursor(buffered=True)
@@ -264,7 +265,10 @@ def home(request):
     return render(request, 'blog/home.html', {'tital': 'Home'})
 
 def index (request):
+    # def Followers(username):
+
     return render(request, 'blog/index.html')
+
 # Twiteer scraping
 def chart(request):
 
@@ -294,10 +298,6 @@ def chart(request):
     count_username = count_row[0]
     tweets_count = count_row[1]
     tweets_location = count_row[2]
-    # end query
-
-    # here we can show data from excel sheet total key words
-    import openpyxl as xl
     wb = xl.load_workbook("dictionary.xlsx", enumerate)
     sheet = wb.worksheets[0]
 
@@ -360,9 +360,7 @@ def chart(request):
 
 
 def sentiment(text):
-   
     analysis = TextBlob(text)
-    print(analysis.sentiment)
     # set sentiment
     if analysis.sentiment.polarity >= 0:
         return 'positive'
@@ -395,11 +393,7 @@ def dictionary_link(request):
         posts.append({
             'words': row['words'],
             'pk': row['pk'],
-
-
-        })
-
-    # items=df
+            })
     context = {
         'items': posts,
         'header': 'Laptops',
@@ -464,8 +458,6 @@ def search_keywords(request):
     tweets_location = count_row[2]
     # end query
 
-    # here we can show data from excel sheet total key words
-    import openpyxl as xl
     wb = xl.load_workbook("dictionary.xlsx", enumerate)
     sheet = wb.worksheets[0]
 
@@ -561,29 +553,16 @@ def twitter_list(request):
    
 
 def twitter_details(request):
-    # if 'realtime' in request.GET:
-    #     q = request.GET['realtime']
-    #     if not q:
-    #         error = True;
-    #     elif 'database' in request.GET:
-    #         error = True;
-    #     else: 
-  
-        
         realtime = request.GET.get('realtime')
         database = request.GET.get('database')
-        print(realtime)
-        print(database)
         if realtime==None and database==None :
-            print('error')
             return render(request, 'blog/index.html')
 
         else:
-            print('succes')
             if realtime=='realtime':
                 search_words = request.GET.get('search')
-                print(search_words)
-                date_since="2020-09-20"
+                correntdatee = datetime.today().strftime('%Y-%m-%d')
+                date_since=correntdatee
                 numTweets=50
                 numRuns=1
                 rtotalTweets=0
@@ -603,7 +582,6 @@ def twitter_details(request):
                     tweets = tweepy.Cursor(api.search, q=search_words, lang="en", since=date_since, tweet_mode='extended').items(numTweets)
                     
                     tweet_list = [tweet for tweet in tweets]
-                    # print(tweet_list)
                     noTweets = 0
                     for tweet in tweet_list:
                         rtotalTweets+=1
@@ -629,14 +607,9 @@ def twitter_details(request):
                         hashtags = tweet.entities['hashtags']
                         # tweet_id= tweet.id
                         username = tweet.user.screen_name
-                        # print(username)
                         url =  f"https://twitter.com/user/status/{tweet.id}"
                         posts.append({
                         'urll': url})
-                    # print('count',rtotalTweets)
-                    # print('tweets_location',tweets_location)
-                    # print('retweetcount',retweets)
-                    # print('tweet',tweet)
                     try:
                         text = tweet.retweeted_status.full_text
                     except AttributeError:  # Not a Retweet
@@ -655,9 +628,6 @@ def twitter_details(request):
                     return render(request, 'blog/index.html',{'totalTweets':rtotalTweets,'tweets_location':tweets_location,'retweets':retweets,'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'total_followers':total_followers,'posts': posts,'coutdate': json.dumps(coutdate)})
                     
             elif database=='database':
-                
-                #insert the data into database
-                print('database')
                 posts = []
                 mydb._open_connection()
                 price_lte = request.GET.get('search')
@@ -711,23 +681,11 @@ def twitter_details(request):
                 group by date(tweetcreatedts)"""
                 cursor.execute(cout_bydate,(price_lte,))
                 for count_date_row in cursor:
-                # count_date_row = cursor.fetchone()
-                    # print(count_date_row)
                     coutdate.append({
-                        #  t=count_date_row[1]
-                        #  date.strftime('%m/%d/%Y')
                         'couttweets': count_date_row[0],
                         'bydate':count_date_row[1].strftime('%m/%d/%Y')
                         })
-                        # print(couttweets)
                 mydb.commit()
-                    # count_tweets = count_date_row[0]
-                    # show_date = count_date_row[1]
-                #count by date total tweets
-                
-                #end query
-                # here we can show data from excel sheet total key words
-                import openpyxl as xl
                 wb = xl.load_workbook("dictionary.xlsx", enumerate)
                 sheet = wb.worksheets[0]
 
@@ -738,6 +696,96 @@ def twitter_details(request):
                     'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'retweets':retweets_count,'totalTweets':total_tweets,'total_followers':total_followers
                 })
    
+def mapper(request):
+        #  search = 
+         posts = []
+        #  tweets = request.GET.get('tweets')
+         if request.GET.get('search')==None:
+             return render(request,'blog/mapper.html')
+         else:
+             search = request.GET.get('search')
+             if request.GET.get('tweets')=='tweets':
+ # # print(tweets)
+                screen_name = request.GET.get('search')
+                user = api.get_user(screen_name)
+                name=user.name
+                userName=user.screen_name
+                location=user.location
+                description=user.description
+                website=user.url
+                followers_count=user.followers_count
+                followers_count=user.followers_count
+                image=user.profile_image_url
+                totaltweets=user.statuses_count
+                statuses = api.user_timeline(screen_name)
+                # print(statuses)
+                for status in statuses:
+                    text=status.text
+                    created=status.created_at
+                    posts.append({
+                        'text':text,
+                        "created":created })
+                    print(posts)
+                return render(request,'blog/mapper.html',{'posts': posts})
+             elif request.GET.get('followers')=='followers':
+                followersArr=[]
+                screen_name = request.GET.get('search')
+                count=0
+                for user in tweepy.Cursor(api.followers, screen_name).items(50): 
+                    count += 1
+                    print(count)
+                    
+                    followers_scrname=user.screen_name
+                    followers_name=user.name
+            
+                    followersurl =  f"https://twitter.com/{user.screen_name}"
+                    f_location=user.location
+                    created=str(user.created_at)
+                    followers_count=str(user.followers_count)
+                    friend=str(user.friends_count)
+                    followersArr.append({
+                        'followers_name':followers_name,
+                        "followers_scrname":followers_scrname,
+                        'followersurl':followersurl,
+                        'f_location':f_location,
+                        'created':created,
+                        'followers_count':followers_count,
+                        'friend':friend,
+
+                         })
+                return render(request,'blog/mapper.html',{'followersArr': followersArr})
+             elif request.GET.get('following')=='following':
+                followingArr=[]
+
+                screen_name = request.GET.get('search')
+                count=0
+                for user in tweepy.Cursor(api.friends, screen_name).items(50): 
+                    count += 1
+
+                    followers_scrname=user.screen_name
+                    followers_name=user.name
+                    followersurl =  f"https://twitter.com/{user.screen_name}"
+                    f_location=user.location
+                    created=str(user.created_at)
+                    followers_count=str(user.followers_count)
+                    friend=str(user.friends_count)
+                    followingArr.append({
+                        'following_name':followers_name,
+                        "followers_scrname":followers_scrname,
+                        'followingsurl':followersurl,
+                        'f_location':f_location,
+                        'created':created,
+                        'following_count':followers_count,
+                        'friend':friend
+                         })
+                print(followingArr)
+                return render(request,'blog/mapper.html',{'followingArr': followingArr})
+                
+                #     print("Name: "+followers_name +"| UserName:"+followers_scrname+"| followersurl:"+followersurl+" | location:"+ user.location+" | Account Created:"+str(user.created_at)+" | followers_count:"+str(user.followers_count)+
+                #         "| friends: "+str(user.friends_count))
+                # print(screen_name +" has more then followers",count) 
+
+# following('irfansyed_pg')  
 
 def insertkeywords(request):
 
