@@ -54,15 +54,15 @@ api = tweepy.API(auth,wait_on_rate_limit=True)
 
 # SQL Connection String strats
 mydb = mysql.connector.connect(
-    # host="104.155.148.67",
-    # # # host="localhost",
-    # database="twitter",
-    # user="twitteruser",
-    # passwd="irfansyed",
-    host="localhost",
+    host="104.155.148.67",
+    # # host="localhost",
     database="twitter",
-    user="root",
-    passwd="",
+    user="twitteruser",
+    passwd="irfansyed",
+    # host="localhost",
+    # database="twitter",
+    # user="root",
+    # passwd="",
 )
 cursor = mydb.cursor()
 # countcursor = mydb.cursor(buffered=True)
@@ -563,7 +563,7 @@ def twitter_details(request):
                 search_words = request.GET.get('search')
                 correntdatee = datetime.today().strftime('%Y-%m-%d')
                 date_since=correntdatee
-                numTweets=50
+                numTweets=100
                 numRuns=1
                 rtotalTweets=0
                 tweets_location=0
@@ -610,21 +610,21 @@ def twitter_details(request):
                         url =  f"https://twitter.com/user/status/{tweet.id}"
                         posts.append({
                         'urll': url})
-                    try:
-                        text = tweet.retweeted_status.full_text
-                    except AttributeError:  # Not a Retweet
-                        text = tweet.full_text
-                    sentiments = sentiment_analysis(text)
-                    if sentiments =='Great':
-                        greatcounter+=1
-                    if sentiments =='Good':
-                        goodcounter+=1
-                    if sentiments =='Neutral':
-                        noutralcounter+=1
-                    if sentiments =='Bad':
-                        badcounter+=1
-                    if sentiments =='Terrible':
-                        terriblecounter+=1
+                        try:
+                            text = tweet.retweeted_status.full_text
+                        except AttributeError:  # Not a Retweet
+                            text = tweet.full_text
+                        sentiments = sentiment_analysis(text)
+                        if sentiments =='Great':
+                            greatcounter+=1
+                        if sentiments =='Good':
+                            goodcounter+=1
+                        if sentiments =='Neutral':
+                            noutralcounter+=1
+                        if sentiments =='Bad':
+                            badcounter+=1
+                        if sentiments =='Terrible':
+                            terriblecounter+=1
                     return render(request, 'blog/index.html',{'totalTweets':rtotalTweets,'tweets_location':tweets_location,'retweets':retweets,'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'total_followers':total_followers,'posts': posts,'coutdate': json.dumps(coutdate)})
                     
             elif database=='database':
