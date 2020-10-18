@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+    {% extends "blog/header.html" %}
+    {% load static %}
+    
+    {% block content %}
+<body>
+    <div class="page-wrapper">
+        <div class="container-fluid">
+
+            <!--------Tweet Mapper Search-->
+            <div class="row">
+               <div class="col-md-12 align-items-center">
+                <h5>Enter a Twitter user name to view all their tweets, likes, followers or timeline</h5>
+               </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action='mapper' method='GET' class="mt-4">
+                            <h4 class="card-title">Search From Twitter</h4>
+                            <form >
+
+                                <div class="form-group" style="width: 100%;">
+                                    <!-- <input type="text" class="form-control" value="search" id="search" placeholder="What are You Lookin For?"  value={{ search }}> -->
+                                    <input type="text" class="form-control" name="search" id="search"
+                                    style="height: 60px;font-size: 26px;"
+                                    placeholder="Enter user" value={{ search }}>
+                                </div>
+                            <h6>Select the info you would like to view for this user</h6>
+                            <div>
+                                <!-- <button type="submit"  name="btn1" value="tweets" class="p-2 m-2 bg-info">Tweets</i></button>
+                                <button type="submit"  name="btn2" class="p-2 m-2 bg-info">Timeline</i></button>
+                                <button type="submit"  class="p-2 m-2 bg-info">Likes</i></button>
+                                <button type="submit"  class="p-2 m-2 bg-info">Followers</i></button>
+                                <button type="submit"  class="p-2 m-2 bg-info">Following</i></button>
+                                 -->
+                              <button type="submit"  name="tweets" value="tweets" class="btn btn-primary">Tweets</button>
+                              <!-- <button type="submit" class="btn btn-primary">TimeLine</button> -->
+                              <!-- <button type="submit" class="btn btn-primary">Likes</button> -->
+                              <button type="submit" name="followers" value="followers" class="btn btn-primary">Followers</button>
+                              <button type="submit" class="btn btn-primary" name="following" value="following">Following</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--------Tweet Mapper Search-->
+
+            <!-------All Tweets Section --> 
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>All Tweets Section</h4>
+                    {% for post in posts  %}
+                    <div class="card">
+                        <div class="card-body collapse show">
+                            <p class="card-text">{{ post.text }}<span>. </span><date><u>{{ post.created }}</u></date></p>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+
+             <!-------All Tweets Section --> 
+
+
+            <!------All following Sections-->
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                    <h4>All Following Section</h4>
+                    {% for post in followingArr  %}
+                    <div class="card">
+                        <div class="card-body" style="display: flex;">
+                            <p class="card-text">
+                                <!-- <img src="./assets/images/favicon.png" alt="favicon.png"/>  -->
+                               {{post.following_name}}| <a href="javascript:void(0)" class="card-link">{{post.followingsurl}}</a>
+                                | {{post.following_count}} Followers | <i class="fa fa-link" style="font-size: small;"></i
+                                >
+                                <i class="fa fa-map"></i> {{post.f_location}}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!------All following Sections-->
+
+            <!---- All My Followers -->
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                    <h4>All My Followers</h4>
+                    {% for post in followersArr  %}
+                    <div class="card">
+                        <div class="card-body" style="display: flex;">
+                            <p class="card-text">
+                                <!-- <img src="./assets/images/favicon.png" alt="favicon.png"/>  -->
+                               {{post.followers_name}}| <a href="javascript:void(0)" class="card-link">{{post.followersurl}}</a>
+                                | {{post.followers_count}} Followers | <i class="fa fa-link" style="font-size: small;"></i
+                                >
+                                <i class="fa fa-map"></i> {{post.f_location}}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                  
+
+                </div>
+            </div>
+
+            <!---- All My Followers -->
+
+        </div>
+    </div>
+    </div>
+ 
+{% endblock content %}
+</body>
+
+</html>
