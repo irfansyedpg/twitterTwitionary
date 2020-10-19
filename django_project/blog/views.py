@@ -704,8 +704,9 @@ def mapper(request):
              return render(request,'blog/mapper.html')
          else:
              search = request.GET.get('search')
+             #this is used for tweets
              if request.GET.get('tweets')=='tweets':
- # # print(tweets)
+
                 screen_name = request.GET.get('search')
                 user = api.get_user(screen_name)
                 name=user.name
@@ -713,7 +714,6 @@ def mapper(request):
                 location=user.location
                 description=user.description
                 website=user.url
-                followers_count=user.followers_count
                 followers_count=user.followers_count
                 image=user.profile_image_url
                 totaltweets=user.statuses_count
@@ -725,8 +725,10 @@ def mapper(request):
                     posts.append({
                         'text':text,
                         "created":created })
-                    print(posts)
-                return render(request,'blog/mapper.html',{'posts': posts})
+                return render(request,'blog/mapper.html',{'posts': posts,'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count,'location':location,'name':name,'image':image})
+                #there are end of tweets
+
+                #this is used for followers
              elif request.GET.get('followers')=='followers':
                 followersArr=[]
                 screen_name = request.GET.get('search')
@@ -743,6 +745,7 @@ def mapper(request):
                     created=str(user.created_at)
                     followers_count=str(user.followers_count)
                     friend=str(user.friends_count)
+                    image=user.profile_image_url
                     followersArr.append({
                         'followers_name':followers_name,
                         "followers_scrname":followers_scrname,
@@ -751,9 +754,12 @@ def mapper(request):
                         'created':created,
                         'followers_count':followers_count,
                         'friend':friend,
-
+                        'image':image
                          })
                 return render(request,'blog/mapper.html',{'followersArr': followersArr})
+                #there are end of followers
+
+            #this is used for followings
              elif request.GET.get('following')=='following':
                 followingArr=[]
 
@@ -769,6 +775,8 @@ def mapper(request):
                     created=str(user.created_at)
                     followers_count=str(user.followers_count)
                     friend=str(user.friends_count)
+                    image=user.profile_image_url
+                    
                     followingArr.append({
                         'following_name':followers_name,
                         "followers_scrname":followers_scrname,
@@ -776,16 +784,13 @@ def mapper(request):
                         'f_location':f_location,
                         'created':created,
                         'following_count':followers_count,
-                        'friend':friend
+                        'friend':friend,
+                        'image':image
+
                          })
                 print(followingArr)
                 return render(request,'blog/mapper.html',{'followingArr': followingArr})
-                
-                #     print("Name: "+followers_name +"| UserName:"+followers_scrname+"| followersurl:"+followersurl+" | location:"+ user.location+" | Account Created:"+str(user.created_at)+" | followers_count:"+str(user.followers_count)+
-                #         "| friends: "+str(user.friends_count))
-                # print(screen_name +" has more then followers",count) 
-
-# following('irfansyed_pg')  
+                #there are end of followings
 
 def insertkeywords(request):
 

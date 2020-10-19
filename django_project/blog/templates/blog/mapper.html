@@ -47,7 +47,23 @@
                     </div>
                 </div>
             </div>
-
+             
+<div class="row mb-5">
+    <div class="col-md-7">
+        <div class="card">
+            
+            <h1 class="py-2 px-2">All My Tweets</h1>
+            
+            <div class="card-body">
+                <div style="display:flex;" class="mb-5">
+                    <img src={{image}} alt="favicon.png" width="70" height="70"/>
+                    <p style="font-size:34px;" class="ml-3">{{screenName}}</p>&nbsp;&nbsp;&nbsp;<p style="font-size:34px;">Loaded {{totaltweets}} Tweets</p>
+                </div>
+                {{name}}| {{followerCount}} Followers|&nbsp;&nbsp;<i class="fa fa-map"></i> {{location}}
+            </div> 
+        </div>
+    </div>
+</div>
             <!--------Tweet Mapper Search-->
 
             <!-------All Tweets Section --> 
@@ -78,7 +94,7 @@
                     <div class="card">
                         <div class="card-body" style="display: flex;">
                             <p class="card-text">
-                                <!-- <img src="./assets/images/favicon.png" alt="favicon.png"/>  -->
+                                <img src={{post.image}} alt="favicon.png"/> 
                                {{post.following_name}}| <a href="javascript:void(0)" class="card-link">{{post.followingsurl}}</a>
                                 | {{post.following_count}} Followers | <i class="fa fa-link" style="font-size: small;"></i
                                 >
@@ -101,7 +117,7 @@
                     <div class="card">
                         <div class="card-body" style="display: flex;">
                             <p class="card-text">
-                                <!-- <img src="./assets/images/favicon.png" alt="favicon.png"/>  -->
+                                <img src={{post.image}} alt="favicon.png"/> 
                                {{post.followers_name}}| <a href="javascript:void(0)" class="card-link">{{post.followersurl}}</a>
                                 | {{post.followers_count}} Followers | <i class="fa fa-link" style="font-size: small;"></i
                                 >
