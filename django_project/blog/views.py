@@ -54,11 +54,16 @@ api = tweepy.API(auth,wait_on_rate_limit=True)
 
 # SQL Connection String strats
 mydb = mysql.connector.connect(
-    host="104.155.148.67",
+    # host="104.155.148.67",
+    # # # host="localhost",
+    # database="twitter",
+    # user="twitteruser",
+    # passwd="irfansyed",
+    host="Localhost",
     # # host="localhost",
     database="twitter",
-    user="twitteruser",
-    passwd="irfansyed",
+    user="tweehunt",
+    passwd="TweeHunt!@#321",
     # host="localhost",
     # database="twitter",
     # user="root",
@@ -705,7 +710,7 @@ def mapper(request):
          else:
              search = request.GET.get('search')
              #this is used for tweets
-             if request.GET.get('tweets')=='tweets':
+             if request.GET.get('action')=='tweets':
 
                 screen_name = request.GET.get('search')
                 user = api.get_user(screen_name)
@@ -729,23 +734,27 @@ def mapper(request):
                 #there are end of tweets
 
                 #this is used for followers
-             elif request.GET.get('followers')=='followers':
+             elif request.GET.get('action')=='followers':
                 followersArr=[]
                 screen_name = request.GET.get('search')
                 count=0
+                userData = api.get_user(screen_name)
+                imageuser=userData.profile_image_url
+                name=userData.name
+                followers_count1=str(userData.followers_count)
+
                 for user in tweepy.Cursor(api.followers, screen_name).items(50): 
                     count += 1
-                    print(count)
-                    
                     followers_scrname=user.screen_name
                     followers_name=user.name
-            
                     followersurl =  f"https://twitter.com/{user.screen_name}"
                     f_location=user.location
+                    location=user.location
                     created=str(user.created_at)
                     followers_count=str(user.followers_count)
                     friend=str(user.friends_count)
                     image=user.profile_image_url
+                    totaltweets=user.statuses_count
                     followersArr.append({
                         'followers_name':followers_name,
                         "followers_scrname":followers_scrname,
@@ -756,15 +765,21 @@ def mapper(request):
                         'friend':friend,
                         'image':image
                          })
-                return render(request,'blog/mapper.html',{'followersArr': followersArr})
+                return render(request,'blog/mapper.html',{'followersArr': followersArr,'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count1,'location':location,'name':name,'image':imageuser})
                 #there are end of followers
 
             #this is used for followings
-             elif request.GET.get('following')=='following':
+             elif request.GET.get('action')=='following':
                 followingArr=[]
 
                 screen_name = request.GET.get('search')
                 count=0
+                userData = api.get_user(screen_name)
+                imageuser=userData.profile_image_url
+                name=userData.name
+                totaltweets=userData.statuses_count
+                location=userData.location
+                followers_count1=str(userData.followers_count)
                 for user in tweepy.Cursor(api.friends, screen_name).items(50): 
                     count += 1
 
@@ -788,8 +803,7 @@ def mapper(request):
                         'image':image
 
                          })
-                print(followingArr)
-                return render(request,'blog/mapper.html',{'followingArr': followingArr})
+                return render(request,'blog/mapper.html',{'followingArr': followingArr,'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count1,'location':location,'name':name,'image':imageuser})
                 #there are end of followings
 
 def insertkeywords(request):

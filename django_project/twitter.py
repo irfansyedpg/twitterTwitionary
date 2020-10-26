@@ -28,16 +28,16 @@ api = tweepy.API(auth,wait_on_rate_limit=True)
 
 #SQL Connection String strats
 mydb = mysql.connector.connect(
-    # host="104.155.148.67",
-    # # # host="localhost",
-    # database="twitter",
-    # user="twitteruser",
-    # passwd="irfansyed",
-    host="localhost",
-    # host="localhost",
+    host="Localhost",
+    # # host="localhost",
     database="twitter",
-    user="root",
-    passwd="",
+    user="tweehunt",
+    passwd="TweeHunt!@#321",
+    # host="localhost",
+    # # host="localhost",
+    # database="twitter",
+    # user="root",
+    # passwd="",
   
 ) 
 mycursor = mydb.cursor()

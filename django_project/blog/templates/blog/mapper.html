@@ -30,17 +30,9 @@
                                 </div>
                             <h6>Select the info you would like to view for this user</h6>
                             <div>
-                                <!-- <button type="submit"  name="btn1" value="tweets" class="p-2 m-2 bg-info">Tweets</i></button>
-                                <button type="submit"  name="btn2" class="p-2 m-2 bg-info">Timeline</i></button>
-                                <button type="submit"  class="p-2 m-2 bg-info">Likes</i></button>
-                                <button type="submit"  class="p-2 m-2 bg-info">Followers</i></button>
-                                <button type="submit"  class="p-2 m-2 bg-info">Following</i></button>
-                                 -->
-                              <button type="submit"  name="tweets" value="tweets" class="btn btn-primary">Tweets</button>
-                              <!-- <button type="submit" class="btn btn-primary">TimeLine</button> -->
-                              <!-- <button type="submit" class="btn btn-primary">Likes</button> -->
-                              <button type="submit" name="followers" value="followers" class="btn btn-primary">Followers</button>
-                              <button type="submit" class="btn btn-primary" name="following" value="following">Following</button>
+                              <button type="submit"  name="action" value="tweets" class="btn btn-primary" >Tweets</button>
+                              <button type="submit" name="action" value="followers" class="btn btn-primary">Followers</button>
+                              <button type="submit" class="btn btn-primary" name="action" value="following">Following</button>
                             </div>
                             </form>
                         </div>
@@ -57,7 +49,10 @@
             <div class="card-body">
                 <div style="display:flex;" class="mb-5">
                     <img src={{image}} alt="favicon.png" width="70" height="70"/>
-                    <p style="font-size:34px;" class="ml-3">{{screenName}}</p>&nbsp;&nbsp;&nbsp;<p style="font-size:34px;">Loaded {{totaltweets}} Tweets</p>
+                    <p style="font-size:34px;" class="ml-3" >{{screenName}}</p>
+                    &nbsp;&nbsp;&nbsp;<p style="font-size:34px;" id="tweetsP">Loaded {{totaltweets}} Tweets</p>
+                    <p style="font-size:34px;"  id="followersP">Loaded {{totaltweets}} Followers</p>
+                    <p style="font-size:34px;" id="followingP">Loaded {{totaltweets}} Following</p>
                 </div>
                 {{name}}| {{followerCount}} Followers|&nbsp;&nbsp;<i class="fa fa-map"></i> {{location}}
             </div> 
@@ -68,7 +63,7 @@
 
             <!-------All Tweets Section --> 
 
-            <div class="row">
+            <div class="row" id="tweets">
                 <div class="col-md-12">
                     <h4>All Tweets Section</h4>
                     {% for post in posts  %}
@@ -76,6 +71,7 @@
                         <div class="card-body collapse show">
                             <p class="card-text">{{ post.text }}<span>. </span><date><u>{{ post.created }}</u></date></p>
                         </div>
+                        
                         {% endfor %}
 
                     </div>
@@ -86,11 +82,11 @@
 
 
             <!------All following Sections-->
-
-            <div class="row">
+            <div class="row" id="following">
                 <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
                     <h4>All Following Section</h4>
                     {% for post in followingArr  %}
+                    
                     <div class="card">
                         <div class="card-body" style="display: flex;">
                             <p class="card-text">
@@ -103,14 +99,14 @@
                         </div>
                     </div>
                     {% endfor %}
+                   
                 </div>
             </div>
-
             <!------All following Sections-->
 
             <!---- All My Followers -->
 
-            <div class="row">
+            <div class="row" id="followers">
                 <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
                     <h4>All My Followers</h4>
                     {% for post in followersArr  %}
@@ -126,9 +122,6 @@
                         </div>
                     </div>
                     {% endfor %}
-
-                  
-
                 </div>
             </div>
 
@@ -137,8 +130,53 @@
         </div>
     </div>
     </div>
- 
+    <script>
+       
+        $(document).ready(function () {
+           console.log(window.location.search)
+           let action = window.location.search.slice(1).split("&")[1].split("=")[1];
+           if(action){
+               if(action == 'tweets'){
+                $('#tweets').show();
+                $('#tweetsP').show();
+                // $('#tweetssection').show();
+                $('#followingP').hide();
+                $('#following').hide();
+                $('#followers').hide();
+                $('#followersP').hide();
+               }
+               else if(action == 'following'){
+                $('#tweets').hide();
+                $('#tweetsP').hide();
+                // $('#tweetssection').hide();
+                $('#following').show();
+                $('#followingP').show();
+                $('#followers').hide();
+                $('#followersP').hide();
+               }
+               else if(action == 'followers'){
+                $('#tweets').hide();
+                $('#tweetsP').hide();
+                // $('#tweetssection').hide();
+
+                $('#following').hide();
+                $('#followingP').hide();
+                $('#followers').show();
+                $('#followersP').show();
+               }
+           } 
+    
+        //    var url = $(location).attr('href');
+        //    var str = url.lastIndexOf("=");
+        //    var SubString = url.substring(str + 1);
+        //    alert(substring)
+        //    window.location.href = 'action?' + SubString;
+        //    return false;
+      
+    });
+    </script>
 {% endblock content %}
+
 </body>
 
 </html>
