@@ -805,7 +805,7 @@ def mapper(request):
                          })
                 return render(request,'blog/mapper.html',{'followingArr': followingArr,'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count1,'location':location,'name':name,'image':imageuser})
                 #there are end of followings
-
+#insert keywords
 def insertkeywords(request):
 
     keywords = request.GET.get("words")
