@@ -28,16 +28,16 @@ api = tweepy.API(auth,wait_on_rate_limit=True)
 
 #SQL Connection String strats
 mydb = mysql.connector.connect(
-    host="Localhost",
-    # # host="localhost",
-    database="twitter",
-    user="tweehunt",
-    passwd="TweeHunt!@#321",
-    # host="localhost",
+    # host="Localhost",
     # # host="localhost",
     # database="twitter",
-    # user="root",
-    # passwd="",
+    # user="tweehunt",
+    # passwd="TweeHunt!@#321",
+    # host="localhost",
+    host="localhost",
+    database="twitter",
+    user="root",
+    passwd="",
   
 ) 
 mycursor = mydb.cursor()
@@ -88,45 +88,6 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
 
             # print(tweetId)
             username = tweet.user.screen_name
-
-            # for tweet in tweets:
-            # if tweet.lang == "en":
-            #     a.append(tweet.text)
-                #Do the stuff here
-            # print('username',username)
-            # for user in tweepy.Cursor(api.followers, screen_name=username).items():
-            #  print(user.screen_name) 
-            #  followers_scrname=user.screen_name
-            #  followers_name=user.name
-            # #  followers_text=user.retweeted_status.text
-            #  print(user.name) 
-            # #  print(followers_text) 
-            #  followersurl =  f"https://twitter.com/{user.screen_name}"
-            #  print(followersurl) 
-             
-            # ids = []
-            # for page in tweepy.Cursor(api.followers_ids, screen_name=username).pages():
-          
-            # sleeptime = 4
-            # pages = tweepy.Cursor(api.followers, screen_name=username).pages()
-
-
-            # while True:
-            #     try:
-            #         page = next(pages)
-            #         time.sleep(sleeptime)
-            #     except tweepy.TweepError: #taking extra care of the "rate limit exceeded"
-            #         time.sleep(60*15) 
-            #         page = next(pages)
-            #     except StopIteration:
-            #         break
-            # for user in page:
-            #     print('user.id_str',user.id_str)
-            #     print('user.screen_name',user.screen_name)
-            #     print('user.followers_count',user.followers_count)
-
-            # print(ids)
-
             url =  f"https://twitter.com/user/status/{tweet.id}"
             try:
                     text = tweet.retweeted_status.full_text
@@ -144,27 +105,8 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
                 val1 = (tagtext,twitter_col_id)
                       
             mycursor.execute(query1,val1)
-            # print(username)
-            # replies=[]
-            # for tweet in tweepy.Cursor(api.search,q='to:'+username, result_type='recent', timeout=999999).items(1000):
-            #     if hasattr(tweet, 'in_reply_to_status_id_str'):
-            #         if (tweet.in_reply_to_status_id_str==tweet_id):
-            #             ryplycount=replies.append(tweet)
-            #             print('repl',ryplycount)
-            # query = "INSERT into tbl_hashtags(location) VALUES (%s)"
-            # val = (location)
-            # query = "INSERT into twitter_table(twitter_text) VALUES (%s)"
-            #val = (location, tweetcreatedts, retweetcount, text, username,url)
-            # val = (text)
-            # mycursor.execute(query,val)
-            #db_tweets.loc[len(db_tweets)] = ith_tweet
             noTweets += 1
             mydb.commit()
-            # print("1 record inserted, ID:", mycursor.lastrowid)
-    
-   
-
-
         # Run ended:
         end_run = time.time()
         
@@ -191,9 +133,21 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
 
 def job():
     try:
-        df = pd.read_excel ('dictionarytwets.xlsx')
-        mylist = df['words'].tolist()
+        # df = pd.read_excel ('dictionarytwets.xlsx')
+        # mylist = df['words'].tolist()
         # print(mylist)
+        posts = []
+        mydb._open_connection()
+        # df = pd.read_excel ('dictionarytwets.xlsx')
+        # mylist = df['words'].tolist()
+        sqlite_select_query = """SELECT Keywords FROM tbl_keywords"""
+        mycursor.execute(sqlite_select_query)
+        for i in mycursor:
+            posts.append(
+            i[0]
+            )
+        mylist=posts
+        print(mylist)
         search_words=""
         count=0
         for a in mylist:
@@ -203,13 +157,11 @@ def job():
                 search_words=search_words+" OR #"+a.replace(" ", "")
                 
             count=1
-        # search_words1=search_words
-        # print(search_words1)
         date_since = "2020-09-20"
 
         numTweets = 1000
         numRuns = 1
-
+        print(search_words)
         scraptweets(search_words, date_since, numTweets, numRuns)
     except Exception as e:
         print(e)
