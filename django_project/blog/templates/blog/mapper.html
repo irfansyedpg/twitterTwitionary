@@ -133,7 +133,9 @@
     <script>
        
         $(document).ready(function () {
-           console.log(window.location.search)
+           let search = window.location.search.slice(1).split("&")[0].split("=")[1];
+            
+            $('#search').val(search);
            let action = window.location.search.slice(1).split("&")[1].split("=")[1];
            if(action){
                if(action == 'tweets'){

@@ -218,6 +218,8 @@ $(function () {
     </script>
 
     <script>
+          let search = window.location.search.slice(1).split("&")[0].split("=")[1];
+            $('#search').val(search);
         $(".preloader").fadeIn();
         // Twitter widget is loading.
         window.twttr = function (d, s, id) {
