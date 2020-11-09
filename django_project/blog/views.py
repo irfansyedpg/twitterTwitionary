@@ -38,6 +38,9 @@ import sys
 from datetime import timedelta
 from datetime import datetime
 import openpyxl as xl
+from tkinter import messagebox
+from django.contrib import messages
+
 
 # newshunt
 
@@ -407,28 +410,32 @@ def dictionary_link(request):
 
 
 def delete_laptop(request):
-    pk = request.GET.get("pk")
-    df = pd.read_excel('dictionary.xlsx')
+    if request.GET.get("pk")==None:
+        return render(request, 'blog/dictionary.html')
+    else:
 
-    df = df.query("pk != "+pk)
-    df.to_excel('dictionary.xlsx')
-    df = pd.read_excel('dictionary.xlsx')
-    posts = []
+        pk = request.GET.get("pk")
+        df = pd.read_excel('dictionary.xlsx')
 
-    for index, row in df.iterrows():
-        posts.append({
-            'words': row['words'],
-            'pk': row['pk'],
+        df = df.query("pk != "+pk)
+        df.to_excel('dictionary.xlsx')
+        df = pd.read_excel('dictionary.xlsx')
+        posts = []
 
-        })
+        for index, row in df.iterrows():
+            posts.append({
+                'words': row['words'],
+                'pk': row['pk'],
 
-    # items=df
-    context = {
-        'items': posts,
-        'header': 'Laptops',
-    }
+            })
 
-    return render(request, 'blog/dictionary.html', context)
+        # items=df
+        context = {
+            'items': posts,
+            'header': 'Laptops',
+        }
+
+        return render(request, 'blog/dictionary.html', context)
 
 
 # from .forms import NameForm
@@ -630,6 +637,7 @@ def twitter_details(request):
                             badcounter+=1
                         if sentiments =='Terrible':
                             terriblecounter+=1
+                        print(username)
                     return render(request, 'blog/index.html',{'totalTweets':rtotalTweets,'tweets_location':tweets_location,'retweets':retweets,'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'total_followers':total_followers,'posts': posts,'coutdate': json.dumps(coutdate)})
                     
             elif database=='database':
@@ -700,7 +708,11 @@ def twitter_details(request):
                     'posts': posts,'coutdate': json.dumps(coutdate),'tweets_count': tweets_count, 'count_username': count_username, 'tweets_location': tweets_location, 'tweets_total_keywords': tweets_total_keywords,
                     'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'retweets':retweets_count,'totalTweets':total_tweets,'total_followers':total_followers
                 })
-   
+
+def long_load(typeback):
+    time.sleep(5) #just simulating the waiting period
+    return "You typed: %s" % typeback
+    
 def mapper(request):
         #  search = 
          posts = []
@@ -808,28 +820,136 @@ def mapper(request):
 #insert keywords
 def insertkeywords(request):
 
-    keywords = request.GET.get("words")
-    df = pd.read_excel('dictionary.xlsx')
-    lstvalue = df['pk'].tail(1).index.item()
-    df = df.append({'pk': lstvalue+5, 'words': keywords}, ignore_index=True)
-    if keywords:
-        df.to_excel('dictionary.xlsx')
-    df = pd.read_excel('dictionary.xlsx')
-    posts = []
+        keywords = request.GET.get('words')
+        df = pd.read_excel('dictionary.xlsx')
+        lstvalue = df['pk'].tail(1).index.item()
+        df = df.append({'pk': lstvalue+5, 'words': keywords}, ignore_index=True)
+        if keywords:
+            df.to_excel('dictionary.xlsx')
+        df = pd.read_excel('dictionary.xlsx')
+        posts = []
 
-    for index, row in df.iterrows():
-        posts.append({
-            'words': row['words'],
-            'pk': row['pk'],
+        for index, row in df.iterrows():
+            posts.append({
+                'words': row['words'],
+                'pk': row['pk'],
 
-        })
+            })
 
-    # items=df
-    context = {
-        'items': posts,
-        'header': 'Laptops',
-    }
+        # items=df
+        context = {
+            'items': posts,
+            'header': 'Laptops',
+        }
+                
 
-    return render(request, 'blog/dictionary.html', context)
+        return render(request, 'blog/dictionary.html', context)
 
    
+
+def add_keywords(request):
+     posts=[]
+     if request.GET.get('words')==None:
+        sqlite_select_query = """SELECT * FROM tbl_keywords ORDER BY Id"""
+        cursor.execute(sqlite_select_query)
+        for row in cursor:
+                    posts.append({
+                        'Id': row[0],
+                        'text': row[1]})
+        context = {
+            'items': posts
+        }
+        return render(request, 'blog/addkeywords.html', context)
+     else:
+        keywords = request.GET.get('words')
+        sql = ("INSERT INTO tbl_keywords (Keywords) VALUES (%s)")
+
+        query = (keywords,)
+        cursor.execute(sql, query)
+        #commit
+        mydb.commit()
+
+        #create a messagebox
+        messages.add_message(
+        request, messages.SUCCESS, 'Successfully Added' +"  "+ keywords,
+        fail_silently=True,
+        )
+        sqlite_select_query = """SELECT * FROM tbl_keywords ORDER BY Id"""
+        cursor.execute(sqlite_select_query)
+        for row in cursor:
+                    posts.append({
+                        'Id': row[0],
+                        'text': row[1]})
+        context = {
+            'items': posts
+        }
+        # messages.info(request, 'Hello world.', fail_silently=True)
+        # messages.set_level(request, messages.WARNING)
+        # messages.success(request, 'Your profile was updated.') # ignored
+        # messages.warning(request, 'Your account is about to expire.') # recorded
+        return render(request, 'blog/addkeywords.html', context)
+
+
+def delete_keywords(request):
+    posts=[]
+    if request.GET.get("pk")==None:
+        return render(request, 'blog/dictionary.html')
+    else:
+
+        pk = request.GET.get("pk")
+        
+        cout_bydate = """Delete From tbl_keywords  WHERE Id=%s ORDER BY Id"""
+        cursor.execute(cout_bydate,(pk,))
+        mydb.commit()
+        #create a messagebox
+        messages.add_message(
+        request, messages.SUCCESS, 'Successfully Deleted',
+        fail_silently=True,
+        )
+        sqlite_select_query = """SELECT * FROM tbl_keywords ORDER BY Id"""
+        cursor.execute(sqlite_select_query)
+        for row in cursor:
+                    posts.append({
+                        'Id': row[0],
+                        'text': row[1]})
+        context = {
+            'items': posts
+        }
+        return render(request, 'blog/addkeywords.html',context)
+ 
+def updatekeywords(request):
+    posts=[]
+    if request.GET.get("words")==None or request.GET.get("words")=='' :
+        success = False
+        sqlite_select_query = """SELECT * FROM tbl_keywords ORDER BY Id"""
+        cursor.execute(sqlite_select_query)
+        for row in cursor:
+                    posts.append({
+                        'Id': row[0],
+                        'text': row[1]})
+        context = {
+            'items': posts
+        }
+    else:
+
+        keyword = request.GET.get('words')
+        userId = request.GET.get('userId')
+
+        cout_bydate = """UPDATE `tbl_keywords` SET `Keywords`=%s WHERE Id=%s ORDER BY Id"""
+        cursor.execute(cout_bydate,(keyword,userId))
+        mydb.commit()
+        #create a messagebox
+        messages.add_message(
+        request, messages.SUCCESS, 'Successfully Updated',
+        fail_silently=True,
+        )
+        sqlite_select_query = """SELECT * FROM tbl_keywords ORDER BY Id"""
+        cursor.execute(sqlite_select_query)
+        for row in cursor:
+                    posts.append({
+                        'Id': row[0],
+                        'text': row[1]})
+        context = {
+            'items': posts
+        }
+    return render(request, 'blog/addkeywords.html',context)

@@ -12,11 +12,15 @@ urlpatterns = [
     path('login', views.login, name='login'),
     path('dictionary', views.dictionary_link, name='dictionary_click'),
     path('insertkeywords', views.insertkeywords),
+    # path('delete_laptop', views.delete_laptop),
     path('search', views.search_keywords,name='search_page'),
     path('twitter_details', views.twitter_details,name='twitter_details'),
     path('twitter_search', views.twitter_search,name='twitter_search'),
     path('twitter_list', views.twitter_list,name='twitter_list'),
     path('index', views.index,name='index'),
     path('mapper', views.mapper,name='mapper'),
+    path('addkeywords', views.add_keywords,name='addkeywords'),
+    path('delete_keywords', views.delete_keywords,name='delete_keywords'),
+    path('updatekeywords', views.updatekeywords,name='updatekeywords'),
 ]
 #helo

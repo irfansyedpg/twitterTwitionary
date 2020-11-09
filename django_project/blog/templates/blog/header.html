@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{% static 'tweets/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css' %}">
     <link rel="stylesheet" href="{% static 'tweets/dist/css/style.min.css' %}">
     <link rel="stylesheet" href="{% static 'tweets/assets/extra-libs/prism/prism.css' %}">
+    <link rel="stylesheet" href="{% static 'tweets/assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css' %}" rel="stylesheet">
     {% if title %}
     <title> Twitionary- {{ title }} </title>
     {% else %}
@@ -181,6 +182,11 @@
                                     class="hide-menu">Tweets Mapper
                                 </span></a>
                         </li>
+                        <li class="sidebar-item"> <a class="sidebar-link" href="addkeywords"
+                            aria-expanded="false"><i data-feather="map-pin" class="feather-icon"></i><span
+                                class="hide-menu">Add Keywords
+                            </span></a>
+                    </li>
 
                         <li class="sidebar-item"> <a class="sidebar-link" href="ticket-list.html"
                                 aria-expanded="false"><i data-feather="layers" class="feather-icon"></i><span
@@ -228,6 +234,11 @@
     
         <script src="https://code.highcharts.com/highcharts.js"></script>
         <script src="https://npmcdn.com/masonry-layout@4.0/dist/masonry.pkgd.js"></script>
+        <script src="{% static 'tweets/assets/extra-libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+        <script src="{% static 'tweets/dist/js/pages/datatable/datatable-basic.init.js' %}"></script>
+        <script src="{% static 'tweets/js/jquery.bootstrap.modal.forms.js' %}"></script>
+    <!-- You can alternatively load the minified version -->
+        <script src="{% static 'tweets/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 {% block content %}
  {% endblock content %}
 </body>

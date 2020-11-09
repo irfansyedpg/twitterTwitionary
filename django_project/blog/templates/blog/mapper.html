@@ -2,7 +2,45 @@
 <html dir="ltr" lang="en">
     {% extends "blog/header.html" %}
     {% load static %}
-    
+    <style>
+     #needs-validation {
+  /* .loader-container will be positionned relative to this */
+  position: relative;
+}
+
+.loader-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(240,240,240,.7);
+  /* hide it at first */
+  display: none;
+}
+
+.loader {
+  border: 16px solid #f3f3f3;
+  /* Light grey */
+  border-top: 16px solid #3498db;
+  /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  /* Add the following to center it */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -38px; /* half its width (border included) */
+  margin-top: -38px; /* half its height */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+    </style>
     {% block content %}
 <body>
     <div class="page-wrapper">
@@ -20,11 +58,11 @@
                         <div class="card-body">
                             <form action='mapper' method='GET' class="mt-4">
                             <h4 class="card-title">Search From Twitter</h4>
-                            <form >
+                          
 
                                 <div class="form-group" style="width: 100%;">
                                     <!-- <input type="text" class="form-control" value="search" id="search" placeholder="What are You Lookin For?"  value={{ search }}> -->
-                                    <input type="text" class="form-control" name="search" id="search"
+                                    <input type="text" class="form-control" required name="search" id="search"
                                     style="height: 60px;font-size: 26px;"
                                     placeholder="Enter user" value={{ search }}>
                                 </div>
@@ -34,6 +72,7 @@
                               <button type="submit" name="action" value="followers" class="btn btn-primary">Followers</button>
                               <button type="submit" class="btn btn-primary" name="action" value="following">Following</button>
                             </div>
+                          
                             </form>
                         </div>
                     </div>
@@ -79,7 +118,6 @@
             </div>
 
              <!-------All Tweets Section --> 
-
 
             <!------All following Sections-->
             <div class="row" id="following">
@@ -129,10 +167,15 @@
 
         </div>
     </div>
-    </div>
+</div>
+
     <script>
-       
         $(document).ready(function () {
+            
+                $('#followingP').hide();
+                $('#following').hide();
+                $('#followers').hide();
+                $('#followersP').hide();
            let search = window.location.search.slice(1).split("&")[0].split("=")[1];
             
             $('#search').val(search);

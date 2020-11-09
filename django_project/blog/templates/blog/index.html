@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
+
+   
 {% extends "blog/header.html" %}
 {% load static %}
+
+<style>
+    .loader {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url('https://lkp.dispendik.surabaya.go.id/assets/loading.gif') 50% 50% no-repeat rgb(249,249,249);
+    }
+</style>
 
 {% block content %}
 
@@ -9,7 +23,9 @@
 
     <div class="page-wrapper">
         <div class="container-fluid">
-
+            <div class="loader">
+                <h1>Hello Loader </h1>
+            </div>
             <!----- Search Twitter------>
             <div class="row">
                 <div class="col-md-12">
@@ -25,7 +41,7 @@
                                 </div>
 
                                 <div class="form-group" style="width: 100%;display: flex;">
-                                    <input type="text" class="form-control" name="search" id="search"
+                                    <input type="text" class="form-control" required name="search" id="search"
                                         style="height: 60px;font-size: 26px;"
                                         placeholder="Enter Keyword Hashing or Websites" value={{ search }}>
                                     <button type="submit" class="btn btn-primary">Search</button>
@@ -82,13 +98,13 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                    <!-- <h5>Tweetes</h5> -->
+                                    <h5>Tweetes</h5>
                                 </div>
                                 <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
                                     <h5>Impressions</h5>
                                 </div>
                                 <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                    <!-- <h5>Location</h5> -->
+                                    <h5>Location</h5>
                                 </div>
 
                             </div>
@@ -204,7 +220,9 @@ $(function () {
     });
     </script>
     <script>
-      
+      $(window).load(function() {
+        $(".loader").fadeOut("slow");
+});
         function value1Changed() {
 
             document.getElementById("database").checked = false;
