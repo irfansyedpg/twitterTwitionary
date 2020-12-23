@@ -171,13 +171,13 @@ def job():
 
 # In[ ]:
 
-job()
-#schedule.every().day.at("16:03").do(job)
+# job()
+schedule.every().day.at("16:03").do(job)
 
 
 
 
-#while True:
- #   schedule.run_pending()
-  #  time.sleep(60) # wait one minute
+while True:
+   schedule.run_pending()
+   time.sleep(60) # wait one minute
 
