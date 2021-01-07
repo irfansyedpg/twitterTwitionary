@@ -28,16 +28,13 @@ api = tweepy.API(auth,wait_on_rate_limit=True)
 
 #SQL Connection String strats
 mydb = mysql.connector.connect(
-    # host="Localhost",
-    # # host="localhost",
-    # database="twitter",
-    # user="tweehunt",
-    # passwd="TweeHunt!@#321",
-    # host="localhost",
     host="localhost",
     database="twitter",
-    user="root",
-    passwd="",
+    user="tweehunt",
+    passwd="TweeHunt!@#321",
+    # user="root",
+    # passwd="",
+    charset="utf8mb4",
   
 ) 
 mycursor = mydb.cursor()
@@ -59,8 +56,6 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
   
     
     for i in range(0, numRuns):
-        
-
         start_run = time.time()
     
         tweets = tweepy.Cursor(api.search, q=search_words, lang="en", since=date_since, tweet_mode='extended').items(numTweets)

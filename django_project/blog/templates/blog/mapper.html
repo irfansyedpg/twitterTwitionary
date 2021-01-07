@@ -1,226 +1,312 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-    {% extends "blog/header.html" %}
-    {% load static %}
-    <style>
-     #needs-validation {
-  /* .loader-container will be positionned relative to this */
-  position: relative;
-}
+{% extends "blog/header.html" %}
+{% load static %}
+<style>
+    #needs-validation {
+        /* .loader-container will be positionned relative to this */
+        position: relative;
+    }
 
-.loader-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(240,240,240,.7);
-  /* hide it at first */
-  display: none;
-}
+    .loader-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(240, 240, 240, .7);
+        /* hide it at first */
+        display: none;
+    }
 
-.loader {
-  border: 16px solid #f3f3f3;
-  /* Light grey */
-  border-top: 16px solid #3498db;
-  /* Blue */
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  animation: spin 1s linear infinite;
-  /* Add the following to center it */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-left: -38px; /* half its width (border included) */
-  margin-top: -38px; /* half its height */
-}
+    .loader {
+        border: 16px solid #f3f3f3;
+        /* Light grey */
+        border-top: 16px solid #3498db;
+        /* Blue */
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        /* Add the following to center it */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -38px;
+        /* half its width (border included) */
+        margin-top: -38px;
+        /* half its height */
+    }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-    </style>
-    {% block content %}
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+{% block content %}
+
 <body>
     <div class="page-wrapper">
         <div class="container-fluid">
 
             <!--------Tweet Mapper Search-->
             <div class="row">
-               <div class="col-md-12 align-items-center">
-                <h5>Enter a Twitter user name to view all their tweets, likes, followers or timeline</h5>
-               </div>
+                <div class="col-md-12 align-items-center">
+                    <h5>Enter a Twitter user name to view all their tweets, likes, followers or timeline</h5>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
                             <form action='mapper' method='GET' class="mt-4">
-                            <h4 class="card-title">Search From Twitter</h4>
-                          
+                                <h4 class="card-title">Search From Twitter</h4>
+
 
                                 <div class="form-group" style="width: 100%;">
                                     <!-- <input type="text" class="form-control" value="search" id="search" placeholder="What are You Lookin For?"  value={{ search }}> -->
                                     <input type="text" class="form-control" required name="search" id="search"
-                                    style="height: 60px;font-size: 26px;"
-                                    placeholder="Enter user" value={{ search }}>
+                                        style="height: 60px;font-size: 26px;" placeholder="Enter user"
+                                        value={{ search }}>
                                 </div>
-                            <h6>Select the info you would like to view for this user</h6>
-                            <div>
-                              <button type="submit"  name="action" value="tweets" class="btn btn-primary" >Tweets</button>
-                              <button type="submit" name="action" value="followers" class="btn btn-primary">Followers</button>
-                              <button type="submit" class="btn btn-primary" name="action" value="following">Following</button>
-                            </div>
-                          
+                                <h6>Select the info you would like to view for this user</h6>
+                                <div>
+                                    <button type="button" id="btntweets" name="action" value="tweets"
+                                        class="btn btn-primary">Tweets</button>
+                                    <button type="button" id="btnfollowers" name="action" value="followers"
+                                        class="btn btn-primary">Followers</button>
+                                    <button type="button" id="btnfollowing" class="btn btn-primary" name="action"
+                                        value="following">Following</button>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-             
-<div class="row mb-5">
-    <div class="col-md-7">
-        <div class="card">
-            
-            <h1 class="py-2 px-2">All My Tweets</h1>
-            
-            <div class="card-body">
-                <div style="display:flex;" class="mb-5">
-                    <img src={{image}} alt="favicon.png" width="70" height="70"/>
-                    <p style="font-size:34px;" class="ml-3" >{{screenName}}</p>
-                    &nbsp;&nbsp;&nbsp;<p style="font-size:34px;" id="tweetsP">Loaded {{totaltweets}} Tweets</p>
-                    <p style="font-size:34px;"  id="followersP">Loaded {{totaltweets}} Followers</p>
-                    <p style="font-size:34px;" id="followingP">Loaded {{totaltweets}} Following</p>
+
+            <div class="row mb-5">
+                <div class="col-md-7">
+                    <div class="card">
+
+                        <h1 class="py-2 px-2">All My Tweets</h1>
+
+                        <div class="card-body">
+                            <div style="display:flex;" class="mb-5">
+                                <img src="https://img.icons8.com/fluent/48/000000/twitter.png" alt="" width="70"
+                                    height="70" id="tweetsImage">
+                                <p style="font-size:34px;" class="ml-3" id="screenName"></p>
+                                &nbsp;&nbsp;&nbsp;<p style="font-size:34px;" id="tweetsP">Loaded <span id="totaltweets" ></span>  Tweets
+                                </p>
+                                <p style="font-size:34px;" id="followersP">Loaded <span id="totalfollowers"></span>  Followers</p>
+                                <p style="font-size:34px;" id="followingP">Loaded <span id="totalfollowing"></span>  Following</p>
+                            </div>
+                            <span id="name"></span> | <span id="followerCount"></span>  Followers|&nbsp;&nbsp;<i class="fa fa-map"></i> <span id="location"></span>
+                        </div>
+                    </div>
                 </div>
-                {{name}}| {{followerCount}} Followers|&nbsp;&nbsp;<i class="fa fa-map"></i> {{location}}
-            </div> 
-        </div>
-    </div>
-</div>
+            </div>
             <!--------Tweet Mapper Search-->
 
-            <!-------All Tweets Section --> 
+            <!-------All Tweets Section -->
 
             <div class="row" id="tweets">
                 <div class="col-md-12">
                     <h4>All Tweets Section</h4>
-                    {% for post in posts  %}
-                    <div class="card">
-                        <div class="card-body collapse show">
-                            <p class="card-text">{{ post.text }}<span>. </span><date><u>{{ post.created }}</u></date></p>
-                        </div>
-                        
-                        {% endfor %}
-
-                    </div>
+                    <div id="totalTweetsArr">
                 </div>
-            </div>
-
-             <!-------All Tweets Section --> 
-
-            <!------All following Sections-->
-            <div class="row" id="following">
-                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-                    <h4>All Following Section</h4>
-                    {% for post in followingArr  %}
                     
-                    <div class="card">
-                        <div class="card-body" style="display: flex;">
-                            <p class="card-text">
-                                <img src={{post.image}} alt="favicon.png"/> 
-                               {{post.following_name}}| <a href="javascript:void(0)" class="card-link">{{post.followingsurl}}</a>
-                                | {{post.following_count}} Followers | <i class="fa fa-link" style="font-size: small;"></i
-                                >
-                                <i class="fa fa-map"></i> {{post.f_location}}
-                            </p>
-                        </div>
-                    </div>
-                    {% endfor %}
-                   
                 </div>
             </div>
-            <!------All following Sections-->
+
+            <!-------All Tweets Section -->
 
             <!---- All My Followers -->
 
             <div class="row" id="followers">
                 <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
                     <h4>All My Followers</h4>
-                    {% for post in followersArr  %}
-                    <div class="card">
-                        <div class="card-body" style="display: flex;">
-                            <p class="card-text">
-                                <img src={{post.image}} alt="favicon.png"/> 
-                               {{post.followers_name}}| <a href="javascript:void(0)" class="card-link">{{post.followersurl}}</a>
-                                | {{post.followers_count}} Followers | <i class="fa fa-link" style="font-size: small;"></i
-                                >
-                                <i class="fa fa-map"></i> {{post.f_location}}
-                            </p>
-                        </div>
+                    <div id="followersArr">
+                        
+                    
                     </div>
-                    {% endfor %}
                 </div>
             </div>
 
             <!---- All My Followers -->
 
+            <!------All following Sections-->
+           
+            <div class="row" id="following">
+                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                    <h4>All Following Section</h4>
+                   <div id="followingArr">
+                   
+                </div>
+                </div>
+
+
+            </div>
+
+            <!------All following Sections-->
         </div>
     </div>
-</div>
+    </div>
 
     <script>
         $(document).ready(function () {
-            
-                $('#followingP').hide();
-                $('#following').hide();
-                $('#followers').hide();
-                $('#followersP').hide();
-           let search = window.location.search.slice(1).split("&")[0].split("=")[1];
-            
-            $('#search').val(search);
-           let action = window.location.search.slice(1).split("&")[1].split("=")[1];
-           if(action){
-               if(action == 'tweets'){
-                $('#tweets').show();
-                $('#tweetsP').show();
-                // $('#tweetssection').show();
-                $('#followingP').hide();
-                $('#following').hide();
-                $('#followers').hide();
-                $('#followersP').hide();
-               }
-               else if(action == 'following'){
-                $('#tweets').hide();
-                $('#tweetsP').hide();
-                // $('#tweetssection').hide();
-                $('#following').show();
-                $('#followingP').show();
-                $('#followers').hide();
-                $('#followersP').hide();
-               }
-               else if(action == 'followers'){
-                $('#tweets').hide();
-                $('#tweetsP').hide();
-                // $('#tweetssection').hide();
+            $('#tweets').hide();
+                    $('#tweetsP').hide();
+                    $('#following').hide();
+                    $('#followingP').hide();
+                    $('#followers').hide();
+                    $('#followersP').hide();
+            $("#btntweets").click(function () {
+                $(".preloader").fadeIn();
 
-                $('#following').hide();
-                $('#followingP').hide();
-                $('#followers').show();
-                $('#followersP').show();
-               }
-           } 
-    
-        //    var url = $(location).attr('href');
-        //    var str = url.lastIndexOf("=");
-        //    var SubString = url.substring(str + 1);
-        //    alert(substring)
-        //    window.location.href = 'action?' + SubString;
-        //    return false;
-      
-    });
+                     $('#tweets').show();
+                    $('#tweetsP').show();
+                    // $('#tweetssection').show();
+                    $('#followingP').hide();
+                    $('#following').hide();
+                    $('#followers').hide();
+                    $('#followersP').hide();
+
+                var search = $("#search").val();
+
+                $.ajax({
+                    url: "{% url 'mapper' %}",
+                    type: 'POST',
+                    data: {
+                        search: search,
+                        action: 'tweets',
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                    },
+                    success: function (json) {
+                        $("#screenName").text(json.screenName);
+                        $("#totaltweets").text(json.totaltweets);
+                        $("#name").text(json.Name);
+                        $("#followerCount").text(json.followerCount);
+                        $("#location").text(json.location);
+                        $("#tweetsImage").attr('src', "" + json.image);
+                        $("#totalTweetsArr").empty();
+                        for(i=0;i<json.posts.length;i++)
+                        {
+                        $("#totalTweetsArr").append('<div class="card">'+
+                        '<div class="card-body collapse show">'+
+                            '<p class="card-text">'+json.posts[i].text+'<span>'+'.'+'</span>'+
+                                '"<date><u>'+json.posts[i].created+'</u></date>'+
+                            '</p>'+
+                        '</div>'+'</div>')
+                        }
+                        $(".preloader").fadeOut();
+                    },
+                    
+                    error: function (xhr, errmsg, err) { }
+                })
+            });
+
+            $("#btnfollowers").click(function () {
+                $(".preloader").fadeIn();
+
+                    $('#tweets').hide();
+                    $('#tweetsP').hide();
+                    $('#following').hide();
+                    $('#followingP').hide();
+                    $('#followers').show();
+                    $('#followersP').show();
+
+                var search = $("#search").val();
+
+                $.ajax({
+                    url: "{% url 'mapper' %}",
+                    type: 'POST',
+                    data: {
+                        search: search,
+                        action: 'followers',
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                    },
+                    success: function (json) {
+                        console.log(json.followersArr)
+                        $("#screenName").text(json.screenName);
+                        $("#totalfollowers").text(json.followerCount);
+                        $("#name").text(json.Name);
+                        $("#followerCount").text(json.followerCount);
+                        $("#location").text(json.location);
+                        $("#tweetsImage").attr('src', "" + json.image);
+                        $("#followersArr").empty();
+                        for(i=0;i<json.followersArr.length;i++)
+                        {
+                        $("#followersArr").append('<div class="card">'+
+                        '<div class="card-body" style="display: flex;">'+
+                            '<p class="card-text">'+
+                                '<img src='+json.followersArr[i].image+' alt="favicon.png"/>'+
+                                json.followersArr[i].followers_name+ '| <a href="javascript:void(0)"class="card-link">'+json.followersArr[i].followersurl+
+                                '</a>|'+ json.followersArr[i].followers_count+ 'Followers | <i class="fa fa-link" style="font-size: small;">'+'</i>'+
+                                '<i class="fa fa-map">'+'</i>'+json.followersArr[i].f_location+
+                            '</p>'+'</div>'+'</div>')
+                        
+                        }
+                $(".preloader").fadeOut();
+
+                    },
+                    error: function (xhr, errmsg, err) { }
+                })
+            });
+            $("#btnfollowing").click(function () {
+                $(".preloader").fadeIn();
+                 $('#tweets').hide();
+                    $('#tweetsP').hide();
+                    // $('#tweetssection').hide();
+                    $('#following').show();
+                    $('#followingP').show();
+                    $('#followers').hide();
+                    $('#followersP').hide();
+                var search = $("#search").val();
+
+                $.ajax({
+                    url: "{% url 'mapper' %}",
+                    type: 'POST',
+                    data: {
+                        search: search,
+                        action: 'following',
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                    },
+                    success: function (json) {
+                        console.log(json)
+                        $("#screenName").text(json.screenName);
+                        $("#totalfollowing").text(json.followingArr.length);
+                        $("#name").text(json.Name);
+                        $("#followerCount").text(json.followerCount);
+                        $("#location").text(json.location);
+                        $("#tweetsImage").attr('src', "" + json.image);
+                        $("#followingArr").empty();
+                        for(i=0;i<json.followingArr.length;i++)
+                        {
+                        $("#followingArr").append('<div class="card">'+
+                        '<div class="card-body" style="display: flex;">'+
+                            '<p class="card-text">'+
+                                '<img src='+json.followingArr[i].image+' alt="favicon.png"/>'+
+                                json.followingArr[i].following_name+ '| <a href="javascript:void(0)"class="card-link">'+json.followingArr[i].followingsurl+
+                                '</a>|'+ json.followingArr[i].following_count+ 'Followers | <i class="fa fa-link" style="font-size: small;">'+'</i>'+
+                                '<i class="fa fa-map">'+'</i>'+json.followingArr[i].f_location+
+                            '</p>'+'</div>'+'</div>')
+                        
+                        }
+                        $(".preloader").fadeOut();
+                    },
+                    error: function (xhr, errmsg, err) { }
+                })
+            });
+           
+
+        });
     </script>
-{% endblock content %}
+    {% endblock content %}
 
 </body>
 

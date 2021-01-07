@@ -2,6 +2,7 @@
 from django.urls import path
 from django.conf.urls import url
 from . import views
+# from blog.views import PostTemplateView, post_json
 
 urlpatterns = [
     path('', views.index, name="blog-home"),
@@ -22,5 +23,8 @@ urlpatterns = [
     path('addkeywords', views.add_keywords,name='addkeywords'),
     path('delete_keywords', views.delete_keywords,name='delete_keywords'),
     path('updatekeywords', views.updatekeywords,name='updatekeywords'),
+    path('keywords', views.post_json,name='keywords'),
+    path('reports', views.reports,name='reports'),
+
 ]
 #helo

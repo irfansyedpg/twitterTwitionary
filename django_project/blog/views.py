@@ -13,8 +13,6 @@ from os import environ
 from django.db import models
 
 import time           # time date libarary
-import json           # Json paring
-
 from django.shortcuts import render
 
 import io        # seting eniromental variable
@@ -40,7 +38,7 @@ from datetime import datetime
 import openpyxl as xl
 from tkinter import messagebox
 from django.contrib import messages
-
+from json import dumps 
 
 # newshunt
 
@@ -57,20 +55,13 @@ api = tweepy.API(auth,wait_on_rate_limit=True)
 
 # SQL Connection String strats
 mydb = mysql.connector.connect(
-    #  host="104.155.148.67",
-    # # # host="localhost",
-    #  database="twitter",
-    #  user="twitteruser",
-    #  passwd="irfansyed",
-    #host="Localhost",
-    # # host="localhost",
-    #database="twitter",
-    #user="tweehunt",
-    #passwd="TweeHunt!@#321",
     host="localhost",
     database="twitter",
-    user="root",
-    passwd="",
+    user="tweehunt",
+    passwd="TweeHunt!@#321",
+    # user="root",
+    # passwd="",
+    charset="utf8mb4",
 )
 cursor = mydb.cursor()
 # countcursor = mydb.cursor(buffered=True)
@@ -565,68 +556,115 @@ def twitter_list(request):
    
 
 def twitter_details(request):
-        realtime = request.GET.get('realtime')
-        database = request.GET.get('database')
-        if realtime==None and database==None :
-            return render(request, 'blog/index.html')
+        if request.method == "POST":
+            checkbox = str(request.POST.get('checkbox'))
+            # return render(request, 'blog/index.html')
+            if checkbox==None:
+                return render(request, 'blog/index.html')
 
-        else:
-            if realtime=='realtime':
-                search_words = request.GET.get('search')
-                correntdatee = datetime.today().strftime('%Y-%m-%d')
-                date_since=correntdatee
-                numTweets=100
-                numRuns=1
-                rtotalTweets=0
-                tweets_location=0
-                retweets=0
-                #text syntaments
-                greatcounter = 0
-                goodcounter = 0
-                noutralcounter = 0
-                badcounter = 0
-                terriblecounter = 0
-                total_followers=0
-                posts=[]
-                coutdate=[]
-                for i in range(0, numRuns):
-                    start_run = time.time()
-                    tweets = tweepy.Cursor(api.search, q=search_words, lang="en", since=date_since, tweet_mode='extended').items(numTweets)
-                    
-                    tweet_list = [tweet for tweet in tweets]
-                    noTweets = 0
-                    for tweet in tweet_list:
-                        rtotalTweets+=1
-                        acctdesc = tweet.user.description
-                        location = tweet.user.location
-                        if location!='':
-                            tweets_location+=1
-                        following = tweet.user.friends_count
-                        followers = tweet.user.followers_count
-                        total_followers=total_followers+followers
-                        totaltweets = tweet.user.statuses_count
-                        usercreatedts = tweet.user.created_at
-                        tweetcreatedts = tweet.created_at
-                        coutdate.append({
-                        #  t=count_date_row[1]
-                        #  date.strftime('%m/%d/%Y')
-                        'couttweets': rtotalTweets,
-                        'bydate':tweetcreatedts.strftime('%m/%d/%Y')
-                        })
-                        retweetcount = tweet.retweet_count
-                        retweets=retweets+retweetcount
-                        # retweets=retweetcount+retweetcount
-                        hashtags = tweet.entities['hashtags']
-                        # tweet_id= tweet.id
-                        username = tweet.user.screen_name
-                        url =  f"https://twitter.com/user/status/{tweet.id}"
-                        posts.append({
-                        'urll': url})
-                        try:
-                            text = tweet.retweeted_status.full_text
-                        except AttributeError:  # Not a Retweet
-                            text = tweet.full_text
-                        sentiments = sentiment_analysis(text)
+            else:
+                if checkbox=='realtime':
+                    correntdatee = datetime.today().strftime('%Y-%m-%d')
+                    search_words = str(request.POST.get('search'))
+
+                    date_since=correntdatee
+                    numTweets=100
+                    numRuns=1
+                    rtotalTweets=0
+                    tweets_location=0
+                    retweets=0
+                    #text syntaments
+                    greatcounter = 0
+                    goodcounter = 0
+                    noutralcounter = 0
+                    badcounter = 0
+                    terriblecounter = 0
+                    total_followers=0
+                    posts=[]
+                    coutdate=[]
+                    for i in range(0, numRuns):
+                        start_run = time.time()
+                        tweets = tweepy.Cursor(api.search, q=search_words, lang="en", since=date_since, tweet_mode='extended').items(numTweets)
+                        
+                        tweet_list = [tweet for tweet in tweets]
+                        noTweets = 0
+                        for tweet in tweet_list:
+                            rtotalTweets+=1
+                            acctdesc = tweet.user.description
+                            location = tweet.user.location
+                            if location!='':
+                                tweets_location+=1
+                            following = tweet.user.friends_count
+                            followers = tweet.user.followers_count
+                            total_followers=total_followers+followers
+                            totaltweets = tweet.user.statuses_count
+                            usercreatedts = tweet.user.created_at
+                            tweetcreatedts = tweet.created_at
+                            coutdate.append({
+                            #  t=count_date_row[1]
+                            #  date.strftime('%m/%d/%Y')
+                            'couttweets': rtotalTweets,
+                            'bydate':tweetcreatedts.strftime('%m/%d/%Y')
+                            })
+                            retweetcount = tweet.retweet_count
+                            retweets=retweets+retweetcount
+                            # retweets=retweetcount+retweetcount
+                            hashtags = tweet.entities['hashtags']
+                            # tweet_id= tweet.id
+                            username = tweet.user.screen_name
+                            url =  f"https://twitter.com/user/status/{tweet.id}"
+                            posts.append({
+                            'urll': url,
+                            'username':username})
+                            try:
+                                text = tweet.retweeted_status.full_text
+                            except AttributeError:  # Not a Retweet
+                                text = tweet.full_text
+                            sentiments = sentiment_analysis(text)
+                            if sentiments =='Great':
+                                greatcounter+=1
+                            if sentiments =='Good':
+                                goodcounter+=1
+                            if sentiments =='Neutral':
+                                noutralcounter+=1
+                            if sentiments =='Bad':
+                                badcounter+=1
+                            if sentiments =='Terrible':
+                                terriblecounter+=1
+                            print(username)
+                            posts = {
+                            'totalTweets':rtotalTweets,
+                            'tweets_location':tweets_location,
+                            'retweets':retweets,
+                            'great':greatcounter,
+                            'good':goodcounter,
+                            'nutral':noutralcounter,
+                            'bad':badcounter,
+                            'terr':terriblecounter,
+                            'total_followers':total_followers,
+                            'posts': posts,
+                            'coutdate':coutdate
+                            }
+                            print(posts)
+                            return HttpResponse({
+                            json.dumps(posts)},content_type="application/json")
+
+                        # return render(request, 'blog/index.html',{'totalTweets':rtotalTweets,'tweets_location':tweets_location,'retweets':retweets,'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'total_followers':total_followers,'posts': posts,'coutdate': json.dumps(coutdate)})
+                        
+                elif checkbox=='database':
+                    posts = []
+                    mydb._open_connection()
+                    price_lte = str(request.POST.get('search'))
+                    print(price_lte)
+                    sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id DESC LIMIT 50"
+                    cursor.execute(sqlite_select_query,(price_lte,))
+                    greatcounter = 0
+                    goodcounter = 0
+                    noutralcounter = 0
+                    badcounter = 0
+                    terriblecounter = 0
+                    for row in cursor:
+                        sentiments = sentiment_analysis(row[4])
                         if sentiments =='Great':
                             greatcounter+=1
                         if sentiments =='Good':
@@ -637,77 +675,60 @@ def twitter_details(request):
                             badcounter+=1
                         if sentiments =='Terrible':
                             terriblecounter+=1
-                        print(username)
-                    return render(request, 'blog/index.html',{'totalTweets':rtotalTweets,'tweets_location':tweets_location,'retweets':retweets,'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'total_followers':total_followers,'posts': posts,'coutdate': json.dumps(coutdate)})
-                    
-            elif database=='database':
-                posts = []
-                mydb._open_connection()
-                price_lte = request.GET.get('search')
-                
-                sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id DESC LIMIT 50"
-                cursor.execute(sqlite_select_query,(price_lte,))
-                greatcounter = 0
-                goodcounter = 0
-                noutralcounter = 0
-                badcounter = 0
-                terriblecounter = 0
-                for row in cursor:
-                    sentiments = sentiment_analysis(row[4])
-                    if sentiments =='Great':
-                        greatcounter+=1
-                    if sentiments =='Good':
-                        goodcounter+=1
-                    if sentiments =='Neutral':
-                        noutralcounter+=1
-                    if sentiments =='Bad':
-                        badcounter+=1
-                    if sentiments =='Terrible':
-                        terriblecounter+=1
-                    posts.append({
-                        'text': row[4],
-                        'username': row[5],
-                        'dated': row[2],
-                        'retweetcount': row[3],
-                        'location': row[1],
-                        'urll': row[6],
-                        'description': row[7],
-                        'following': row[8],
-                        'followers': row[9],
-                        'sentiment': sentiments})
-                    
-                mydb.commit()
-                # show data from 2nd table
-                tweets_countq_query = """select COUNT(distinct Username) as username,COUNT(a.Id),COUNT(distinct location) as location,SUM(retweetcount),COUNT(totaltweets),sum(followers) as Followers from tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id"""
-                cursor.execute(tweets_countq_query,(price_lte,))
+                        posts.append({
+                            'text': row[4],
+                            'username': row[5],
+                            'dated': row[2],
+                            'retweetcount': row[3],
+                            'location': row[1],
+                            'urll': row[6],
+                            'description': row[7],
+                            'following': row[8],
+                            'followers': row[9],
+                            'sentiment': sentiments})
+                        
+                    mydb.commit()
+                    # show data from 2nd table
+                    tweets_countq_query = """select COUNT(distinct Username) as username,COUNT(a.Id),COUNT(distinct location) as location,SUM(retweetcount),COUNT(totaltweets),sum(followers) as Followers from tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id"""
+                    cursor.execute(tweets_countq_query,(price_lte,))
 
-                count_row = cursor.fetchone()
-                count_username = count_row[0]
-                tweets_count = count_row[1]
-                tweets_location = count_row[2]
-                retweets_count = count_row[3]
-                total_tweets = count_row[4]
-                total_followers = count_row[5]
-                # end query
-                coutdate = []
-                cout_bydate = """select count(a.id),date(tweetcreatedts) as date FROM twitter.tbl_twitter a JOIN twitter.tbl_hashtags b on a.Id=b.twitter_id WHERE b.title=%s  
-                group by date(tweetcreatedts)"""
-                cursor.execute(cout_bydate,(price_lte,))
-                for count_date_row in cursor:
-                    coutdate.append({
-                        'couttweets': count_date_row[0],
-                        'bydate':count_date_row[1].strftime('%m/%d/%Y')
-                        })
-                mydb.commit()
-                wb = xl.load_workbook("dictionary.xlsx", enumerate)
-                sheet = wb.worksheets[0]
+                    count_row = cursor.fetchone()
+                    count_username = count_row[0]
+                    tweets_count = count_row[1]
+                    tweets_location = count_row[2]
+                    retweets_count = count_row[3]
+                    total_tweets = count_row[4]
+                    total_followers = count_row[5]
+                    # end query
+                    coutdate = []
+                    cout_bydate = """select count(a.id),date(tweetcreatedts) as date FROM twitter.tbl_twitter a JOIN twitter.tbl_hashtags b on a.Id=b.twitter_id WHERE b.title=%s  
+                    group by date(tweetcreatedts)"""
+                    cursor.execute(cout_bydate,(price_lte,))
+                    for count_date_row in cursor:
+                        coutdate.append({
+                            'couttweets': count_date_row[0],
+                            'bydate':count_date_row[1].strftime('%m/%d/%Y')
+                            })
+                    mydb.commit()
+                    wb = xl.load_workbook("dictionary.xlsx", enumerate)
+                    sheet = wb.worksheets[0]
 
-                tweets_total_keywords = sheet.max_row
-                # column_count = sheet.max_column
-                return render(request, 'blog/index.html', {
-                    'posts': posts,'coutdate': json.dumps(coutdate),'tweets_count': tweets_count, 'count_username': count_username, 'tweets_location': tweets_location, 'tweets_total_keywords': tweets_total_keywords,
-                    'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'retweets':retweets_count,'totalTweets':total_tweets,'total_followers':total_followers
-                })
+                    tweets_total_keywords = sheet.max_row
+                    # column_count = sheet.max_column
+                    print(coutdate)
+                    posts = {
+                    'posts': posts,
+                    'coutdate':coutdate,
+                     'tweets_count':tweets_count,'count_username': count_username, 'tweets_location': tweets_location, 'tweets_total_keywords': tweets_total_keywords,
+                        'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'retweets':retweets_count,'totalTweets':total_tweets,'total_followers':total_followers
+                    
+                     }
+                    return HttpResponse({
+                        json.dumps(posts)},content_type="application/json")
+                    #  return render(request, 'blog/index.html', {
+                    #     'posts': posts,'coutdate': json.dumps(coutdate),'tweets_count': tweets_count, 'count_username': count_username, 'tweets_location': tweets_location, 'tweets_total_keywords': tweets_total_keywords,
+                    #     'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'retweets':retweets_count,'totalTweets':total_tweets,'total_followers':total_followers
+                    # })
 
 def long_load(typeback):
     time.sleep(5) #just simulating the waiting period
@@ -715,107 +736,134 @@ def long_load(typeback):
     
 def mapper(request):
         #  search = 
-         posts = []
-        #  tweets = request.GET.get('tweets')
-         if request.GET.get('search')==None:
-             return render(request,'blog/mapper.html')
-         else:
-             search = request.GET.get('search')
-             #this is used for tweets
-             if request.GET.get('action')=='tweets':
+        # if request.method == "POST":
+            posts = []
+        
+            search = str(request.POST.get('search'))
+            if search==None or search=='None' :
+                return render(request, 'blog/mapper.html')
 
-                screen_name = request.GET.get('search')
-                user = api.get_user(screen_name)
-                name=user.name
-                userName=user.screen_name
-                location=user.location
-                description=user.description
-                website=user.url
-                followers_count=user.followers_count
-                image=user.profile_image_url
-                totaltweets=user.statuses_count
-                statuses = api.user_timeline(screen_name)
-                # print(statuses)
-                for status in statuses:
-                    text=status.text
-                    created=status.created_at
-                    posts.append({
-                        'text':text,
-                        "created":created })
-                return render(request,'blog/mapper.html',{'posts': posts,'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count,'location':location,'name':name,'image':image})
+            else:
+                #this is used for tweets
+                if str(request.POST.get('action'))=='tweets':
+                    screen_name = search
+                    user = api.get_user(screen_name)
+                    name=user.name
+                    userName=user.screen_name
+                    location=user.location
+                    description=user.description
+                    website=user.url
+                    followers_count=user.followers_count
+                    image=user.profile_image_url
+                    totaltweets=user.statuses_count
+                    statuses = api.user_timeline(screen_name)
+                    for status in statuses:
+                        text=status.text
+                        created=status.created_at
+                        posts.append({
+                            'text':text,
+                            "created":created.strftime('%m/%d/%Y') })
+                    posts = {
+                    'posts': posts,
+                    'totaltweets':totaltweets,
+                    'screenName':screen_name,
+                    'followerCount':followers_count,
+                    'location':location,
+                    'name':name,'image':image
+                    }
+                    print(posts)
+
+                    return HttpResponse({
+                        json.dumps(posts)},content_type="application/json")
+                    # return render(request,'blog/mapper.html',{'posts': posts,'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count,'location':location,'name':name,'image':image})
                 #there are end of tweets
 
                 #this is used for followers
-             elif request.GET.get('action')=='followers':
-                followersArr=[]
-                screen_name = request.GET.get('search')
-                count=0
-                userData = api.get_user(screen_name)
-                imageuser=userData.profile_image_url
-                name=userData.name
-                followers_count1=str(userData.followers_count)
+                elif str(request.POST.get('action'))=='followers':
+                    followersArr=[]
+                    screen_name =search
+                    count=0
+                    userData = api.get_user(screen_name)
+                    imageuser=userData.profile_image_url
+                    name=userData.name
+                    followers_count1=str(userData.followers_count)
 
-                for user in tweepy.Cursor(api.followers, screen_name).items(50): 
-                    count += 1
-                    followers_scrname=user.screen_name
-                    followers_name=user.name
-                    followersurl =  f"https://twitter.com/{user.screen_name}"
-                    f_location=user.location
-                    location=user.location
-                    created=str(user.created_at)
-                    followers_count=str(user.followers_count)
-                    friend=str(user.friends_count)
-                    image=user.profile_image_url
-                    totaltweets=user.statuses_count
-                    followersArr.append({
-                        'followers_name':followers_name,
-                        "followers_scrname":followers_scrname,
-                        'followersurl':followersurl,
-                        'f_location':f_location,
-                        'created':created,
-                        'followers_count':followers_count,
-                        'friend':friend,
-                        'image':image
-                         })
-                return render(request,'blog/mapper.html',{'followersArr': followersArr,'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count1,'location':location,'name':name,'image':imageuser})
+                    for user in tweepy.Cursor(api.followers, screen_name).items(50): 
+                        count += 1
+                        followers_scrname=user.screen_name
+                        followers_name=user.name
+                        followersurl =  f"https://twitter.com/{user.screen_name}"
+                        f_location=user.location
+                        location=user.location
+                        created=str(user.created_at)
+                        followers_count=str(user.followers_count)
+                        friend=str(user.friends_count)
+                        image=user.profile_image_url
+                        totaltweets=user.statuses_count
+                        print(followersurl)
+                        followersArr.append({
+                            'followers_name':followers_name,
+                            "followers_scrname":followers_scrname,
+                            'followersurl':followersurl,
+                            'f_location':f_location,
+                            'created':created,
+                            'followers_count':followers_count,
+                            'friend':friend,
+                            'image':image
+                                })
+                        # print(followersArr)
+                        posts = {
+                        'followersArr': followersArr,
+                        'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count1,'location':location,'name':name,'image':imageuser
+                        }
+                        return HttpResponse({
+                        json.dumps(posts)},content_type="application/json")
+                    # return render(request,'blog/mapper.html',{'followersArr': followersArr,'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count1,'location':location,'name':name,'image':imageuser})
                 #there are end of followers
 
             #this is used for followings
-             elif request.GET.get('action')=='following':
-                followingArr=[]
+                elif str(request.POST.get('action'))=='following':
+                    followingArr=[]
+                    print(search)
+                    screen_name = search
+                    count=0
+                    userData = api.get_user(screen_name)
+                    imageuser=userData.profile_image_url
+                    name=userData.name
+                    totaltweets=userData.statuses_count
+                    location=userData.location
+                    followers_count1=str(userData.followers_count)
 
-                screen_name = request.GET.get('search')
-                count=0
-                userData = api.get_user(screen_name)
-                imageuser=userData.profile_image_url
-                name=userData.name
-                totaltweets=userData.statuses_count
-                location=userData.location
-                followers_count1=str(userData.followers_count)
-                for user in tweepy.Cursor(api.friends, screen_name).items(50): 
-                    count += 1
+                    for user in tweepy.Cursor(api.friends, screen_name).items(50): 
+                        count += 1
+                        print('followers_namefollowers_name',user)
+                        
+                        followers_scrname=user.screen_name
+                        followers_name=user.name
+                        followersurl =  f"https://twitter.com/{user.screen_name}"
+                        f_location=user.location
+                        created=str(user.created_at)
+                        followers_count=str(user.followers_count)
+                        friend=str(user.friends_count)
+                        image=user.profile_image_url
+                        followingArr.append({
+                            'following_name':followers_name,
+                            "followers_scrname":followers_scrname,
+                            'followingsurl':followersurl,
+                            'f_location':f_location,
+                            'created':created,
+                            'following_count':followers_count,
+                            'friend':friend,
+                            'image':image
 
-                    followers_scrname=user.screen_name
-                    followers_name=user.name
-                    followersurl =  f"https://twitter.com/{user.screen_name}"
-                    f_location=user.location
-                    created=str(user.created_at)
-                    followers_count=str(user.followers_count)
-                    friend=str(user.friends_count)
-                    image=user.profile_image_url
-                    
-                    followingArr.append({
-                        'following_name':followers_name,
-                        "followers_scrname":followers_scrname,
-                        'followingsurl':followersurl,
-                        'f_location':f_location,
-                        'created':created,
-                        'following_count':followers_count,
-                        'friend':friend,
-                        'image':image
-
-                         })
-                return render(request,'blog/mapper.html',{'followingArr': followingArr,'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count1,'location':location,'name':name,'image':imageuser})
+                                })
+                        posts = {
+                        'followingArr': followingArr,'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count1,'location':location,'name':name,'image':imageuser
+                        }
+                        print(followersurl)
+                        return HttpResponse({
+                        json.dumps(posts)},content_type="application/json")
+                    # return render(request,'blog/mapper.html',{'followingArr': followingArr,'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count1,'location':location,'name':name,'image':imageuser})
                 #there are end of followings
 #insert keywords
 def insertkeywords(request):
@@ -848,64 +896,71 @@ def insertkeywords(request):
    
 
 def add_keywords(request):
-     posts=[]
-     if request.GET.get('words')==None:
-        sqlite_select_query = """SELECT * FROM tbl_keywords ORDER BY Id"""
-        cursor.execute(sqlite_select_query)
-        for row in cursor:
-                    posts.append({
-                        'Id': row[0],
-                        'text': row[1]})
-        context = {
-            'items': posts
-        }
-        return render(request, 'blog/addkeywords.html', context)
-     else:
-        keywords = request.GET.get('words')
-        sql = ("INSERT INTO tbl_keywords (Keywords) VALUES (%s)")
+    # try:
+        posts=[]
+        if request.method == "POST":
+            print('not none')
+    
+            # print(int(request.POST.get('Id')))
+            keywords = str(request.POST.get('keyword'))
+            print(keywords)
 
-        query = (keywords,)
-        cursor.execute(sql, query)
-        #commit
-        mydb.commit()
+            sql = ("INSERT INTO tbl_keywords (Keywords) VALUES (%s)")
 
-        #create a messagebox
-        messages.add_message(
-        request, messages.SUCCESS, 'Successfully Added' +"  "+ keywords,
-        fail_silently=True,
-        )
-        sqlite_select_query = """SELECT * FROM tbl_keywords ORDER BY Id"""
-        cursor.execute(sqlite_select_query)
-        for row in cursor:
-                    posts.append({
-                        'Id': row[0],
-                        'text': row[1]})
-        context = {
-            'items': posts
-        }
-        # messages.info(request, 'Hello world.', fail_silently=True)
-        # messages.set_level(request, messages.WARNING)
-        # messages.success(request, 'Your profile was updated.') # ignored
-        # messages.warning(request, 'Your account is about to expire.') # recorded
-        return render(request, 'blog/addkeywords.html', context)
+            query = (keywords,)
+            cursor.execute(sql, query)
+            #commit
+            mydb.commit()
+            messages='Successfully saved'
+
+            context = {
+                'result': messages
+            }
+            return HttpResponse(json.dumps(context),content_type="application/json")
+       
+        else:  
+            print('none')
+            sqlite_select_query = """SELECT * FROM tbl_keywords ORDER BY Id"""
+            cursor.execute(sqlite_select_query)
+            for row in cursor:
+                        posts.append({
+                            'Id': row[0],
+                            'text': row[1]})
+            context = {
+                'items': posts
+            }
+            print('post',posts)
+            return HttpResponse(json.dumps(posts), content_type="application/json")
+           
+
+    # except Exception as e:
+    #         print('exception',e)
+    #         messages='error'
+    #         context = {
+    #             'result': messages
+    #         }
+    #         return HttpResponse(json.dumps(context),content_type="application/json")
+
 
 
 def delete_keywords(request):
     posts=[]
-    if request.GET.get("pk")==None:
+    # return render(request, 'blog/addkeywords.html')
+    if int(request.POST.get('postid'))==None:
         return render(request, 'blog/dictionary.html')
     else:
 
-        pk = request.GET.get("pk")
+        pk = int(request.POST.get('postid'))
         
         cout_bydate = """Delete From tbl_keywords  WHERE Id=%s ORDER BY Id"""
         cursor.execute(cout_bydate,(pk,))
         mydb.commit()
-        #create a messagebox
+        # create a messagebox
         messages.add_message(
         request, messages.SUCCESS, 'Successfully Deleted',
         fail_silently=True,
         )
+
         sqlite_select_query = """SELECT * FROM tbl_keywords ORDER BY Id"""
         cursor.execute(sqlite_select_query)
         for row in cursor:
@@ -915,41 +970,87 @@ def delete_keywords(request):
         context = {
             'items': posts
         }
-        return render(request, 'blog/addkeywords.html',context)
+       # return render(request, 'blog/addkeywords.html',context)
+        print(posts)
+        return HttpResponse(json.dumps(posts), content_type="application/json")
  
 def updatekeywords(request):
-    posts=[]
-    if request.GET.get("words")==None or request.GET.get("words")=='' :
-        success = False
-        sqlite_select_query = """SELECT * FROM tbl_keywords ORDER BY Id"""
-        cursor.execute(sqlite_select_query)
-        for row in cursor:
-                    posts.append({
-                        'Id': row[0],
-                        'text': row[1]})
-        context = {
-            'items': posts
-        }
-    else:
+    try:
+        posts=[]
 
-        keyword = request.GET.get('words')
-        userId = request.GET.get('userId')
-
+        keyword = str(request.POST.get('keyword'))
+        userId = int(request.POST.get('Id'))
         cout_bydate = """UPDATE `tbl_keywords` SET `Keywords`=%s WHERE Id=%s ORDER BY Id"""
         cursor.execute(cout_bydate,(keyword,userId))
         mydb.commit()
-        #create a messagebox
-        messages.add_message(
-        request, messages.SUCCESS, 'Successfully Updated',
-        fail_silently=True,
-        )
-        sqlite_select_query = """SELECT * FROM tbl_keywords ORDER BY Id"""
+        messages='Successfully Updated'
+
+        context = {
+            'result': messages
+        }
+        return HttpResponse(json.dumps(context),content_type="application/json")
+
+    except Exception as e:
+            print('exception',e)
+            messages='error'
+            context = {
+                'result': messages
+            }
+            return HttpResponse(json.dumps(context),content_type="application/json")
+
+
+from django.views.generic import TemplateView
+class PostTemplateView(TemplateView):
+    template_name='blog/addkeywordsjson.html'
+
+def post_json(request):
+    #     posts=[]
+    #     sqlite_select_query = """SELECT * FROM tbl_keywords ORDER BY Id"""
+    #     cursor.execute(sqlite_select_query)
+    #     for row in cursor:
+    #                 posts.append({
+    #                     'Id': row[0],
+    #                     'text': row[1]})
+    #     context = {
+    #         'items': posts
+    #     }
+    #    # return render(request, 'blog/addkeywords.html',context)
+    #     print(posts)
+        # return HttpResponse(json.dumps(posts), content_type="application/json")
+        return render(request, 'blog/addkeywords.html')
+
+def reports (request):
+    #  keyword = str(request.POST.get('keyword'))
+    # if request.method == "POST":
+    todate = str(request.POST.get('todate'))
+    if todate==None or todate=='None' :
+        return render(request, 'blog/reports.html')
+    else:
+        print('not none')
+        posts=[]
+        counter = 0
+        datecount = 0
+        todate = str(request.POST.get('todate'))
+        fromdate = str(request.POST.get('fromdate'))
+        tweets_countq_query="SELECT COUNT(Id),date(tweetcreatedts) from tbl_twitter WHERE date(tweetcreatedts) BETWEEN " '%s' " and " '%s' " GROUP BY date(tweetcreatedts)"
+        cursor.execute(tweets_countq_query,(todate,fromdate))
+        coutdate=[]
+        for count_date_row in cursor:
+                        coutdate.append({
+                            'couttweets': count_date_row[0],
+                            'bydate':count_date_row[1].strftime('%m/%d/%Y')
+                            })
+                        datecount+=count_date_row[0]
+        mydb.commit()
+        sqlite_select_query = """SELECT COUNT(h.Id),title from tbl_hashtags h JOIN tbl_keywords k on h.title=k.Keywords GROUP BY Title"""
         cursor.execute(sqlite_select_query)
         for row in cursor:
-                    posts.append({
-                        'Id': row[0],
-                        'text': row[1]})
-        context = {
-            'items': posts
+                posts.append({
+                    'count': row[0],
+                    'title': row[1]})
+                counter+=row[0]
+        posts={
+            'posts': posts,'counter':counter,'coutdate':coutdate,'todate':todate,'fromdate':fromdate,'datecount':datecount
         }
-    return render(request, 'blog/addkeywords.html',context)
+        return HttpResponse(json.dumps(posts),content_type="application/json")
+    #  return render(request, 'blog/reports.html',{'posts': posts,'counter':counter,'coutdate':coutdate,'todate':todate,'fromdate':fromdate,'datecount':datecount})

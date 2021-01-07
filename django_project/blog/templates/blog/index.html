@@ -32,21 +32,16 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Search Keywords</h4>
-                            <form action='twitter_details' name="frm" id="frm" method='GET'>
-                                <div class="preloader">
-                                    <div class="lds-ripple">
-                                        <div class="lds-pos"></div>
-                                        <div class="lds-pos"></div>
-                                    </div>
-                                </div>
+                        <form name="frm" id="frm">
+                             
 
                                 <div class="form-group" style="width: 100%;display: flex;">
-                                    <input type="text" class="form-control" required name="search" id="search"
+                                    <input type="text" class="form-control" required name="search" id="searchwords"
                                         style="height: 60px;font-size: 26px;"
-                                        placeholder="Enter Keyword Hashing or Websites" value={{ search }}>
+                                        placeholder="Enter Keyword Hashing or Websites">
                                     <button type="submit" class="btn btn-primary">Search</button>
                                 </div>
-                                <input type="radio" style="width:15px;height:15px;" value="database" name="database"
+                                <input type="radio" style="width:15px;height:15px;" value="database" checked name="database"
                                 id="database" onchange="value2Changed()">&nbsp;<span
                                 style="font-size:20px;" checked>Database </span>
                                 <input type="radio" style="width:15px;height:15px;" value="realtime" name="realtime"
@@ -81,13 +76,13 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
-                                    <h5>{{totalTweets}}</h5>
+                                    <h5 id="totalTweets"></h5>
                                 </div>
-                                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
-                                    <h5>{{retweets}}</h5>
+                                <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                    <h5 id="total_followers"></h5>
                                 </div>
-                                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
-                                    <h5>{{tweets_location}}</h5>
+                                <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
+                                    <h5 id="tweets_location"></h5>
                                 </div>
                             </div>
                         </div>
@@ -110,13 +105,13 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                    <h5>{{totalTweets}}</h5>
+                                    <h5 id="totalTweets1"></h5>
                                 </div>
                                 <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                    <h5>{{total_followers}}</h5>
+                                    <h5 id="total_followers1"></h5>
                                 </div>
                                 <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
-                                    <h5>{{tweets_location}}</h5>
+                                    <h5 id="tweets_location1"></h5>
                                 </div>
 
                             </div>
@@ -186,39 +181,53 @@
                 <h5>Twitter Feed</h5>
             </div>
 
+            <!-- <div class="row">
+               
+                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 ml-5">
+                    <div class="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 350, "gutter":20 }'id="urlpost" >
+                       
+                        <div class="grid-item">
+                            
+                        </div>
+                         <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/tribunabi/status/625360348489646080"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/tribunabi/status/625360348489646080"></a>
+                            </blockquote>
+                        </div>
+                        <div class="grid-item">
+                            <blockquote class="twitter-tweet">
+                                <a href="https://twitter.com/tribunabi/status/625360348489646080"></a>
+                            </blockquote>
+                        </div> 
+                        
+                       
+                    </div>
+                </div>
+            </div> -->
             <div class="row">
 
                 <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 ml-5">
-                    <div class="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 350, "gutter":20 }'>
-
-                        {% for post in posts  %}
-                        <div class="grid-item">
-
+                    <div class="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 350, "gutter":20 }'id="urlpost" >
+                       
+                        <div class="grid-item row" > 
+                            <!-- <a href="{% url 'mapper'%}?search= {{ post.username }}&action=tweets" target="_blank"><img
+                                    src="https://img.icons8.com/fluent/48/000000/twitter.png" />{{ post.username }}</a>
                             <blockquote class="twitter-tweet">
+
                                 <a href={{ post.urll }}></a>
-                            </blockquote>
+                            </blockquote> -->
                         </div>
-                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
     </div>
-
-    <script>
-
-$(function () {
-            $("#database").prop("checked", true);
-            $("#frm").submit(function () {
-                if($("#search").val()==0){
-                   alert("Enter key words") 
-                   return false;
-
-                }
-        });
-    });
-    </script>
     <script>
       $(window).load(function() {
         $(".loader").fadeOut("slow");
@@ -238,7 +247,7 @@ $(function () {
     <script>
           let search = window.location.search.slice(1).split("&")[0].split("=")[1];
             $('#search').val(search);
-        $(".preloader").fadeIn();
+       
         // Twitter widget is loading.
         window.twttr = function (d, s, id) {
             var t, js, fjs = d.getElementsByTagName(s)[0];
@@ -257,22 +266,71 @@ $(function () {
 
         // When widget is ready, run masonry
         twttr.ready(function (twttr) {
+            $(".preloader").fadeIn();
             twttr.events.bind('loaded', function (event) {
                 $('.grid').masonry({
                     itemSelector: '.grid-item',
-                    columnWidth: 400,
-                    gutter: 20
+                    // columnWidth: 600,
+                    // gutter: 20
                 });
             });
+            $(".preloader").fadeOut();
+
         });
     </script>
 
     <script type="text/javascript">
-        var greate = JSON.parse("{{great}}");
-        var good = JSON.parse("{{good}}");
-        var nuetral = JSON.parse("{{nutral}}");
-        var bad = JSON.parse("{{bad}}");
-        var terrible = JSON.parse("{{terr}}");
+    $("#frm").submit(function () {
+      $(".preloader").fadeIn();
+    var search= $("#searchwords").val();
+    var checkbox='';
+    if(  $('input[name="realtime"]').is(':checked') ) {
+        checkbox='realtime';
+        }
+        else{
+            checkbox='database';
+        }
+    $.ajax({
+    url: "{% url 'twitter_details' %}",
+    type: 'POST',
+    data: {
+        search:search,
+        checkbox:checkbox,
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+    },
+    success: function(json){
+            var urlpost=$('#urlpost');
+            var html= "";
+            $('.grid-item').empty();
+            for (i = 0; i < json.posts.length; i++) {
+            console.log(json)
+            html=$('.grid-item').append('<div class ="col-sm-4"><a href="'+json.posts[i].username+'" target="_blank">'+'<img src="https://img.icons8.com/fluent/48/000000/twitter.png" />'+json.posts[i].username+'</a>'+
+                            '<blockquote class="twitter-tweet"><a href='+json.posts[i].urll+'></a></blockquote></div>')
+                            html.appendTo(urlpost);
+            // html=$('.grid-item').append('<blockquote class="twitter-tweet"><a href="'+json.posts[i].urll+'">Hello</a></blockquote>');
+            // html.appendTo(urlpost);
+            }
+
+          
+          twttr.widgets.load(
+            
+            document.getElementById("#urlpost")
+
+            );// END ulr
+        //START total tweets ,total retweets and total location
+        $("#totalTweets").text(json.totalTweets)
+        $("#total_followers").text(json.total_followers)
+        $("#tweets_location").text(json.tweets_location)
+        $("#totalTweets1").text(json.totalTweets)
+        $("#total_followers1").text(json.total_followers)
+        $("#tweets_location1").text(json.tweets_location)
+        //END total tweets ,total retweets and total location
+        
+        var greate = json.great;
+        var good = json.good;
+        var nuetral = json.nutral;
+        var bad = json.bad;
+        var terrible = json.terr;
         // Build the chart
         Highcharts.chart('Sentiments', {
             chart: {
@@ -334,8 +392,8 @@ $(function () {
                 }]
             }]
         });
-        var retweets = JSON.parse("{{retweets}}");
-        var totalTweets = JSON.parse("{{totalTweets}}");
+        var retweets = json.retweets;
+        var totalTweets =json.totalTweets;
 
         // Build the chart
         Highcharts.chart('ByType', {
@@ -391,152 +449,8 @@ $(function () {
                 ]
             }]
         });
-        // Build the chart
-        // Highcharts.chart('BySource', {
-        //     chart: {
-        //         plotBackgroundColor: null,
-        //         plotBorderWidth: null,
-        //         plotShadow: false,
-        //         type: 'pie'
-        //     },
-        //     title: {
-        //         text: ''
-        //     },
-        //     tooltip: {
-        //         pointFormat: '{name} <b>{point.percentage:.1f}%</b>'
-        //     },
-        //     accessibility: {
-        //         point: {
-        //             valueSuffix: '%'
-        //         }
-        //     },
-        //     credits: {
-        //         enabled: false
-        //     },
-        //     plotOptions: {
-        //         pie: {
-        //             allowPointSelect: true,
-        //             cursor: 'pointer',
-        //             dataLabels: {
-        //                 enabled: false
-        //             },
-        //             showInLegend: true
-        //         }
-        //     },
-        //     legend: {
-        //         align: 'right',
-        //         verticalAlign: 'top',
-        //         layout: 'vertical',
-        //         x: 0,
-        //         y: 100
-        //     },
-        //     series: [{
-        //         name: ' ',
-        //         colorByPoint: true,
-        //         data: [{
-        //             name: 'iPhone',
-        //             y: 61.41,
-        //             sliced: false,
-        //             selected: true
-        //         }, {
-        //             name: 'Android',
-        //             y: 11.84
-        //         }, {
-        //             name: 'Twitter Web App',
-        //             y: 10.85
-        //         }, {
-        //             name: 'iPad',
-        //             y: 4.67
-        //         }, {
-        //             name: 'TweetDeck',
-        //             y: 4.18
-        //         }, {
-        //             name: 'addempsea',
-        //             y: 7.05
-        //         }]
-        //     }]
-        // });
-        // Build the chart
-        // Highcharts.chart('ByLanguage', {
-        //     chart: {
-        //         plotBackgroundColor: null,
-        //         plotBorderWidth: null,
-        //         plotShadow: false,
-        //         type: 'pie'
-        //     },
-        //     title: {
-        //         text: ''
-        //     },
-        //     tooltip: {
-        //         pointFormat: '{name} <b>{point.percentage:.1f}%</b>'
-        //     },
-        //     accessibility: {
-        //         point: {
-        //             valueSuffix: '%'
-        //         }
-        //     },
-        //     credits: {
-        //         enabled: false
-        //     },
-        //     plotOptions: {
-        //         pie: {
-        //             allowPointSelect: true,
-        //             cursor: 'pointer',
-        //             dataLabels: {
-        //                 enabled: false
-        //             },
-        //             showInLegend: true
-        //         }
-        //     },
-        //     legend: {
-        //         align: 'right',
-        //         verticalAlign: 'top',
-        //         layout: 'vertical',
-        //         x: 0,
-        //         y: 100
-        //     },
-        //     series: [{
-        //         name: '',
-        //         colorByPoint: true,
-        //         data: [{
-        //             name: 'English',
-        //             y: 11.84,
-        //             sliced: false,
-        //             selected: true
-        //         }, {
-        //             name: 'Urdu',
-        //             y: 10.85
-        //         }, {
-        //             name: 'Arabic',
-        //             y: 4.67
-        //         }, {
-        //             name: 'Italian',
-        //             y: 4.18
-        //         }, {
-        //             name: 'French',
-        //             y: 7.05
-        //         }, {
-        //             name: 'Spanish',
-        //             y: 7.05
-        //         }, {
-        //             name: 'Portuguese',
-        //             y: 7.05
-        //         }, {
-        //             name: 'Korean',
-        //             y: 7.05
-        //         }, {
-        //             name: 'Japan',
-        //             y: 7.05
-        //         }, {
-        //             name: 'Chines',
-        //             y: 7.05
-        //         }]
-        //     }]
-        // });
-
-        // var coutdate =JSON.parse('{{coutdate.couttweets}}');
-
-        var mydict = JSON.parse('{{ coutdate|safe }}')
+        var mydict = json.coutdate;
+        console.log(mydict)
         let tweetsArray = [];
         let bydate = [];
 
@@ -592,6 +506,16 @@ $(function () {
             }
 
         });
+        $(".preloader").fadeOut();
+    },
+    
+    error: function(xhr, errmsg, err) {}
+})
+
+return false;
+    });
+    
+  
     </script>
 
     {% endblock content %}
