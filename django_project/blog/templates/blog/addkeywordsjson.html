@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+{% extends "blog/header.html" %}
+{% load static %}
+
+{% block content %}
+
+<body>
+<!-- ============================================================== -->
+<!-- Page wrapper  -->
+<!-- ============================================================== -->
+<div class="page-wrapper">
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+        <!-- ============================================================== -->
+        <!-- Start Page Content -->
+        <!-- ============================================================== -->
+
+     <!-- basic table -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Keyword</h4>
+                        <div class="table-responsive">
+                            <div class="row">
+                               
+
+                            <table id="zero_config" class="table table-striped table-bordered no-wrap">
+                                <thead>
+                                    <tr>
+                                        <td>Id</td>
+                                        <th>Name</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                               
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+
+        </div>
+</div>
+
+<script>
+
+    // const mydata = "{{ data|safe }}";
+    var totalTweets = JSON.parse('{{data|safe}}');
+    // var dataset1 = [{'Id': 3, 'text': 'ISPRC'}, {'Id': 4, 'text': 'PakArmy'}, {'Id': 5, 'text': 'chief of army staff'}, {'Id': 8, 'text': 'afghanistan'}, {'Id': 9, 'text': 'military intelligence pakistan'}, {'Id': 10, 'text': 'military intelligence afghanistan'}, {'Id': 12, 'text': 'air defence systems'}, {'Id': 58, 'text': 'fayaz'}]
+    // var index=1;
+
+    totalTweets.forEach((element) => {
+        // index+1;
+    $("#zero_config tbody").append("<tr style='color:#000;'><td>" + element.Id + "</td><td>" + element.text + "</td><td><a onclick='Edit(this)' class='btn btn-warning margin-bottom delete-company'>Edit</a><a onclick='Remove(this)' class='btn btn-danger btn-sm'>Delete</a></td></tr>");
+    // index++;
+    });
+</script>
+
+<script type="text/javascript">
+function Remove(ele)
+{
+    var Id=$(ele).closest("tr").find("td:eq(0)").text();
+   
+    $.ajax({
+    url: "{% url 'delete_keywords' %}",
+    type: 'POST',
+    data: {
+        postid: Id,
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+    },
+    success: function(json){
+      json.forEach((element) => {
+        console.log(element.Id)
+    $("#zero_config tbody").append("<tr style='color:#000;'><td>" + element.Id + "</td><td>" + element.text + "</td><td><a onclick='Edit(this)' class='btn btn-warning margin-bottom delete-company'>Edit</a><a onclick='Remove(this)' class='btn btn-danger btn-sm'>Delete</a></td></tr>");
+   
+    });
+    },
+    error: function(xhr, errmsg, err) {}
+})
+}
+//     </script>
+    {% endblock content %}
+</body>
+
+</html>
