@@ -558,16 +558,18 @@ def twitter_list(request):
 def twitter_details(request):
         if request.method == "POST":
             checkbox = str(request.POST.get('checkbox'))
+            lastId=str(request.POST.get('lastId'))
             # return render(request, 'blog/index.html')
             if checkbox==None:
                 return render(request, 'blog/index.html')
 
             else:
                 if checkbox=='realtime':
+
                     correntdatee = datetime.today().strftime('%Y-%m-%d')
                     search_words = str(request.POST.get('search'))
 
-                    date_since=correntdatee
+                    date_since = correntdatee
                     numTweets=100
                     numRuns=1
                     rtotalTweets=0
@@ -582,37 +584,50 @@ def twitter_details(request):
                     total_followers=0
                     posts=[]
                     coutdate=[]
+                    print(search_words)
                     for i in range(0, numRuns):
                         start_run = time.time()
+                    
                         tweets = tweepy.Cursor(api.search, q=search_words, lang="en", since=date_since, tweet_mode='extended').items(numTweets)
-                        
                         tweet_list = [tweet for tweet in tweets]
+                        print(tweet_list)
                         noTweets = 0
                         for tweet in tweet_list:
-                            rtotalTweets+=1
+                            print('loop')
+                            # rtotalTweets+=1
                             acctdesc = tweet.user.description
                             location = tweet.user.location
-                            if location!='':
-                                tweets_location+=1
+                            # if location!='':
+                            #     tweets_location+=1
                             following = tweet.user.friends_count
                             followers = tweet.user.followers_count
                             total_followers=total_followers+followers
                             totaltweets = tweet.user.statuses_count
                             usercreatedts = tweet.user.created_at
                             tweetcreatedts = tweet.created_at
+                            retweetcount = tweet.retweet_count
+                            retweets=retweets+retweetcount
+                            # retweets=retweetcount+retweetcount
+                            hashtags = tweet.entities['hashtags']
+                            tweet_id= tweet.id
+                            print(tweet_id)
+
+                            # print(tweet_id)
+                            username = tweet.user.screen_name
+                            url =  f"https://twitter.com/user/status/{tweet.id}"
+                            print(url)
+
+                            print(username)
+                            print(totaltweets)
+
+                            # return False
                             coutdate.append({
                             #  t=count_date_row[1]
                             #  date.strftime('%m/%d/%Y')
                             'couttweets': rtotalTweets,
                             'bydate':tweetcreatedts.strftime('%m/%d/%Y')
                             })
-                            retweetcount = tweet.retweet_count
-                            retweets=retweets+retweetcount
-                            # retweets=retweetcount+retweetcount
-                            hashtags = tweet.entities['hashtags']
-                            # tweet_id= tweet.id
-                            username = tweet.user.screen_name
-                            url =  f"https://twitter.com/user/status/{tweet.id}"
+                           
                             posts.append({
                             'urll': url,
                             'username':username})
@@ -631,9 +646,8 @@ def twitter_details(request):
                                 badcounter+=1
                             if sentiments =='Terrible':
                                 terriblecounter+=1
-                            print(username)
                             posts = {
-                            'totalTweets':rtotalTweets,
+                            'totalTweets':totaltweets,
                             'tweets_location':tweets_location,
                             'retweets':retweets,
                             'great':greatcounter,
@@ -645,7 +659,7 @@ def twitter_details(request):
                             'posts': posts,
                             'coutdate':coutdate
                             }
-                            print(posts)
+                            # print(posts)
                             return HttpResponse({
                             json.dumps(posts)},content_type="application/json")
 
@@ -656,8 +670,16 @@ def twitter_details(request):
                     mydb._open_connection()
                     price_lte = str(request.POST.get('search'))
                     print(price_lte)
-                    sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id DESC LIMIT 50"
-                    cursor.execute(sqlite_select_query,(price_lte,))
+                    if(lastId==None or lastId==""):
+                       print(lastId,'null')
+                       sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id LIMIT 50"
+                       cursor.execute(sqlite_select_query,(price_lte,))
+                       
+                    else:
+                        print(lastId,'n null')
+
+                        sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title=%s and a.Id>%s ORDER BY a.Id LIMIT 50"
+                        cursor.execute(sqlite_select_query,(price_lte,lastId))
                     greatcounter = 0
                     goodcounter = 0
                     noutralcounter = 0
@@ -676,7 +698,8 @@ def twitter_details(request):
                         if sentiments =='Terrible':
                             terriblecounter+=1
                         posts.append({
-                            'text': row[4],
+                            'Id': row[0]
+,                           'text': row[4],
                             'username': row[5],
                             'dated': row[2],
                             'retweetcount': row[3],
@@ -715,7 +738,6 @@ def twitter_details(request):
 
                     tweets_total_keywords = sheet.max_row
                     # column_count = sheet.max_column
-                    print(coutdate)
                     posts = {
                     'posts': posts,
                     'coutdate':coutdate,
@@ -729,6 +751,186 @@ def twitter_details(request):
                     #     'posts': posts,'coutdate': json.dumps(coutdate),'tweets_count': tweets_count, 'count_username': count_username, 'tweets_location': tweets_location, 'tweets_total_keywords': tweets_total_keywords,
                     #     'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'retweets':retweets_count,'totalTweets':total_tweets,'total_followers':total_followers
                     # })
+def twitter_url_list(request):
+     if request.method == "POST":
+            checkbox = str(request.POST.get('checkbox'))
+            # return render(request, 'blog/index.html')
+            if checkbox==None:
+                return render(request, 'blog/index.html')
+
+            else:
+                if checkbox=='realtime':
+                    correntdatee = datetime.today().strftime('%Y-%m-%d')
+                    search_words = int(request.POST.get('search'))
+
+                    date_since = correntdatee
+                    numTweets=100
+                    numRuns=1
+                    rtotalTweets=0
+                    tweets_location=0
+                    retweets=0
+                    #text syntaments
+                    greatcounter = 0
+                    goodcounter = 0
+                    noutralcounter = 0
+                    badcounter = 0
+                    terriblecounter = 0
+                    total_followers=0
+                    posts=[]
+                    coutdate=[]
+                    print(search_words)
+                    for i in range(0, numRuns):
+                        start_run = time.time()
+                    
+                        tweets = tweepy.Cursor(api.search, q=search_words, lang="en", since=date_since, tweet_mode='extended').items(numTweets)
+                        tweet_list = [tweet for tweet in tweets]
+                        # print(tweet_list)
+                        noTweets = 0
+                        for tweet in tweet_list:
+                            # rtotalTweets+=1
+                            acctdesc = tweet.user.description
+                            location = tweet.user.location
+                            # if location!='':
+                            #     tweets_location+=1
+                            following = tweet.user.friends_count
+                            followers = tweet.user.followers_count
+                            total_followers=total_followers+followers
+                            totaltweets = tweet.user.statuses_count
+                            usercreatedts = tweet.user.created_at
+                            tweetcreatedts = tweet.created_at
+                            retweetcount = tweet.retweet_count
+                            retweets=retweets+retweetcount
+                            # retweets=retweetcount+retweetcount
+                            hashtags = tweet.entities['hashtags']
+                            # tweet_id= tweet.id
+
+                            # print(tweet_id)
+                            username = tweet.user.screen_name
+                            url =  f"https://twitter.com/user/status/{tweet.id}"
+                            print(url)
+
+                            print(username)
+                            print(totaltweets)
+
+                            # return False
+                            coutdate.append({
+                            #  t=count_date_row[1]
+                            #  date.strftime('%m/%d/%Y')
+                            'couttweets': rtotalTweets,
+                            'bydate':tweetcreatedts.strftime('%m/%d/%Y')
+                            })
+                           
+                            posts.append({
+                            'urll': url,
+                            'username':username})
+                            try:
+                                text = tweet.retweeted_status.full_text
+                            except AttributeError:  # Not a Retweet
+                                text = tweet.full_text
+                            sentiments = sentiment_analysis(text)
+                            if sentiments =='Great':
+                                greatcounter+=1
+                            if sentiments =='Good':
+                                goodcounter+=1
+                            if sentiments =='Neutral':
+                                noutralcounter+=1
+                            if sentiments =='Bad':
+                                badcounter+=1
+                            if sentiments =='Terrible':
+                                terriblecounter+=1
+                            posts = {
+                            'totalTweets':totaltweets,
+                            'tweets_location':tweets_location,
+                            'retweets':retweets,
+                            'great':greatcounter,
+                            'good':goodcounter,
+                            'nutral':noutralcounter,
+                            'bad':badcounter,
+                            'terr':terriblecounter,
+                            'total_followers':total_followers,
+                            'posts': posts,
+                            'coutdate':coutdate
+                            }
+                            # print(posts)
+                            return HttpResponse({
+                            json.dumps(posts)},content_type="application/json")
+
+                        # return render(request, 'blog/index.html',{'totalTweets':rtotalTweets,'tweets_location':tweets_location,'retweets':retweets,'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'total_followers':total_followers,'posts': posts,'coutdate': json.dumps(coutdate)})
+                        
+                elif checkbox=='database':
+                    posts = []
+                    mydb._open_connection()
+                    price_lte = str(request.POST.get('search'))
+                    print(price_lte)
+                    sqlite_select_query = "SELECT * FROM tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id DESC LIMIT 50"
+                    cursor.execute(sqlite_select_query,(price_lte,))
+                    greatcounter = 0
+                    goodcounter = 0
+                    noutralcounter = 0
+                    badcounter = 0
+                    terriblecounter = 0
+                    for row in cursor:
+                        sentiments = sentiment_analysis(row[4])
+                        if sentiments =='Great':
+                            greatcounter+=1
+                        if sentiments =='Good':
+                            goodcounter+=1
+                        if sentiments =='Neutral':
+                            noutralcounter+=1
+                        if sentiments =='Bad':
+                            badcounter+=1
+                        if sentiments =='Terrible':
+                            terriblecounter+=1
+                        posts.append({
+                            'Id': row[0]
+,                            'text': row[4],
+                            'username': row[5],
+                            'dated': row[2],
+                            'retweetcount': row[3],
+                            'location': row[1],
+                            'urll': row[6],
+                            'description': row[7],
+                            'following': row[8],
+                            'followers': row[9],
+                            'sentiment': sentiments})
+                        
+                    mydb.commit()
+                    # show data from 2nd table
+                    tweets_countq_query = """select COUNT(distinct Username) as username,COUNT(a.Id),COUNT(distinct location) as location,SUM(retweetcount),COUNT(totaltweets),sum(followers) as Followers from tbl_twitter a JOIN tbl_hashtags b on a.Id=b.twitter_id WHERE b.title= %s ORDER BY a.Id"""
+                    cursor.execute(tweets_countq_query,(price_lte,))
+
+                    count_row = cursor.fetchone()
+                    count_username = count_row[0]
+                    tweets_count = count_row[1]
+                    tweets_location = count_row[2]
+                    retweets_count = count_row[3]
+                    total_tweets = count_row[4]
+                    total_followers = count_row[5]
+                    # end query
+                    coutdate = []
+                    cout_bydate = """select count(a.id),date(tweetcreatedts) as date FROM twitter.tbl_twitter a JOIN twitter.tbl_hashtags b on a.Id=b.twitter_id WHERE b.title=%s  
+                    group by date(tweetcreatedts)"""
+                    cursor.execute(cout_bydate,(price_lte,))
+                    for count_date_row in cursor:
+                        coutdate.append({
+                            'couttweets': count_date_row[0],
+                            'bydate':count_date_row[1].strftime('%m/%d/%Y')
+                            })
+                    mydb.commit()
+                    wb = xl.load_workbook("dictionary.xlsx", enumerate)
+                    sheet = wb.worksheets[0]
+
+                    tweets_total_keywords = sheet.max_row
+                    # column_count = sheet.max_column
+                    posts = {
+                    'posts': posts,
+                    'coutdate':coutdate,
+                     'tweets_count':tweets_count,'count_username': count_username, 'tweets_location': tweets_location, 'tweets_total_keywords': tweets_total_keywords,
+                        'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'retweets':retweets_count,'totalTweets':total_tweets,'total_followers':total_followers
+                    
+                     }
+                    return HttpResponse({
+                        json.dumps(posts)},content_type="application/json")
 
 def long_load(typeback):
     time.sleep(5) #just simulating the waiting period
@@ -753,10 +955,12 @@ def mapper(request):
                     location=user.location
                     description=user.description
                     website=user.url
+                    print(website)
                     followers_count=user.followers_count
                     image=user.profile_image_url
                     totaltweets=user.statuses_count
                     statuses = api.user_timeline(screen_name)
+                    # print(statuses.id)
                     for status in statuses:
                         text=status.text
                         created=status.created_at
@@ -771,7 +975,7 @@ def mapper(request):
                     'location':location,
                     'name':name,'image':image
                     }
-                    print(posts)
+                    # print(posts)
 
                     return HttpResponse({
                         json.dumps(posts)},content_type="application/json")

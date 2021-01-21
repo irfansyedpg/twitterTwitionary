@@ -30,11 +30,11 @@ api = tweepy.API(auth,wait_on_rate_limit=True)
 mydb = mysql.connector.connect(
     host="localhost",
     database="twitter",
-    user="tweehunt",
-    passwd="TweeHunt!@#321",
-    # user="root",
-    # passwd="",
-    charset="utf8mb4",
+    # user="tweehunt",
+    # passwd="TweeHunt!@#321",
+    user="root",
+    passwd="",
+    # charset="utf8mb4",
   
 ) 
 mycursor = mydb.cursor()
@@ -49,6 +49,7 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
     
     
     print('function called function')
+    print(search_words)
     db_tweets = pd.DataFrame(columns = [ 'location', 'tweetcreatedts',
                                         'retweetcount', 'text', 'hashtags'])
     program_start = time.time()
@@ -84,6 +85,8 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
             # print(tweetId)
             username = tweet.user.screen_name
             url =  f"https://twitter.com/user/status/{tweet.id}"
+            print(totaltweets)
+            print(url)
             try:
                     text = tweet.retweeted_status.full_text
             except AttributeError:  # Not a Retweet
@@ -166,13 +169,13 @@ def job():
 
 # In[ ]:
 
-# job()
-schedule.every().day.at("16:03").do(job)
+job()
+# schedule.every().day.at("16:03").do(job)
 
 
 
 
-while True:
-   schedule.run_pending()
-   time.sleep(60) # wait one minute
+# while True:
+#    schedule.run_pending()
+#    time.sleep(60) # wait one minute
 

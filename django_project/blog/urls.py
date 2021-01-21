@@ -16,6 +16,7 @@ urlpatterns = [
     # path('delete_laptop', views.delete_laptop),
     path('search', views.search_keywords,name='search_page'),
     path('twitter_details', views.twitter_details,name='twitter_details'),
+    path('twitter_url_list', views.twitter_url_list),
     path('twitter_search', views.twitter_search,name='twitter_search'),
     path('twitter_list', views.twitter_list,name='twitter_list'),
     path('index', views.index,name='index'),

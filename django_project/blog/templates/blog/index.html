@@ -1,20 +1,43 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
 
-   
+
 {% extends "blog/header.html" %}
 {% load static %}
 
 <style>
-    .loader {
-    position: fixed;
-    left: 0px;
+  .LockOn {
+    display: block;
+    visibility: visible;
+    position: absolute;
+    z-index: 999;
     top: 0px;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-    background: url('https://lkp.dispendik.surabaya.go.id/assets/loading.gif') 50% 50% no-repeat rgb(249,249,249);
-    }
+    left: 0px;
+    width: 105%;
+    height: 105%;
+    background-color:white;
+    vertical-align:bottom;
+    padding-top: 20%; 
+    filter: alpha(opacity=75); 
+    opacity: 0.75; 
+    font-size:large;
+    color:blue;
+    font-style:italic;
+    font-weight:400;
+    background-image: url("../Common/loadingGIF.gif");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+    /* .loader {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url('https://lkp.dispendik.surabaya.go.id/assets/loading.gif') 50% 50% no-repeat rgb(249, 249, 249);
+    } */
 </style>
 
 {% block content %}
@@ -23,8 +46,7 @@
 
     <div class="page-wrapper">
         <div class="container-fluid">
-            <div class="loader">
-                <h1>Hello Loader </h1>
+            <div id="coverScreen"  class="LockOn">
             </div>
             <!----- Search Twitter------>
             <div class="row">
@@ -32,8 +54,8 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Search Keywords</h4>
-                        <form name="frm" id="frm">
-                             
+                            <form name="frm" id="frm">
+
 
                                 <div class="form-group" style="width: 100%;display: flex;">
                                     <input type="text" class="form-control" required name="search" id="searchwords"
@@ -41,13 +63,13 @@
                                         placeholder="Enter Keyword Hashing or Websites">
                                     <button type="submit" class="btn btn-primary">Search</button>
                                 </div>
-                                <input type="radio" style="width:15px;height:15px;" value="database" checked name="database"
-                                id="database" onchange="value2Changed()">&nbsp;<span
-                                style="font-size:20px;" checked>Database </span>
+                                <input type="radio" style="width:15px;height:15px;" value="database" checked
+                                    name="database" id="database" onchange="value2Changed()">&nbsp;<span
+                                    style="font-size:20px;" checked>Database </span>
                                 <input type="radio" style="width:15px;height:15px;" value="realtime" name="realtime"
                                     id="realtime" onchange="value1Changed()">&nbsp;<span style="font-size:20px;">Real
                                     Time </span>
-                               
+
                             </form>
                         </div>
                     </div>
@@ -212,9 +234,10 @@
             <div class="row">
 
                 <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 ml-5">
-                    <div class="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 350, "gutter":20 }'id="urlpost" >
-                       
-                        <div class="grid-item row" > 
+                    <div class="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 350, "gutter":20 }'
+                        id="urlpost">
+
+                        <div class="grid-item row">
                             <!-- <a href="{% url 'mapper'%}?search= {{ post.username }}&action=tweets" target="_blank"><img
                                     src="https://img.icons8.com/fluent/48/000000/twitter.png" />{{ post.username }}</a>
                             <blockquote class="twitter-tweet">
@@ -229,9 +252,17 @@
     </div>
     </div>
     <script>
-      $(window).load(function() {
-        $(".loader").fadeOut("slow");
-});
+         window.onscroll = function () {
+            var d = document.documentElement;
+            var offset = d.scrollTop + window.innerHeight;
+            var height = d.offsetHeight;
+            var allowScroll;
+            if (offset >= height - 1) {
+                //  loadData();
+                console.log('Scroll down');
+
+            }
+        };
         function value1Changed() {
 
             document.getElementById("database").checked = false;
@@ -245,9 +276,9 @@
     </script>
 
     <script>
-          let search = window.location.search.slice(1).split("&")[0].split("=")[1];
-            $('#search').val(search);
-       
+        let search = window.location.search.slice(1).split("&")[0].split("=")[1];
+        $('#search').val(search);
+
         // Twitter widget is loading.
         window.twttr = function (d, s, id) {
             var t, js, fjs = d.getElementsByTagName(s)[0];
@@ -261,261 +292,324 @@
                 ready: function (f) {
                     t._e.push(f)
                 }
+                
             });
         }(document, 'script', 'twitter-wjs');
 
         // When widget is ready, run masonry
         twttr.ready(function (twttr) {
-            $(".preloader").fadeIn();
             twttr.events.bind('loaded', function (event) {
+            $(".preloader").fadeIn();
+
                 $('.grid').masonry({
+                    
                     itemSelector: '.grid-item',
                     // columnWidth: 600,
                     // gutter: 20
                 });
-            });
             $(".preloader").fadeOut();
+
+            });
 
         });
     </script>
 
     <script type="text/javascript">
-    $("#frm").submit(function () {
-      $(".preloader").fadeIn();
-    var search= $("#searchwords").val();
-    var checkbox='';
-    if(  $('input[name="realtime"]').is(':checked') ) {
-        checkbox='realtime';
-        }
-        else{
-            checkbox='database';
-        }
-    $.ajax({
-    url: "{% url 'twitter_details' %}",
-    type: 'POST',
-    data: {
-        search:search,
-        checkbox:checkbox,
-        csrfmiddlewaretoken: '{{ csrf_token }}',
-    },
-    success: function(json){
-            var urlpost=$('#urlpost');
-            var html= "";
-            $('.grid-item').empty();
-            for (i = 0; i < json.posts.length; i++) {
-            console.log(json)
-            html=$('.grid-item').append('<div class ="col-sm-4"><a href="'+json.posts[i].username+'" target="_blank">'+'<img src="https://img.icons8.com/fluent/48/000000/twitter.png" />'+json.posts[i].username+'</a>'+
-                            '<blockquote class="twitter-tweet"><a href='+json.posts[i].urll+'></a></blockquote></div>')
-                            html.appendTo(urlpost);
-            // html=$('.grid-item').append('<blockquote class="twitter-tweet"><a href="'+json.posts[i].urll+'">Hello</a></blockquote>');
-            // html.appendTo(urlpost);
+        let lastId;
+        function loadData() {
+            countLastId = lastId.Id
+            console.log('last Id', countLastId)
+            $(".preloader").fadeIn();
+            var search = $("#searchwords").val();
+            var checkbox = '';
+            if ($('input[name="realtime"]').is(':checked')) {
+                checkbox = 'realtime';
             }
+            else {
+                checkbox = 'database';
+            }
+            $.ajax({
+                url: "{% url 'twitter_details' %}",
+                type: 'POST',
+                data: {
+                    search: search,
+                    checkbox: checkbox,
+                    lastId: countLastId,
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                success: function (json) {
+                  
+                    var urlpost = $('#urlpost');
+                    var html = "";
+                    lastId = json.posts[json.posts.length - 1];
+                    for (i = 0; i < json.posts.length; i++) {
+                        console.log(json.posts[i].urll)
+                        // console.log(json.posts)
+                        html = $('.grid-item').append('<div class ="col-sm-4"><a href="' + json.posts[i].username + '" target="_blank">' + '<img src="https://img.icons8.com/fluent/48/000000/twitter.png" />' + json.posts[i].username + '</a>' +
+                            '<blockquote class="twitter-tweet"><a href=' + json.posts[i].urll + '></a></blockquote></div>')
+                            $(window).on('load', function () {
+                        $(".preloader").fadeOut();
 
-          
-          twttr.widgets.load(
-            
-            document.getElementById("#urlpost")
-
-            );// END ulr
-        //START total tweets ,total retweets and total location
-        $("#totalTweets").text(json.totalTweets)
-        $("#total_followers").text(json.total_followers)
-        $("#tweets_location").text(json.tweets_location)
-        $("#totalTweets1").text(json.totalTweets)
-        $("#total_followers1").text(json.total_followers)
-        $("#tweets_location1").text(json.tweets_location)
-        //END total tweets ,total retweets and total location
-        
-        var greate = json.great;
-        var good = json.good;
-        var nuetral = json.nutral;
-        var bad = json.bad;
-        var terrible = json.terr;
-        // Build the chart
-        Highcharts.chart('Sentiments', {
-            chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                type: 'pie'
-            },
-            title: {
-                text: 'Sentiments'
-            },
-            tooltip: {
-                pointFormat: '{name} <b>{point.percentage:.1f}%</b>'
-            },
-            accessibility: {
-                point: {
-                    valueSuffix: '%'
-                }
-            },
-            credits: {
-                enabled: false
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: false
-                    },
-                    showInLegend: true
-                }
-            },
-            legend: {
-                align: 'right',
-                verticalAlign: 'top',
-                layout: 'vertical',
-                x: 0,
-                y: 100
-            },
-            series: [{
-                name: '',
-                data: [{
-                    name: 'Great',
-                    y: greate,
-                    sliced: false,
-                    selected: true,
-                }, {
-                    name: 'Good',
-                    y: good
-                }, {
-                    name: 'Neutral',
-                    y: nuetral
-                }, {
-                    name: 'Bad',
-                    y: bad
-                }, {
-                    name: 'Terrible',
-                    y: terrible
-                }]
-            }]
-        });
-        var retweets = json.retweets;
-        var totalTweets =json.totalTweets;
-
-        // Build the chart
-        Highcharts.chart('ByType', {
-            chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                type: 'pie'
-            },
-            title: {
-                text: ''
-            },
-            tooltip: {
-                pointFormat: '{name} <b>{point.percentage:.1f}%</b>'
-            },
-            accessibility: {
-                point: {
-                    valueSuffix: '%'
-                }
-            },
-            credits: {
-                enabled: false
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: false
-                    },
-                    showInLegend: true
-                }
-            },
-            legend: {
-                align: 'right',
-                verticalAlign: 'top',
-                layout: 'vertical',
-                x: 0,
-                y: 100
-            },
-            series: [{
-                name: '',
-                colorByPoint: true,
-                data: [{
-                    name: 'Tweets',
-                    y: totalTweets,
-                    sliced: false,
-                    selected: true
-                }, {
-                    name: 'Retweets',
-                    y: retweets
-                }
-                ]
-            }]
-        });
-        var mydict = json.coutdate;
-        console.log(mydict)
-        let tweetsArray = [];
-        let bydate = [];
-
-        let bydateArr = [];
-        for (const tweets of mydict) {
-            var d = new Date(tweets.bydate);
-            var year = d.getFullYear();
-            var month = d.getMonth();
-            var day = d.getDay();
-            var formater = day + '/' + month + '/' + year;
-            tweetsArray.push([formater, tweets.couttweets]);
-            bydateArr.push(formater)
-        }
-        console.log(bydateArr);
-
-        Highcharts.chart('ByTime', {
-
-            title: {
-                text: ''
-            },
-
-            time: {
-                timezone: 'Pakistan/Karachi'
-            },
-            xAxis: {
-                type: 'datetime',
-                categories: bydateArr
-            },
-            credits: {
-                enabled: false
-            },
-
-            series: [{
-                name: 'Tweets',
-                data: tweetsArray,
-                // pointStart: bydate,
-            }],
-
-
-            responsive: {
-                rules: [{
-                    condition: {
-                        maxWidth: 500
-                    },
-                    chartOptions: {
-                        legend: {
-                            layout: 'horizontal',
-                            align: 'center',
-                            verticalAlign: 'bottom'
-                        }
+                    });html.appendTo(urlpost);
                     }
-                }]
+
+
+                    twttr.widgets.load(
+
+                        document.getElementById("#urlpost")
+
+                    );// END ulr
+                },
+
+                error: function (xhr, errmsg, err) { }
+            })
+
+        }
+        $("#frm").submit(function () {
+            // var elmnt = document.getElementById("content");
+            // var y = elmnt.scrollHeight;
+            // var x = elmnt.scrollWidth;
+            // document.getElementById ("demo").innerHTML = "Height: " + y + "px<br>Width: " + x + "px";
+            $(".preloader").fadeIn();
+            var search = $("#searchwords").val();
+            var checkbox = '';
+            if ($('input[name="realtime"]').is(':checked')) {
+                checkbox = 'realtime';
             }
+            else {
+                checkbox = 'database';
+            }
+            $.ajax({
+                url: "{% url 'twitter_details' %}",
+                type: 'POST',
+                data: {
+                    search: search,
+                    checkbox: checkbox,
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                success: function (json) {
+                    var urlpost = $('#urlpost');
+                    var html = "";
+                    $('.grid-item').empty();
+                    lastId = json.posts[json.posts.length - 1];
 
+                    for (i = 0; i < json.posts.length; i++) {
+                        console.log(json.posts[i].urll,'usernam',json.posts[i].username)
+                        
+
+                        html = $('.grid-item').append('<div class ="col-sm-4"><a href="' + json.posts[i].username + '" target="_blank">' + '<img src="https://img.icons8.com/fluent/48/000000/twitter.png" />' + json.posts[i].username + '</a>' +
+                            '<blockquote class="twitter-tweet"><a href=' + json.posts[i].urll + '></a></blockquote></div>')
+                            $(".preloader").fadeIn();
+                             html.appendTo(urlpost);
+                        // html=$('.grid-item').append('<blockquote class="twitter-tweet"><a href="'+json.posts[i].urll+'">Hello</a></blockquote>');
+                        // html.appendTo(urlpost);
+                    }
+                    // $(".preloader").fadeIn();
+
+
+                    twttr.widgets.load(
+
+                        document.getElementById("#urlpost")
+
+                    );// END ulr
+                    //START total tweets ,total retweets and total location
+                    $("#totalTweets").text(json.totalTweets)
+                    $("#total_followers").text(json.total_followers)
+                    $("#tweets_location").text(json.tweets_location)
+                    $("#totalTweets1").text(json.totalTweets)
+                    $("#total_followers1").text(json.total_followers)
+                    $("#tweets_location1").text(json.tweets_location)
+                    //END total tweets ,total retweets and total location
+
+                    var greate = json.great;
+                    var good = json.good;
+                    var nuetral = json.nutral;
+                    var bad = json.bad;
+                    var terrible = json.terr;
+                    // Build the chart
+                    Highcharts.chart('Sentiments', {
+                        chart: {
+                            plotBackgroundColor: null,
+                            plotBorderWidth: null,
+                            plotShadow: false,
+                            type: 'pie'
+                        },
+                        title: {
+                            text: 'Sentiments'
+                        },
+                        tooltip: {
+                            pointFormat: '{name} <b>{point.percentage:.1f}%</b>'
+                        },
+                        accessibility: {
+                            point: {
+                                valueSuffix: '%'
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                showInLegend: true
+                            }
+                        },
+                        legend: {
+                            align: 'right',
+                            verticalAlign: 'top',
+                            layout: 'vertical',
+                            x: 0,
+                            y: 100
+                        },
+                        series: [{
+                            name: '',
+                            data: [{
+                                name: 'Great',
+                                y: greate,
+                                sliced: false,
+                                selected: true,
+                            }, {
+                                name: 'Good',
+                                y: good
+                            }, {
+                                name: 'Neutral',
+                                y: nuetral
+                            }, {
+                                name: 'Bad',
+                                y: bad
+                            }, {
+                                name: 'Terrible',
+                                y: terrible
+                            }]
+                        }]
+                    });
+                    var retweets = json.retweets;
+                    var totalTweets = json.totalTweets;
+
+                    // Build the chart
+                    Highcharts.chart('ByType', {
+                        chart: {
+                            plotBackgroundColor: null,
+                            plotBorderWidth: null,
+                            plotShadow: false,
+                            type: 'pie'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        tooltip: {
+                            pointFormat: '{name} <b>{point.percentage:.1f}%</b>'
+                        },
+                        accessibility: {
+                            point: {
+                                valueSuffix: '%'
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                showInLegend: true
+                            }
+                        },
+                        legend: {
+                            align: 'right',
+                            verticalAlign: 'top',
+                            layout: 'vertical',
+                            x: 0,
+                            y: 100
+                        },
+                        series: [{
+                            name: '',
+                            colorByPoint: true,
+                            data: [{
+                                name: 'Tweets',
+                                y: totalTweets,
+                                sliced: false,
+                                selected: true
+                            }, {
+                                name: 'Retweets',
+                                y: retweets
+                            }
+                            ]
+                        }]
+                    });
+                    var mydict = json.coutdate;
+                    let tweetsArray = [];
+                    let bydate = [];
+
+                    let bydateArr = [];
+                    for (const tweets of mydict) {
+                        var d = new Date(tweets.bydate);
+                        var year = d.getFullYear();
+                        var month = d.getMonth();
+                        var day = d.getDay();
+                        var formater = day + '/' + month + '/' + year;
+                        tweetsArray.push([formater, tweets.couttweets]);
+                        bydateArr.push(formater)
+                    }
+
+
+                    Highcharts.chart('ByTime', {
+
+                        title: {
+                            text: ''
+                        },
+
+                        time: {
+                            timezone: 'Pakistan/Karachi'
+                        },
+                        xAxis: {
+                            type: 'datetime',
+                            categories: bydateArr
+                        },
+                        credits: {
+                            enabled: false
+                        },
+
+                        series: [{
+                            name: 'Tweets',
+                            data: tweetsArray,
+                            // pointStart: bydate,
+                        }],
+
+
+                        responsive: {
+                            rules: [{
+                                condition: {
+                                    maxWidth: 500
+                                },
+                                chartOptions: {
+                                    legend: {
+                                        layout: 'horizontal',
+                                        align: 'center',
+                                        verticalAlign: 'bottom'
+                                    }
+                                }
+                            }]
+                        }
+
+                    });
+                    $(".preloader").fadeOut();
+                },
+
+                error: function (xhr, errmsg, err) { }
+            })
+
+            return false;
         });
-        $(".preloader").fadeOut();
-    },
-    
-    error: function(xhr, errmsg, err) {}
-})
 
-return false;
-    });
-    
-  
+
     </script>
 
     {% endblock content %}
