@@ -298,19 +298,21 @@
 
         // When widget is ready, run masonry
         twttr.ready(function (twttr) {
-            twttr.events.bind('loaded', function (event) {
-            $(".preloader").fadeIn();
+            
 
+            twttr.events.bind('loaded', function (event) {
+      
+                
                 $('.grid').masonry({
                     
                     itemSelector: '.grid-item',
                     // columnWidth: 600,
                     // gutter: 20
                 });
-            $(".preloader").fadeOut();
+           
 
             });
-
+            $(".preloader").fadeOut();
         });
     </script>
 
@@ -328,6 +330,7 @@
             else {
                 checkbox = 'database';
             }
+            $(".preloader").fadeIn();
             $.ajax({
                 url: "{% url 'twitter_details' %}",
                 type: 'POST',
@@ -348,7 +351,7 @@
                         html = $('.grid-item').append('<div class ="col-sm-4"><a href="' + json.posts[i].username + '" target="_blank">' + '<img src="https://img.icons8.com/fluent/48/000000/twitter.png" />' + json.posts[i].username + '</a>' +
                             '<blockquote class="twitter-tweet"><a href=' + json.posts[i].urll + '></a></blockquote></div>')
                             $(window).on('load', function () {
-                        $(".preloader").fadeOut();
+                        // $(".preloader").fadeOut();
 
                     });html.appendTo(urlpost);
                     }
@@ -359,11 +362,14 @@
                         document.getElementById("#urlpost")
 
                     );// END ulr
+            setTimeout(function(){ $(".preloader").fadeOut(); }, 5000);
+
+                    
+                    
                 },
 
                 error: function (xhr, errmsg, err) { }
             })
-
         }
         $("#frm").submit(function () {
             // var elmnt = document.getElementById("content");

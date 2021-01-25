@@ -30,11 +30,11 @@ api = tweepy.API(auth,wait_on_rate_limit=True)
 mydb = mysql.connector.connect(
     host="localhost",
     database="twitter",
-    # user="tweehunt",
-    # passwd="TweeHunt!@#321",
-    user="root",
-    passwd="",
-    # charset="utf8mb4",
+    user="tweehunt",
+    passwd="TweeHunt!@#321",
+    # user="root",
+    # passwd="",
+    charset="utf8mb4",
   
 ) 
 mycursor = mydb.cursor()
