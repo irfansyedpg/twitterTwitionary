@@ -590,10 +590,8 @@ def twitter_details(request):
                     
                         tweets = tweepy.Cursor(api.search, q=search_words, lang="en", since=date_since, tweet_mode='extended').items(numTweets)
                         tweet_list = [tweet for tweet in tweets]
-                        print(tweet_list)
                         noTweets = 0
                         for tweet in tweet_list:
-                            print('loop')
                             # rtotalTweets+=1
                             acctdesc = tweet.user.description
                             location = tweet.user.location
@@ -610,15 +608,16 @@ def twitter_details(request):
                             # retweets=retweetcount+retweetcount
                             hashtags = tweet.entities['hashtags']
                             tweet_id= tweet.id
-                            print(tweet_id)
+                            # print(tweet_id)
 
                             # print(tweet_id)
                             username = tweet.user.screen_name
                             url =  f"https://twitter.com/user/status/{tweet.id}"
                             print(url)
-
                             print(username)
-                            print(totaltweets)
+
+                            # print(username)
+                            # print(totaltweets)
 
                             # return False
                             coutdate.append({
@@ -627,7 +626,6 @@ def twitter_details(request):
                             'couttweets': rtotalTweets,
                             'bydate':tweetcreatedts.strftime('%m/%d/%Y')
                             })
-                           
                             posts.append({
                             'urll': url,
                             'username':username})
@@ -646,7 +644,7 @@ def twitter_details(request):
                                 badcounter+=1
                             if sentiments =='Terrible':
                                 terriblecounter+=1
-                            posts = {
+                            posts1 = {
                             'totalTweets':totaltweets,
                             'tweets_location':tweets_location,
                             'retweets':retweets,
@@ -660,8 +658,8 @@ def twitter_details(request):
                             'coutdate':coutdate
                             }
                             # print(posts)
-                            return HttpResponse({
-                            json.dumps(posts)},content_type="application/json")
+                        return HttpResponse({
+                        json.dumps(posts1)},content_type="application/json")
 
                         # return render(request, 'blog/index.html',{'totalTweets':rtotalTweets,'tweets_location':tweets_location,'retweets':retweets,'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'total_followers':total_followers,'posts': posts,'coutdate': json.dumps(coutdate)})
                         
@@ -760,6 +758,7 @@ def twitter_url_list(request):
 
             else:
                 if checkbox=='realtime':
+                    print('realtime')
                     correntdatee = datetime.today().strftime('%Y-%m-%d')
                     search_words = int(request.POST.get('search'))
 
@@ -778,7 +777,7 @@ def twitter_url_list(request):
                     total_followers=0
                     posts=[]
                     coutdate=[]
-                    print(search_words)
+                    # print(search_words)
                     for i in range(0, numRuns):
                         start_run = time.time()
                     
@@ -809,8 +808,8 @@ def twitter_url_list(request):
                             url =  f"https://twitter.com/user/status/{tweet.id}"
                             print(url)
 
-                            print(username)
-                            print(totaltweets)
+                            # print(username)
+                            # print(totaltweets)
 
                             # return False
                             coutdate.append({
@@ -852,8 +851,8 @@ def twitter_url_list(request):
                             'coutdate':coutdate
                             }
                             # print(posts)
-                            return HttpResponse({
-                            json.dumps(posts)},content_type="application/json")
+                        return HttpResponse({
+                        json.dumps(posts)},content_type="application/json")
 
                         # return render(request, 'blog/index.html',{'totalTweets':rtotalTweets,'tweets_location':tweets_location,'retweets':retweets,'great':greatcounter,'good':goodcounter,'nutral':noutralcounter,'bad':badcounter,'terr':terriblecounter,'total_followers':total_followers,'posts': posts,'coutdate': json.dumps(coutdate)})
                         
