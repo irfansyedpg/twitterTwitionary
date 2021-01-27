@@ -984,6 +984,8 @@ def mapper(request):
 
                 #this is used for followers
                 elif str(request.POST.get('action'))=='followers':
+                    print('followers')
+                    
                     followersArr=[]
                     screen_name =search
                     count=0
@@ -991,8 +993,11 @@ def mapper(request):
                     imageuser=userData.profile_image_url
                     name=userData.name
                     followers_count1=str(userData.followers_count)
+                    screen_name = "imrankhan"
+                    for user in api.followers(screen_name): 
+                        print(user.screen_name)
+                    
 
-                    for user in tweepy.Cursor(api.followers, screen_name).items(50): 
                         count += 1
                         followers_scrname=user.screen_name
                         followers_name=user.name
@@ -1004,7 +1009,8 @@ def mapper(request):
                         friend=str(user.friends_count)
                         image=user.profile_image_url
                         totaltweets=user.statuses_count
-                        print(followersurl)
+                        # print(user)
+                        print('useruser-------',user.screen_name)
                         followersArr.append({
                             'followers_name':followers_name,
                             "followers_scrname":followers_scrname,
@@ -1020,8 +1026,8 @@ def mapper(request):
                         'followersArr': followersArr,
                         'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count1,'location':location,'name':name,'image':imageuser
                         }
-                        return HttpResponse({
-                        json.dumps(posts)},content_type="application/json")
+                    return HttpResponse({
+                    json.dumps(posts)},content_type="application/json")
                     # return render(request,'blog/mapper.html',{'followersArr': followersArr,'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count1,'location':location,'name':name,'image':imageuser})
                 #there are end of followers
 
@@ -1065,8 +1071,8 @@ def mapper(request):
                         'followingArr': followingArr,'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count1,'location':location,'name':name,'image':imageuser
                         }
                         print(followersurl)
-                        return HttpResponse({
-                        json.dumps(posts)},content_type="application/json")
+                    return HttpResponse({
+                    json.dumps(posts)},content_type="application/json")
                     # return render(request,'blog/mapper.html',{'followingArr': followingArr,'totaltweets':totaltweets,'screenName':screen_name,'followerCount':followers_count1,'location':location,'name':name,'image':imageuser})
                 #there are end of followings
 #insert keywords
