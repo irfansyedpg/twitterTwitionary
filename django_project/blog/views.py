@@ -1241,6 +1241,7 @@ def reports (request):
         datecount = 0
         todate = str(request.POST.get('todate'))
         fromdate = str(request.POST.get('fromdate'))
+        mydb._open_connection()
         tweets_countq_query="SELECT COUNT(Id),date(tweetcreatedts) from tbl_twitter WHERE date(tweetcreatedts) BETWEEN " '%s' " and " '%s' " GROUP BY date(tweetcreatedts)"
         cursor.execute(tweets_countq_query,(todate,fromdate))
         coutdate=[]
@@ -1251,6 +1252,7 @@ def reports (request):
                             })
                         datecount+=count_date_row[0]
         mydb.commit()
+        mydb._open_connection()
         sqlite_select_query = """SELECT COUNT(h.Id),title from tbl_hashtags h JOIN tbl_keywords k on h.title=k.Keywords GROUP BY Title"""
         cursor.execute(sqlite_select_query)
         for row in cursor:
