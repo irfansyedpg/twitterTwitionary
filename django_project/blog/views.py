@@ -1160,7 +1160,7 @@ def delete_keywords(request):
     else:
 
         pk = int(request.POST.get('postid'))
-        
+        mydb._open_connection()
         cout_bydate = """Delete From tbl_keywords  WHERE Id=%s ORDER BY Id"""
         cursor.execute(cout_bydate,(pk,))
         mydb.commit()
@@ -1169,7 +1169,7 @@ def delete_keywords(request):
         request, messages.SUCCESS, 'Successfully Deleted',
         fail_silently=True,
         )
-
+        mydb._open_connection()
         sqlite_select_query = """SELECT * FROM tbl_keywords ORDER BY Id"""
         cursor.execute(sqlite_select_query)
         for row in cursor:
@@ -1189,6 +1189,7 @@ def updatekeywords(request):
 
         keyword = str(request.POST.get('keyword'))
         userId = int(request.POST.get('Id'))
+        mydb._open_connection()
         cout_bydate = """UPDATE `tbl_keywords` SET `Keywords`=%s WHERE Id=%s ORDER BY Id"""
         cursor.execute(cout_bydate,(keyword,userId))
         mydb.commit()
